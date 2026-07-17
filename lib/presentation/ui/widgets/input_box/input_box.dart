@@ -831,12 +831,10 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             _listValuesNotifier.value = listFetchResult;
 
             log("ListValuesBloc listener, "
-                "list values fetched: $listFetchResult");
+                "list values fetched: $listFetchResult,\n"
+                "validated selected value: ${listFetchResult.selectedItem}");
 
             if (validatedSelectedValue != null) {
-              log("ListValuesBloc listener, "
-                  "preselected list value: $validatedSelectedValue");
-
               _distributeSelectedValue(
                 selectedValue: validatedSelectedValue,
                 listValuesFetchResult: listFetchResult,
@@ -1093,14 +1091,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   Widget _listItem(ValueModel value, {Widget? suffixIcon}) {
     return Row(
       children: [
-        value.iconUri != null && value != _noValueHint
+        value != _noValueHint
             ? Container(
                 width: _prefixIconContainerWidth,
                 padding: const EdgeInsets.only(
                   right: _prefixIconPadding,
                 ),
                 child: ConvertouchSvgIcon(
-                  uri: value.iconUri!,
+                  uri: value.iconUri,
                   defaultUri: widget.model.listType.defaultIconUri,
                   defaultColor: widget.dropdownColors.icon.regular,
                 ),

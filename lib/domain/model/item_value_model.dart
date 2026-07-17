@@ -100,12 +100,6 @@ class ItemValueModel extends ItemModel {
     );
   }
 
-  M copyWithDefaultIconUri<M extends ItemValueModel>() {
-    return copyWith(
-      value: Patchable(value?.copyWithDefaultIconUri(listType?.defaultIconUri)),
-    ) as M;
-  }
-
   bool get hasValue {
     return listType != null && value != null ||
         listType == null && (value != null || defaultValue != null);

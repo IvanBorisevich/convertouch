@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 const double _defaultIconSize = 25;
 
 class ConvertouchSvgIcon extends StatelessWidget {
-  final String uri;
+  final String? uri;
   final String? defaultUri;
   final double? size;
   final Color? color;
@@ -48,18 +48,22 @@ class ConvertouchSvgIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     String? resultIconUri = idToIconName[uri] ?? uri;
 
+    if (resultIconUri == null) {
+      return _getSvgIconFromAsset(
+        defaultUri,
+        color: color ?? defaultColor,
+      );
+    }
+
     if (StringUtils.isUrl(resultIconUri)) {
       return FutureBuilder<String>(
-        future: _getSvgIconMarkupFromNetwork(),
+        future: _getSvgIconMarkupFromNetwork(resultIconUri),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.hasError ||
               !snapshot.hasData) {
-            String? resultDefaultIconUri =
-                idToIconName[defaultUri] ?? defaultUri;
-
             return _getSvgIconFromAsset(
-              resultDefaultIconUri,
+              defaultUri,
               color: color ?? defaultColor,
             );
           }
@@ -75,7 +79,7 @@ class ConvertouchSvgIcon extends StatelessWidget {
     );
   }
 
-  Future<String> _getSvgIconMarkupFromNetwork() async {
+  Future<String> _getSvgIconMarkupFromNetwork(String uri) async {
     final response = await http.get(Uri.parse(uri));
 
     if (response.statusCode == 200) {

@@ -65,12 +65,6 @@ class FetchListValuesUseCase
         leaveUnknownSelectedValue ? selectedValue : validatedSelectedValue;
     result ??= (leaveEmptySelectedValue ? null : preselectedValue);
 
-    if (result?.iconUri == null) {
-      result = result?.copyWithDefaultIconUri(
-        input.fetchParams!.listType.defaultIconUri,
-      );
-    }
-
     return result;
   }
 

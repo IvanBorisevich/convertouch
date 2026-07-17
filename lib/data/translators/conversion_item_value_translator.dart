@@ -39,7 +39,7 @@ class ConversionUnitValueTranslator extends ConversionItemValueTranslator<
       unit: unit!,
       value: ValueModel.any(entity.value),
       defaultValue: ValueModel.any(entity.defaultValue),
-    ).copyWithDefaultIconUri();
+    );
   }
 }
 
@@ -78,6 +78,6 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
       calculated: int2bool(entity.calculated),
       value: ValueModel.any(entity.value),
       defaultValue: ValueModel.any(entity.defaultValue),
-    ).copyWithDefaultIconUri();
+    );
   }
 }

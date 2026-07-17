@@ -55,7 +55,6 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     bool hasReachedMax;
     List<int> oobIds;
     List<T> allItems;
-    T? selectedItem = state.itemsFetch.selectedItem;
 
     if (event.firstFetch) {
       allItems = [];
@@ -82,7 +81,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel.loading(
             items: allItems,
-            selectedItem: selectedItem,
+            selectedItem: state.itemsFetch.selectedItem,
             searchString: searchString,
             pageNum: pageNum,
             fetchParams: fetchParams,
@@ -123,7 +122,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
               ...allItems,
               ...newBatch.right.items,
             ],
-            selectedItem: selectedItem,
+            selectedItem: newBatch.right.selectedItem,
             hasReachedMax: newBatch.right.hasReachedMax,
             searchString: searchString,
             pageNum: newBatch.right.pageNum,
@@ -142,7 +141,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel.failure(
             items: state.itemsFetch.items,
-            selectedItem: selectedItem,
+            selectedItem: state.itemsFetch.selectedItem,
             error: e is ConvertouchException
                 ? e
                 : ConvertouchException(message: e.toString()),

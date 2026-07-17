@@ -17,8 +17,7 @@ class ListValuesResponseParser extends ResponseParser {
     List<ValueModel> listValues = jsonListValues
         .whereType<Map<String, dynamic>>()
         .map(
-          (item) => ValueModel.fromJson(item)!
-              .copyWithDefaultIconUri(listType.defaultIconUri),
+          (item) => ValueModel.fromJson(item)!,
         )
         .toList();
 
