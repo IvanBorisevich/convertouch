@@ -12,8 +12,6 @@ class JobResultModel {
     this.notification,
   });
 
-  const JobResultModel.start() : this(progressPercent: 0.0);
-
   const JobResultModel.finish(
     DynamicDataModel? result, {
     ConvertouchException? info,

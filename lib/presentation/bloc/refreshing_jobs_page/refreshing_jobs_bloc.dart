@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
@@ -21,6 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RefreshingJobsBloc
     extends ConvertouchPersistentBloc<ConvertouchEvent, RefreshingJobsFetched> {
+  final JobsOperationsMap _jobOperations = {};
+
   final StartJobUseCase startJobUseCase;
   final StopJobUseCase stopJobUseCase;
   final FetchDynamicCoefficientsUseCase fetchDynamicCoefficientsUseCase;
@@ -34,7 +37,10 @@ class RefreshingJobsBloc
   }) : super(const RefreshingJobsFetched(jobs: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
     on<ChangeJobInfo>(_onChangeJobInfo);
-    on<StartRefreshingJob>(_onStartRefreshingJob);
+    on<StartRefreshingJob>(
+      _onStartRefreshingJob,
+      transformer: restartable(),
+    );
     on<StopRefreshingJob>(_onStopRefreshingJob);
   }
 
@@ -83,6 +89,12 @@ class RefreshingJobsBloc
 
         return;
       } else {
+        await cancelJobOperation(
+          _jobOperations,
+          unitGroupName: event.unitGroupName,
+          paramSetName: event.params.paramSet.name,
+        );
+
         final result = await stopJobUseCase.execute(
           InputJobStopModel(
             job: existingJob,
@@ -139,7 +151,7 @@ class RefreshingJobsBloc
       emit: emit,
     );
 
-    final startedJobResult = await startJobUseCase.execute(
+    final jobStartResult = await startJobUseCase.execute(
       InputJobStartModel(
         job: job,
         onExecute: (jobParams) async {
@@ -164,8 +176,15 @@ class RefreshingJobsBloc
       ),
     );
 
-    if (startedJobResult.isLeft) {
-      event.onError?.call(startedJobResult.left);
+    if (jobStartResult.isLeft) {
+      event.onError?.call(jobStartResult.left);
+    } else {
+      patchJobsOperations(
+        _jobOperations,
+        unitGroupName: event.unitGroupName,
+        paramSetName: event.params.paramSet.name,
+        jobOperation: jobStartResult.right,
+      );
     }
   }
 
@@ -185,6 +204,12 @@ class RefreshingJobsBloc
       return;
     }
 
+    await cancelJobOperation(
+      _jobOperations,
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.paramSetName,
+    );
+
     final stoppedJobResult = await stopJobUseCase.execute(
       InputJobStopModel(
         job: jobToStop,
@@ -196,12 +221,11 @@ class RefreshingJobsBloc
     if (stoppedJobResult.isLeft) {
       event.onError?.call(stoppedJobResult.left);
     } else {
-      add(
-        ChangeJobInfo(
-          jobPatch: stoppedJobResult.right,
-          unitGroupName: event.unitGroupName,
-          paramSetName: event.paramSetName,
-        ),
+      await _patchJobsMapAndEmit(
+        unitGroupName: event.unitGroupName,
+        paramSetName: event.paramSetName,
+        jobPatch: stoppedJobResult.right,
+        emit: emit,
       );
 
       event.onComplete?.call();
@@ -228,7 +252,6 @@ class RefreshingJobsBloc
 
   @override
   RefreshingJobsFetched? fromJson(Map<String, dynamic> json) {
-    log("Serializing jobs json map: $json");
     return RefreshingJobsFetched.fromJson(json);
   }
 
@@ -239,13 +262,15 @@ class RefreshingJobsBloc
 
   @override
   Future<void> close() async {
+    await cancelAllJobOperations(_jobOperations);
+
     for (var job in state.jobs.values) {
       if (job.progressController != null && !job.progressController!.isClosed) {
         await job.progressController!.close();
       }
     }
 
-    log("Job stream controllers have been closed");
+    log("All ongoing jobs have been stopped");
 
     return super.close();
   }

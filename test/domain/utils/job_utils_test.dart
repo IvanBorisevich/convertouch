@@ -28,7 +28,7 @@ void main() {
   });
 
   test('Should update existing job in the map', () async {
-    final jobsController = StreamController<JobResultModel>.broadcast();
+    final jobController = StreamController<JobResultModel>.broadcast();
     final completedAt = DateTime.now();
 
     expect(
@@ -44,14 +44,14 @@ void main() {
         jobPatch: JobModel(
           cron: Cron.never,
           completedAt: completedAt,
-          progressController: jobsController,
+          progressController: jobController,
         ),
       ),
       {
         _jobKey: JobModel(
           cron: Cron.never,
           completedAt: completedAt,
-          progressController: jobsController,
+          progressController: jobController,
         ),
       },
     );
@@ -61,7 +61,7 @@ void main() {
         {
           _jobKey: JobModel(
             cron: Cron.never,
-            progressController: jobsController,
+            progressController: jobController,
           ),
         },
         unitGroupName: GroupNames.currency,
@@ -79,6 +79,6 @@ void main() {
       },
     );
 
-    await jobsController.close();
+    await jobController.close();
   });
 }

@@ -1,7 +1,9 @@
+import 'package:async/async.dart';
 import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
 typedef JobsMap = Map<String, JobModel>;
+typedef JobsOperationsMap = Map<String, CancelableOperation<void>?>;
 
 JobModel? findJob(
   JobsMap activeJobs, {
@@ -24,7 +26,6 @@ JobsMap patchJobsMap(
   resultMap.update(
     _jobKey(unitGroupName, paramSetName),
     (job) => job.copyWith(
-      params: Patchable(jobPatch.params),
       completedAt: Patchable(jobPatch.completedAt),
       cron: Patchable(jobPatch.cron),
       progressController: Patchable(
@@ -36,6 +37,40 @@ JobsMap patchJobsMap(
   );
 
   return resultMap;
+}
+
+void patchJobsOperations(
+  JobsOperationsMap map, {
+  required String unitGroupName,
+  required String paramSetName,
+  required CancelableOperation<void>? jobOperation,
+}) {
+  map.update(
+    _jobKey(unitGroupName, paramSetName),
+    (_) => jobOperation,
+    ifAbsent: () => jobOperation,
+  );
+}
+
+Future<void> cancelJobOperation(
+  JobsOperationsMap map, {
+  required String unitGroupName,
+  required String paramSetName,
+}) async {
+  final jobOperation = map.remove(_jobKey(unitGroupName, paramSetName));
+  await _cancelJobOperation(jobOperation);
+}
+
+Future<void> cancelAllJobOperations(JobsOperationsMap map) async {
+  for (var jobOperation in map.values) {
+    await _cancelJobOperation(jobOperation);
+  }
+}
+
+Future<void> _cancelJobOperation(CancelableOperation<void>? operation) async {
+  if (operation != null && !operation.isCanceled) {
+    await operation.cancel();
+  }
 }
 
 String _jobKey(String unitGroupName, String paramSetName) =>

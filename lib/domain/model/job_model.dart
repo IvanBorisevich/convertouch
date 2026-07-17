@@ -23,14 +23,14 @@ enum JobExecutionMode {
 }
 
 class JobModel extends IdNameItemModel {
-  final InputDynamicDataFetchModel? params;
+  final InputDynamicDataFetchModel params;
   final Cron cron;
   final DateTime? completedAt;
   final StreamController<JobResultModel>? progressController;
   final JobExecutionMode executionMode;
 
   const JobModel({
-    this.params,
+    this.params = InputDynamicDataFetchModel.empty,
     this.cron = Cron.never,
     this.completedAt,
     this.progressController,
@@ -42,14 +42,13 @@ class JobModel extends IdNameItemModel {
         );
 
   JobModel copyWith({
-    Patchable<InputDynamicDataFetchModel>? params,
     Patchable<DateTime>? completedAt,
     Patchable<Cron>? cron,
     Patchable<StreamController<JobResultModel>>? progressController,
   }) {
     return JobModel(
       executionMode: executionMode,
-      params: ObjectUtils.patch(this.params, params),
+      params: params,
       completedAt: ObjectUtils.patch(this.completedAt, completedAt),
       cron: ObjectUtils.patch(this.cron, cron)!,
       progressController:

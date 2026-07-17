@@ -9,7 +9,9 @@ const Map<String, DynamicDataType> dynamicDataGroups = {
   GroupNames.temperature: DynamicDataType.singleValue,
 };
 
-abstract class InputDynamicDataFetchModel {
+class InputDynamicDataFetchModel {
+  static const empty = InputDynamicDataFetchModel(groupName: "");
+
   final String groupName;
 
   const InputDynamicDataFetchModel({

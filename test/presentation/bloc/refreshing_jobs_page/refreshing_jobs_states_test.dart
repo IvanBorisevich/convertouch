@@ -124,7 +124,6 @@ void main() {
       final firstState = RefreshingJobsFetched(
         jobs: {
           _jobKey: JobModel(
-            params: null,
             cron: Cron.never,
             completedAt: null,
             progressController: jobStreamController,
@@ -136,7 +135,6 @@ void main() {
       final secondState = RefreshingJobsFetched(
         jobs: {
           _jobKey: JobModel(
-            params: null,
             cron: Cron.never,
             completedAt: DateTime.now(),
             progressController: null,

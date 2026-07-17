@@ -46,8 +46,8 @@ class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
 
   @override
   Future<Either<ConvertouchException, void>> cancelFetch() async {
-    if (_cancellableOperation?.isCanceled == false) {
-      await _cancellableOperation?.cancel();
+    if (_cancellableOperation != null && !_cancellableOperation!.isCanceled) {
+      await _cancellableOperation!.cancel();
     }
 
     return const Right(null);

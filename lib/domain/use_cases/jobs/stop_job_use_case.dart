@@ -13,7 +13,7 @@ class StopJobUseCase<R> extends UseCase<InputJobStopModel, JobModel> {
     InputJobStopModel input,
   ) async {
     try {
-      input.job.progressController?.close();
+      await input.job.progressController?.close();
 
       JobModel stoppedJob = input.job.copyWith(
         progressController: const Patchable(null, patchNull: true),

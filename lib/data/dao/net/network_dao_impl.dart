@@ -38,11 +38,11 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-        throw ConvertouchException(
-          message: "Data fetching failed",
-          severity: ExceptionSeverity.warning,
-        )
-        //'{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
+        // throw ConvertouchException(
+        //   message: "Data fetching failed",
+        //   severity: ExceptionSeverity.warning,
+        // )
+        '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
       );
     }
 
