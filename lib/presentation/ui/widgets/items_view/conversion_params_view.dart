@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
@@ -389,6 +391,11 @@ class ConversionParamsView extends StatelessWidget {
                         : (itemState.id == paramValue.id
                             ? itemState.value!
                             : paramValue);
+
+                log("ConversionParamValueBloc builder(), "
+                    "itemState: $itemState, "
+                    "parent bloc param value: $paramValue, "
+                    "result param value: $resultParamValue");
 
                 return ConversionParamItem(
                   paramValue: resultParamValue,

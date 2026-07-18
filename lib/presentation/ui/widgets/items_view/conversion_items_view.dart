@@ -89,16 +89,9 @@ class ConvertouchConversionItemsView extends StatelessWidget {
               child: BlocBuilder<ConversionUnitValueBloc,
                   ConversionUnitValueState>(
                 buildWhen: (prev, next) {
-                  bool result = prev != next &&
+                  return prev != next &&
                       (next is ConversionUnitValueInitialState ||
                           next.id == unitValue.id);
-
-                  log("ConversionUnitValueBloc buildWhen(), "
-                      "itemState: $next, "
-                      "parent bloc unit value: $unitValue, "
-                      "result: $result");
-
-                  return result;
                 },
                 builder: (_, itemState) {
                   final resultUnitValue =

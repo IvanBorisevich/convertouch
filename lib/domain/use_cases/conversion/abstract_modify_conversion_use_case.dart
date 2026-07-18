@@ -53,20 +53,20 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         );
       }
 
+      bool paramValueChanged = _checkIfParamValueChanged(input);
+
       if (modifiedConvertedValues.isEmpty) {
-        final resultConversion = ConversionModel(
+        final newConversion = ConversionModel(
           id: input.conversion.id,
           unitGroup: modifiedGroup,
           params: newParams,
         );
 
-        if (areParamsFilled(newParams?.active)) {
-          input.ifParamSetFilled?.call(resultConversion);
-        } else if (areParamsPartiallyFilled(newParams?.active)) {
-          input.ifParamSetFilledPartiallyOrEmpty?.call(resultConversion);
+        if (paramValueChanged) {
+          _doOnParamValueChanged(input, newConversion);
         }
 
-        return Right(resultConversion);
+        return Right(newConversion);
       }
 
       ConversionUnitValueModel? newSrcUnitValue = await newSourceUnitValue(
@@ -95,15 +95,11 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         params: newParams,
       );
 
-      if (input.delta is ConversionParamsModifyDelta) {
-        if (areParamsFilled(newParams?.active)) {
-          input.ifParamSetFilled?.call(conversion);
-        } else if (areParamsPartiallyFilled(newParams?.active)) {
-          input.ifParamSetFilledPartiallyOrEmpty?.call(conversion);
-        }
+      if (paramValueChanged) {
+        _doOnParamValueChanged(input, conversion);
       }
 
-      if (input.delta.recalculateUnitValues) {
+      if (input.delta.recalculateUnitValues && paramValueChanged) {
         var convertedUnitValues = rules.calculateUnitValues(
           InputConversionModel(
             unitGroup: modifiedGroup,
@@ -177,5 +173,33 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     required D delta,
   }) async {
     return oldConvertedUnitValues;
+  }
+
+  bool _checkIfParamValueChanged(InputConversionModifyModel<D> input) {
+    D delta = input.delta;
+    ConversionModel oldConversion = input.conversion;
+
+    bool paramValueChanged = true;
+
+    if (delta is EditConversionParamValueDelta) {
+      final newParamValue =
+          oldConversion.params?.active?.getParamValueById(delta.paramId);
+
+      paramValueChanged = newParamValue?.value != delta.newValue ||
+          newParamValue?.defaultValue != delta.newDefaultValue;
+    }
+
+    return paramValueChanged;
+  }
+
+  void _doOnParamValueChanged(
+    InputConversionModifyModel<D> input,
+    ConversionModel newConversion,
+  ) {
+    if (areParamsFilled(newConversion.params?.active)) {
+      input.ifParamSetFilled?.call(newConversion);
+    } else if (areParamsPartiallyFilled(newConversion.params?.active)) {
+      input.ifParamSetFilledPartiallyOrEmpty?.call(newConversion);
+    }
   }
 }

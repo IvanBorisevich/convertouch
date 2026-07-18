@@ -510,11 +510,11 @@ class ConversionBloc
       );
 
       if (!event.rebuildParams) {
-        event.onConversionParamValuesUpdated?.call(result.right);
+        event.paramValuesPartialBuilder?.call(result.right);
       }
 
       if (!event.rebuildUnitValues) {
-        event.onConversionUnitValuesUpdated?.call(result.right);
+        event.unitValuesPartialBuilder?.call(result.right);
       }
 
       event.doAfter?.call(result.right);

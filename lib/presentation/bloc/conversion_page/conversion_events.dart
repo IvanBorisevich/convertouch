@@ -16,12 +16,12 @@ abstract class ConversionEvent extends ConvertouchEvent {
   final void Function(
     ConversionModel, {
     ConvertouchException? info,
-  })? onConversionParamValuesUpdated;
+  })? paramValuesPartialBuilder;
 
   final void Function(
     ConversionModel, {
     ConvertouchException? info,
-  })? onConversionUnitValuesUpdated;
+  })? unitValuesPartialBuilder;
 
   final void Function(
       ConversionModel, {
@@ -29,8 +29,8 @@ abstract class ConversionEvent extends ConvertouchEvent {
       })? doAfter;
 
   const ConversionEvent({
-    this.onConversionParamValuesUpdated,
-    this.onConversionUnitValuesUpdated,
+    this.paramValuesPartialBuilder,
+    this.unitValuesPartialBuilder,
     this.doAfter,
     super.onError,
     required this.rebuildUnitValues,
@@ -46,8 +46,8 @@ abstract class ConversionParamsEvent extends ConversionEvent {
     this.ifParamSetFilled,
     this.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
-    super.onConversionParamValuesUpdated,
-    super.onConversionUnitValuesUpdated,
+    super.paramValuesPartialBuilder,
+    super.unitValuesPartialBuilder,
     super.doAfter,
     required super.rebuildUnitValues,
     required super.rebuildParams,
@@ -155,7 +155,7 @@ class AddUnitsToConversion extends ConversionEvent {
   const AddUnitsToConversion({
     required this.unitIds,
     super.onError,
-    super.onConversionParamValuesUpdated,
+    super.paramValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
@@ -176,7 +176,7 @@ class EditConversionUnit extends ConversionEvent {
   const EditConversionUnit({
     required this.editedUnit,
     super.onError,
-    super.onConversionUnitValuesUpdated,
+    super.unitValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
@@ -203,8 +203,8 @@ class EditConversionUnitValue extends ConversionEvent {
     this.listValues,
     required this.unitId,
     super.onError,
-    super.onConversionParamValuesUpdated,
-    super.onConversionUnitValuesUpdated,
+    super.paramValuesPartialBuilder,
+    super.unitValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
@@ -231,7 +231,7 @@ class UpdateConversionCoefficients extends ConversionEvent {
   const UpdateConversionCoefficients({
     required this.newCoefficients,
     super.onError,
-    super.onConversionUnitValuesUpdated,
+    super.unitValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
@@ -252,7 +252,7 @@ class RemoveConversionItems extends ConversionEvent {
   const RemoveConversionItems({
     required this.unitIds,
     super.onError,
-    super.onConversionParamValuesUpdated,
+    super.paramValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
 
@@ -277,7 +277,7 @@ class ReplaceConversionItemUnit extends ConversionEvent {
     required this.newUnit,
     required this.oldUnitId,
     required this.recalculationMode,
-    super.onConversionParamValuesUpdated,
+    super.paramValuesPartialBuilder,
     super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: true, rebuildParams: false);
@@ -324,7 +324,7 @@ class AddParamSetsToConversion extends ConversionParamsEvent {
 
 class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
   const RemoveSelectedParamSetFromConversion({
-    super.onConversionUnitValuesUpdated,
+    super.unitValuesPartialBuilder,
     super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -337,7 +337,7 @@ class RemoveSelectedParamSetFromConversion extends ConversionParamsEvent {
 
 class RemoveAllParamSetsFromConversion extends ConversionParamsEvent {
   const RemoveAllParamSetsFromConversion({
-    super.onConversionUnitValuesUpdated,
+    super.unitValuesPartialBuilder,
     super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
@@ -354,7 +354,7 @@ class SelectParamSetInConversion extends ConversionParamsEvent {
   const SelectParamSetInConversion({
     required this.newSelectedParamSetIndex,
     super.onError,
-    super.onConversionUnitValuesUpdated,
+    super.unitValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: true);
 
@@ -386,8 +386,8 @@ class EditConversionParamValue extends ConversionParamsEvent {
     super.ifParamSetFilled,
     super.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
-    super.onConversionParamValuesUpdated,
-    super.onConversionUnitValuesUpdated,
+    super.paramValuesPartialBuilder,
+    super.unitValuesPartialBuilder,
     super.doAfter,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
 
@@ -419,8 +419,8 @@ class ReplaceConversionParamUnit extends ConversionParamsEvent {
     required this.newUnit,
     required this.paramId,
     required this.paramSetId,
-    super.onConversionParamValuesUpdated,
-    super.onConversionUnitValuesUpdated,
+    super.paramValuesPartialBuilder,
+    super.unitValuesPartialBuilder,
     super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: false);
@@ -448,7 +448,7 @@ class ToggleCalculableParam extends ConversionParamsEvent {
   const ToggleCalculableParam({
     required this.paramId,
     required this.paramSetId,
-    super.onConversionParamValuesUpdated,
+    super.paramValuesPartialBuilder,
     super.doAfter,
     super.onError,
   }) : super(rebuildUnitValues: false, rebuildParams: false);

@@ -3,9 +3,9 @@ import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.d
 import 'package:convertouch/domain/model/num_range.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/edit_conversion_param_value_use_case.dart';
+import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_param_set_value_use_case.dart';
-import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
 import 'package:convertouch/domain/use_cases/list_values/fetch_list_values_use_case.dart';
 import 'package:test/test.dart';
@@ -359,6 +359,85 @@ void main() {
     });
   });
 
+  group('By coefficients - currency', () {
+    group("Should NOT recalculate conversion by changed param 'Source / Bank'",
+        () {
+      test("Should NOT change param 'Source / Bank'", () async {
+        TestClass testClass = TestClass();
+
+        void ifParamSetFilled(conversion) {
+          testClass.mockTestMethod1();
+        }
+
+        void ifParamSetFilledPartiallyOrEmpty(conversion) {
+          testClass.mockTestMethod2();
+        }
+
+        await testCaseCompact(
+          unitGroup: currencyGroup,
+          useCase: useCase,
+          delta: EditConversionParamValueDelta.raw(
+            newValue: exchangeRateSources.items[0],
+            listValues: exchangeRateSources,
+            paramId: exchangeRateSourceBankParam.id,
+            paramSetId: exchangeRateParamSet.id,
+          ),
+          currentParams: ConversionParamSetValueBulkModel.singleCompact(
+            paramSet: exchangeRateParamSet,
+            paramValues: [
+              (
+                exchangeRateSourceBankParam,
+                exchangeRateSources.items[0],
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null,
+              ),
+            ],
+          ),
+          currentSrc: (usd, 1, 1, listValuesFetchResult: null),
+          currentUnitValues: [
+            (usd, 1, 1, listValuesFetchResult: null),
+            (
+              aud,
+              1 / aud.coefficient!,
+              1 / aud.coefficient!,
+              listValuesFetchResult: null
+            )
+          ],
+          expectedParams: ConversionParamSetValueBulkModel.singleCompact(
+            paramSet: exchangeRateParamSet,
+            paramValues: [
+              (
+                exchangeRateSourceBankParam,
+                exchangeRateSources.items[0],
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: exchangeRateSources,
+              ),
+            ],
+          ),
+          expectedSrc: (usd, 1, 1, listValuesFetchResult: null),
+          expectedUnitValues: [
+            (usd, 1, 1, listValuesFetchResult: null),
+            (
+              aud,
+              1 / aud.coefficient!,
+              1 / aud.coefficient!,
+              listValuesFetchResult: null
+            )
+          ],
+          ifParamSetFilled: ifParamSetFilled,
+          ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
+        );
+
+        expect(testClass.method1CallCount, 0);
+        expect(testClass.method2CallCount, 0);
+      });
+    });
+  });
+
   group('By formula - clothes size', () {
     group("Should change 'Person' list value [Man -> Woman]", () {
       group("Should recalc 'Garment' list value [empty -> default Shirt]", () {
@@ -464,24 +543,14 @@ void main() {
               listValuesFetchResult: esClothesSizes,
             ),
             expectedUnitValues: [
-              (
-                itClothesSize,
-                38,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
+              (itClothesSize, 38, null, listValuesFetchResult: itClothesSizes),
               (
                 esClothesSize,
                 34,
                 null,
                 listValuesFetchResult: esClothesSizes,
               ),
-              (
-                deClothesSize,
-                32,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (deClothesSize, 32, null, listValuesFetchResult: deClothesSizes),
             ],
           );
         });
@@ -713,24 +782,9 @@ void main() {
               listValuesFetchResult: esClothesSizes,
             ),
             expectedUnitValues: [
-              (
-                itClothesSize,
-                46,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
-              (
-                esClothesSize,
-                42,
-                null,
-                listValuesFetchResult: esClothesSizes
-              ),
-              (
-                deClothesSize,
-                40,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (itClothesSize, 46, null, listValuesFetchResult: itClothesSizes),
+              (esClothesSize, 42, null, listValuesFetchResult: esClothesSizes),
+              (deClothesSize, 40, null, listValuesFetchResult: deClothesSizes),
             ],
           );
         });
@@ -786,24 +840,9 @@ void main() {
               listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
-              (
-                itClothesSize,
-                48,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
-              (
-                esClothesSize,
-                40,
-                null,
-                listValuesFetchResult: esClothesSizes
-              ),
-              (
-                deClothesSize,
-                46,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (itClothesSize, 48, null, listValuesFetchResult: itClothesSizes),
+              (esClothesSize, 40, null, listValuesFetchResult: esClothesSizes),
+              (deClothesSize, 46, null, listValuesFetchResult: deClothesSizes),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
               paramSet: clothesSizeParamSet,
@@ -842,24 +881,9 @@ void main() {
               listValuesFetchResult: esClothesSizes
             ),
             expectedUnitValues: [
-              (
-                itClothesSize,
-                44,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
-              (
-                esClothesSize,
-                36,
-                null,
-                listValuesFetchResult: esClothesSizes
-              ),
-              (
-                deClothesSize,
-                44,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (itClothesSize, 44, null, listValuesFetchResult: itClothesSizes),
+              (esClothesSize, 36, null, listValuesFetchResult: esClothesSizes),
+              (deClothesSize, 44, null, listValuesFetchResult: deClothesSizes),
             ],
           );
         });
@@ -911,24 +935,9 @@ void main() {
               listValuesFetchResult: esClothesSizes,
             ),
             currentUnitValues: [
-              (
-                itClothesSize,
-                48,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
-              (
-                esClothesSize,
-                40,
-                null,
-                listValuesFetchResult: esClothesSizes
-              ),
-              (
-                deClothesSize,
-                46,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (itClothesSize, 48, null, listValuesFetchResult: itClothesSizes),
+              (esClothesSize, 40, null, listValuesFetchResult: esClothesSizes),
+              (deClothesSize, 46, null, listValuesFetchResult: deClothesSizes),
             ],
             expectedParams: ConversionParamSetValueBulkModel.singleCompact(
               paramSet: clothesSizeParamSet,
@@ -967,24 +976,9 @@ void main() {
               listValuesFetchResult: esClothesSizes
             ),
             expectedUnitValues: [
-              (
-                itClothesSize,
-                44,
-                null,
-                listValuesFetchResult: itClothesSizes
-              ),
-              (
-                esClothesSize,
-                36,
-                null,
-                listValuesFetchResult: esClothesSizes
-              ),
-              (
-                deClothesSize,
-                44,
-                null,
-                listValuesFetchResult: deClothesSizes
-              ),
+              (itClothesSize, 44, null, listValuesFetchResult: itClothesSizes),
+              (esClothesSize, 36, null, listValuesFetchResult: esClothesSizes),
+              (deClothesSize, 44, null, listValuesFetchResult: deClothesSizes),
             ],
           );
         });

@@ -831,31 +831,32 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             _listValuesNotifier.value = listFetchResult;
 
             log("ListValuesBloc listener, "
-                "list values fetched: $listFetchResult,\n"
-                "validated selected value: ${listFetchResult.selectedItem}");
+                "list values fetched: $listFetchResult");
 
-            if (validatedSelectedValue != null) {
-              _distributeSelectedValue(
-                selectedValue: validatedSelectedValue,
-                listValuesFetchResult: listFetchResult,
-              );
-
-              log("Separated values: "
-                  "main value: ${_selectedMainValueNotifier.value}, "
-                  "hint: ${_hintNotifier.value}");
-
-              widget.onValueChanged?.call(
-                validatedSelectedValue,
-                listValues: listFetchResult,
-              );
+            if (!listFetchResult.isSuccess) {
+              return;
             }
+
+            widget.onValueChanged?.call(
+              validatedSelectedValue ?? ValueModel.empty,
+              listValues: listFetchResult,
+            );
+
+            _distributeSelectedValue(
+              selectedValue: validatedSelectedValue,
+              listValuesFetchResult: listFetchResult,
+            );
+
+            log("Separated values: "
+                "main value: ${_selectedMainValueNotifier.value}, "
+                "hint: ${_hintNotifier.value}");
 
             if (listFetchResult.searchable) {
               _initDropdownSearch();
             }
 
             /* WA to refresh dropdown list values instantly */
-            if (_dropdownIsOpenNotifier.value && !listFetchResult.isLoading) {
+            if (_dropdownIsOpenNotifier.value) {
               log("Auto-closing the dropdown when list fetch finished");
 
               _isDropdownStateChangedProgrammatically = true;
@@ -1091,7 +1092,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   Widget _listItem(ValueModel value, {Widget? suffixIcon}) {
     return Row(
       children: [
-        value != _noValueHint
+        widget.model.listType.defaultIconUri != null && value != _noValueHint
             ? Container(
                 width: _prefixIconContainerWidth,
                 padding: const EdgeInsets.only(

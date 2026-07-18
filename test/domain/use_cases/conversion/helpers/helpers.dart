@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_bulk_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/abstract_modify_conversion_use_case.dart';
@@ -18,6 +18,8 @@ Future<void> testCase<T extends ConversionModifyDelta>({
   ConversionUnitValueModel? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
   required List<ConversionUnitValueModel> expectedUnitValues,
+  ParamSetValueChangedCallback? ifParamSetFilled,
+  ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
 }) async {
   ConversionModel actual = ObjectUtils.tryGet(
     await useCase.execute(
@@ -29,6 +31,8 @@ Future<void> testCase<T extends ConversionModifyDelta>({
           params: currentParams,
         ),
         delta: delta,
+        ifParamSetFilled: ifParamSetFilled,
+        ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
       ),
     ),
   );
@@ -61,6 +65,8 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
   UnitValueRawRecord? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
   required List<UnitValueRawRecord> expectedUnitValues,
+  ParamSetValueChangedCallback? ifParamSetFilled,
+  ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
 }) async {
   await testCase(
     useCase: useCase,
@@ -104,5 +110,20 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
           ),
         )
         .toList(),
+    ifParamSetFilled: ifParamSetFilled,
+    ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
   );
+}
+
+class TestClass {
+  int method1CallCount = 0;
+  int method2CallCount = 0;
+
+  void mockTestMethod1() {
+    method1CallCount++;
+  }
+
+  void mockTestMethod2() {
+    method2CallCount++;
+  }
 }

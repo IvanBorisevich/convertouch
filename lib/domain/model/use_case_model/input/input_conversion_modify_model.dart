@@ -198,12 +198,14 @@ class EditConversionParamValueDelta extends EditItemValueDelta
   factory EditConversionParamValueDelta.raw({
     dynamic newValue,
     dynamic newDefaultValue,
+    ListValuesFetchResult? listValues,
     required int paramId,
     required int paramSetId,
   }) {
     return EditConversionParamValueDelta(
       newValue: ValueModel.any(newValue),
       newDefaultValue: ValueModel.any(newDefaultValue),
+      listValues: listValues,
       paramId: paramId,
       paramSetId: paramSetId,
     );
