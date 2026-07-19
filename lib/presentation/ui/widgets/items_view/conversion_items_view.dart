@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
@@ -89,27 +90,26 @@ class ConvertouchConversionItemsView extends StatelessWidget {
               padding: const EdgeInsets.only(
                 bottom: _spacing,
               ),
-              child: BlocBuilder<ConversionUnitValueBloc,
-                  ConversionUnitValueState>(
+              child: BlocBuilder<ConversionItemBloc, ConversionItemState>(
                 buildWhen: (prev, next) {
                   return prev != next &&
-                      (next is ConversionUnitValueInitialState ||
-                          next.id == unitValue.id);
+                      next.itemValue is ConversionUnitValueModel &&
+                      (next.isUnitValueInitialState || next.id == unitValue.id);
                 },
                 builder: (_, itemState) {
-                  final resultUnitValue =
-                      itemState is ConversionUnitValueInitialState
-                          ? unitValue
-                          : (itemState.id == unitValue.id
-                              ? itemState.itemValue!
-                              : unitValue);
+                  final resultUnitValue = itemState.isUnitValueInitialState ||
+                          itemState.itemValue is! ConversionUnitValueModel
+                      ? unitValue
+                      : (itemState.id == unitValue.id
+                          ? itemState.itemValue! as ConversionUnitValueModel
+                          : unitValue);
 
-                  log("ConversionUnitValueBloc builder(), "
+                  log("Unit value ConversionItemBloc builder(), "
                       "itemState: $itemState, "
                       "parent bloc unit value: $unitValue, "
                       "result unit value: $resultUnitValue");
 
-                  final isSource = itemState is ConversionUnitValueInitialState
+                  final isSource = itemState.isUnitValueInitialState
                       ? unitValue.unit.id == srcUnitId
                       : itemState.isSource;
 

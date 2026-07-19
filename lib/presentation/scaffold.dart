@@ -113,10 +113,7 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
           create: (context) => di.locator<ConversionBloc>(),
         ),
         BlocProvider(
-          create: (context) => di.locator<ConversionUnitValueBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => di.locator<ConversionParamValueBloc>(),
+          create: (context) => di.locator<ConversionItemBloc>(),
         ),
         BlocProvider(
           create: (context) => di.locator<ListValuesBloc>(),

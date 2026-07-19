@@ -1,36 +1,38 @@
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
-abstract class ConversionItemEvent<T extends ItemValueModel>
-    extends ConvertouchEvent {
+abstract class ConversionItemEvent extends ConvertouchEvent {
   const ConversionItemEvent();
 }
 
-abstract class ConversionUnitValueEvent
-    extends ConversionItemEvent<ConversionUnitValueModel> {
-  const ConversionUnitValueEvent();
-}
-
-abstract class ConversionParamValueEvent
-    extends ConversionItemEvent<ConversionParamValueModel> {
-  const ConversionParamValueEvent();
-}
-
-class UpdateUnitValue extends ConversionUnitValueEvent {
-  final String id;
-  final ConversionUnitValueModel newValue;
-  final bool isSource;
-
-  const UpdateUnitValue({
+abstract class UpdateItemValue extends ConversionItemEvent {
+  const UpdateItemValue({
     required this.id,
-    required this.newValue,
-    required this.isSource,
+    required this.newItemValue,
   });
+
+  final String id;
+  final ItemValueModel newItemValue;
 
   @override
   List<Object?> get props => [
         id,
-        newValue,
+        newItemValue,
+      ];
+}
+
+class UpdateUnitValue extends UpdateItemValue {
+  final bool isSource;
+
+  const UpdateUnitValue({
+    required super.id,
+    required super.newItemValue,
+    this.isSource = false,
+  });
+
+  @override
+  List<Object?> get props => [
+        super.props,
         isSource,
       ];
 
@@ -38,35 +40,26 @@ class UpdateUnitValue extends ConversionUnitValueEvent {
   String toString() {
     return 'UpdateUnitValue{'
         'id: $id, '
-        'newValue: $newValue, '
+        'newItemValue: $newItemValue, '
         'isSource: $isSource}';
   }
 }
 
-class UpdateParamValue extends ConversionParamValueEvent {
-  final String id;
-  final ConversionParamValueModel newItemValue;
-
+class UpdateParamValue extends UpdateItemValue {
   const UpdateParamValue({
-    required this.id,
-    required this.newItemValue,
+    required super.id,
+    required super.newItemValue,
   });
-
-  @override
-  List<Object?> get props => [
-        id,
-        newItemValue,
-      ];
 
   @override
   String toString() {
     return 'UpdateParamValue{'
         'id: $id, '
-        'newValue: $newItemValue}';
+        'newItemValue: $newItemValue}';
   }
 }
 
-class ResetUnitValues extends ConversionUnitValueEvent {
+class ResetUnitValues extends ConversionItemEvent {
   const ResetUnitValues();
 
   @override
@@ -75,7 +68,7 @@ class ResetUnitValues extends ConversionUnitValueEvent {
   }
 }
 
-class ResetParamValues extends ConversionParamValueEvent {
+class ResetParamValues extends ConversionItemEvent {
   const ResetParamValues();
 
   @override

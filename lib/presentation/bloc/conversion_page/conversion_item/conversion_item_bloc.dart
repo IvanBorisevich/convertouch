@@ -1,71 +1,61 @@
-import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_events.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract class ConversionItemBloc<
-    T extends ItemValueModel,
-    E extends ConversionItemEvent<T>,
-    S extends ConversionItemState<T>> extends ConvertouchBloc<E, S> {
-  ConversionItemBloc(super.initialState);
-}
-
-class ConversionUnitValueBloc extends ConversionItemBloc<
-    ConversionUnitValueModel,
-    ConversionUnitValueEvent,
-    ConversionUnitValueState> {
-  ConversionUnitValueBloc() : super(const ConversionUnitValueInitialState()) {
-    on<UpdateUnitValue>(_onUpdateUnitValue);
+class ConversionItemBloc
+    extends ConvertouchBloc<ConversionItemEvent, ConversionItemState> {
+  ConversionItemBloc()
+      : super(const ConversionItemState(id: null, itemValue: null)) {
+    on<UpdateItemValue>(_onUpdateItemValue);
     on<ResetUnitValues>(_onResetUnitValues);
+    on<ResetParamValues>(_onResetParamValues);
   }
 
-  _onUpdateUnitValue(
-    UpdateUnitValue event,
-    Emitter<ConversionUnitValueState> emit,
+  _onUpdateItemValue(
+    UpdateItemValue event,
+    Emitter<ConversionItemState> emit,
   ) async {
     emit(
-      ConversionUnitValueUpdated(
+      ConversionItemState(
         id: event.id,
-        itemValue: event.newValue,
-        isSource: event.isSource,
+        itemValue: event.newItemValue,
+        isSource: event is UpdateUnitValue ? event.isSource : false,
+        isParamValueInitialState:
+            event is UpdateParamValue ? false : state.isParamValueInitialState,
+        isUnitValueInitialState:
+            event is UpdateUnitValue ? false : state.isUnitValueInitialState,
       ),
     );
   }
 
   _onResetUnitValues(
     ResetUnitValues event,
-    Emitter<ConversionUnitValueState> emit,
-  ) async {
-    emit(const ConversionUnitValueInitialState());
-  }
-}
-
-class ConversionParamValueBloc extends ConversionItemBloc<
-    ConversionParamValueModel,
-    ConversionParamValueEvent,
-    ConversionParamValueState> {
-  ConversionParamValueBloc() : super(const ConversionParamValueInitialState()) {
-    on<UpdateParamValue>(_onUpdateParamValue);
-    on<ResetParamValues>(_onResetParamValues);
-  }
-
-  _onUpdateParamValue(
-    UpdateParamValue event,
-    Emitter<ConversionParamValueState> emit,
+    Emitter<ConversionItemState> emit,
   ) async {
     emit(
-      ConversionParamValueUpdated(
-        id: event.id,
-        itemValue: event.newItemValue,
+      ConversionItemState(
+        id: state.id,
+        itemValue: state.itemValue,
+        isSource: state.isSource,
+        isParamValueInitialState: state.isParamValueInitialState,
+        isUnitValueInitialState: true,
       ),
     );
   }
 
   _onResetParamValues(
     ResetParamValues event,
-    Emitter<ConversionParamValueState> emit,
+    Emitter<ConversionItemState> emit,
   ) async {
-    emit(const ConversionParamValueInitialState());
+    emit(
+      ConversionItemState(
+        id: state.id,
+        itemValue: state.itemValue,
+        isSource: state.isSource,
+        isParamValueInitialState: true,
+        isUnitValueInitialState: state.isUnitValueInitialState,
+      ),
+    );
   }
 }

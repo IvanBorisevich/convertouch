@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_item/conversion_item_bloc.dart';
@@ -379,23 +380,23 @@ class ConversionParamsView extends StatelessWidget {
             padding: const EdgeInsets.only(
               bottom: _paramsSpacing,
             ),
-            child: BlocBuilder<ConversionParamValueBloc,
-                ConversionParamValueState>(
+            child: BlocBuilder<ConversionItemBloc, ConversionItemState>(
               buildWhen: (prev, next) {
                 return prev != next &&
-                    (next is ConversionParamValueInitialState ||
+                    next.itemValue is ConversionParamValueModel &&
+                    (next.isParamValueInitialState ||
                         next.id == paramValue.id &&
                             next.itemValue != paramValue);
               },
               builder: (_, itemState) {
-                final resultParamValue =
-                    itemState is ConversionParamValueInitialState
-                        ? paramValue
-                        : (itemState.id == paramValue.id
-                            ? itemState.itemValue!
-                            : paramValue);
+                final resultParamValue = itemState.isParamValueInitialState ||
+                        itemState.itemValue is! ConversionParamValueModel
+                    ? paramValue
+                    : (itemState.id == paramValue.id
+                        ? itemState.itemValue! as ConversionParamValueModel
+                        : paramValue);
 
-                log("ConversionParamValueBloc builder(), "
+                log("Param value ConversionItemBloc builder(), "
                     "itemState: $itemState, "
                     "parent bloc param value: $paramValue, "
                     "result param value: $resultParamValue");

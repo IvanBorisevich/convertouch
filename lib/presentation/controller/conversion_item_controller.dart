@@ -16,10 +16,10 @@ class ConversionItemController {
     required ConversionUnitValueModel newUnitValue,
     bool isSource = false,
   }) {
-    BlocProvider.of<ConversionUnitValueBloc>(context).add(
+    BlocProvider.of<ConversionItemBloc>(context).add(
       UpdateUnitValue(
         id: id,
-        newValue: newUnitValue,
+        newItemValue: newUnitValue,
         isSource: isSource,
       ),
     );
@@ -30,7 +30,7 @@ class ConversionItemController {
     required String id,
     required ConversionParamValueModel newParamValue,
   }) {
-    BlocProvider.of<ConversionParamValueBloc>(context).add(
+    BlocProvider.of<ConversionItemBloc>(context).add(
       UpdateParamValue(
         id: id,
         newItemValue: newParamValue,
@@ -39,13 +39,13 @@ class ConversionItemController {
   }
 
   void resetUnitValues(BuildContext context) {
-    BlocProvider.of<ConversionUnitValueBloc>(context).add(
+    BlocProvider.of<ConversionItemBloc>(context).add(
       const ResetUnitValues(),
     );
   }
 
   void resetParamValues(BuildContext context) {
-    BlocProvider.of<ConversionParamValueBloc>(context).add(
+    BlocProvider.of<ConversionItemBloc>(context).add(
       const ResetParamValues(),
     );
   }
