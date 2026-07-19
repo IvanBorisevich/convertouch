@@ -24,9 +24,9 @@ abstract class ConversionEvent extends ConvertouchEvent {
   })? unitValuesPartialBuilder;
 
   final void Function(
-      ConversionModel, {
-      ConvertouchException? info,
-      })? doAfter;
+    ConversionModel, {
+    ConvertouchException? info,
+  })? doAfter;
 
   const ConversionEvent({
     this.paramValuesPartialBuilder,

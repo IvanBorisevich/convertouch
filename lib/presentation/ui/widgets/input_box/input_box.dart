@@ -15,7 +15,6 @@ import 'package:convertouch/presentation/bloc/common/items_list/list_values_bloc
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_bloc.dart';
 import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_states.dart';
 import 'package:convertouch/presentation/controller/validation_controller.dart';
-import 'package:convertouch/presentation/ui/model/input_box_view_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
@@ -158,7 +157,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   })? _onValueChanged;
   late final TextEditingController _controller;
   late final ValueNotifier<bool> _closeIconVisibilityNotifier;
-  late InputBoxViewModel _inputBoxModel;
 
   late Color _backgroundColor;
   late Color _foregroundColor;
@@ -175,16 +173,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
       _validationKey = UniqueKey();
     }
 
-    _inputBoxModel = InputBoxViewModel.ofValue(
-      widget.model,
-      conversionGroupName: widget.conversionGroupName,
-      conversionParams: widget.conversionParams,
-      readonly: widget.readonly,
-      maxTextLength: widget.maxTextLength,
-      textLengthCounterVisible: widget.textLengthCounterVisible,
-      labelText: widget.labelText,
-    );
-
     _focusNode = initOrGetFocusNode(initial: widget.focusNode);
     _controller = initOrGetController(initial: widget.controller);
 
@@ -192,7 +180,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
 
     _onValueChanged = (value, {listValues}) {
       _closeIconVisibilityNotifier.value =
-          _inputBoxModel is! ListBoxViewModel && value.hasRawValue;
+          widget.model.listType == null && value.hasRawValue;
       widget.onValueChanged?.call(value, listValues: listValues);
     };
 
@@ -204,7 +192,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         if (!mounted) return;
 
         _closeIconVisibilityNotifier.value =
-            _inputBoxModel is! ListBoxViewModel && _controller.text.isNotEmpty;
+            widget.model.listType == null && _controller.text.isNotEmpty;
 
         setState(() {
           _setColors();
@@ -248,18 +236,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
 
     if (widget.colors != oldWidget.colors || widget.model != oldWidget.model) {
       _setColors();
-    }
-
-    if (widget.model != oldWidget.model) {
-      _inputBoxModel = InputBoxViewModel.ofValue(
-        widget.model,
-        conversionGroupName: widget.conversionGroupName,
-        conversionParams: widget.conversionParams,
-        readonly: widget.readonly,
-        maxTextLength: widget.maxTextLength,
-        textLengthCounterVisible: widget.textLengthCounterVisible,
-        labelText: widget.labelText,
-      );
     }
   }
 
@@ -330,7 +306,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
                     decoration: const BoxDecoration(
                       borderRadius: _borderRadius,
                     ),
-                    child: _inputField(_inputBoxModel, context),
+                    child: _inputField(context),
                   ),
                 ),
               ),
@@ -366,10 +342,16 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     );
   }
 
-  Widget _inputField(InputBoxViewModel model, BuildContext context) {
-    if (model is TextBoxViewModel) {
+  Widget _inputField(BuildContext context) {
+    if (widget.model.listType == null) {
       return _TextField(
-        model: model,
+        model: widget.model,
+        conversionGroupName: widget.conversionGroupName,
+        conversionParams: widget.conversionParams,
+        readonly: widget.readonly,
+        maxTextLength: widget.maxTextLength,
+        textLengthCounterVisible: widget.textLengthCounterVisible,
+        labelText: widget.labelText,
         autofocus: widget.autofocus,
         controller: _controller,
         focusNode: _focusNode,
@@ -395,11 +377,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         contentPadding: const EdgeInsets.only(top: 10, bottom: 0),
         floatingLabelBehavior: widget.floatingLabelBehavior,
       );
-    }
-
-    if (model is ListBoxViewModel) {
+    } else {
       return _ListField(
-        model: model,
+        model: widget.model,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
         foregroundColor: _foregroundColor,
@@ -415,10 +395,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         theme: widget.theme,
       );
     }
-
-    throw Exception(
-      "Cannot create input box by model of type ${model.runtimeType}",
-    );
   }
 
   Widget _suffixCloseIcon(BuildContext context) {
@@ -519,9 +495,11 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
 
 // Text field -----------------------------------------------------------------
 
-class _TextField extends StatefulWidget {
+class _TextField<M extends ItemValueModel> extends StatefulWidget {
   const _TextField({
     required this.model,
+    this.conversionGroupName,
+    this.conversionParams,
     required this.controller,
     required this.autofocus,
     required this.focusNode,
@@ -529,17 +507,23 @@ class _TextField extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
+    this.labelText,
+    this.readonly = false,
     required this.foregroundColor,
     required this.hintColor,
     required this.labelColor,
     required this.dialogColors,
     required this.fontSize,
+    this.maxTextLength,
+    this.textLengthCounterVisible = false,
     required this.margin,
     required this.contentPadding,
     this.floatingLabelBehavior,
   });
 
-  final TextBoxViewModel model;
+  final M model;
+  final String? conversionGroupName;
+  final ConversionParamSetValueModel? conversionParams;
   final TextEditingController controller;
   final bool autofocus;
   final FocusNode focusNode;
@@ -547,29 +531,35 @@ class _TextField extends StatefulWidget {
   final void Function(ValueModel)? onValueChanged;
   final void Function(ValueModel)? onValueFocused;
   final void Function(ValueModel)? onValueUnfocused;
+  final String? labelText;
+  final bool readonly;
   final Color foregroundColor;
   final Color hintColor;
   final Color labelColor;
   final WidgetColorScheme dialogColors;
   final double fontSize;
+  final int? maxTextLength;
+  final bool textLengthCounterVisible;
   final EdgeInsets margin;
   final EdgeInsets contentPadding;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
-  State<StatefulWidget> createState() => _TextFieldState();
+  State<_TextField<M>> createState() => _TextFieldState<M>();
 }
 
-class _TextFieldState extends State<_TextField>
+class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
     with FocusNodeMixin, TextControllerMixin {
   late void Function() _focusListener;
 
+  late String? _labelText;
   late String? _hint;
 
   @override
   void initState() {
     super.initState();
 
+    _labelText = widget.labelText ?? widget.model.name;
     _hint = _getHint(focused: widget.autofocus);
 
     initTextControllerValue(
@@ -585,7 +575,8 @@ class _TextFieldState extends State<_TextField>
         });
       },
       onFocusLeft: () {
-        widget.onValueUnfocused?.call(widget.model.hint ?? ValueModel.empty);
+        widget.onValueUnfocused
+            ?.call(widget.model.defaultValue ?? ValueModel.empty);
 
         setState(() {
           _hint = _getHint(focused: false);
@@ -602,8 +593,12 @@ class _TextFieldState extends State<_TextField>
   }
 
   @override
-  void didUpdateWidget(_TextField oldWidget) {
+  void didUpdateWidget(_TextField<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    log("text field didUpdateWidget(), widget model: ${widget.model}");
+
+    _labelText = widget.labelText ?? widget.model.name;
 
     if (widget.model.value != oldWidget.model.value) {
       updateTextControllerValue(
@@ -612,7 +607,7 @@ class _TextFieldState extends State<_TextField>
       );
     }
 
-    if (widget.model.hint != oldWidget.model.hint) {
+    if (widget.model.defaultValue != oldWidget.model.defaultValue) {
       _hint = _getHint(focused: widget.focusNode.hasFocus);
     }
   }
@@ -622,7 +617,9 @@ class _TextFieldState extends State<_TextField>
   }
 
   String? _getHint({required bool focused}) {
-    return (focused ? widget.model.hint?.raw : widget.model.hint?.alt) ??
+    return (focused
+            ? widget.model.defaultValue?.raw
+            : widget.model.defaultValue?.alt) ??
         _noValueHint.raw;
   }
 
@@ -631,8 +628,8 @@ class _TextFieldState extends State<_TextField>
     RegExp? inputRegExp = _valueTypeToRegExp[widget.model.valueType];
 
     return TextField(
-      readOnly: widget.model.readonly,
-      maxLength: widget.model.maxTextLength,
+      readOnly: widget.readonly,
+      maxLength: widget.maxTextLength,
       textAlignVertical: TextAlignVertical.center,
       obscureText: false,
       autofocus: widget.autofocus,
@@ -649,15 +646,15 @@ class _TextFieldState extends State<_TextField>
         context,
         margin: widget.margin,
         fontSize: widget.fontSize,
-        labelText: widget.model.labelText,
+        labelText: _labelText,
         hintText: _hint,
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
         floatingLabelBehavior: widget.floatingLabelBehavior,
         contentPadding: widget.contentPadding,
       ).copyWith(
-        suffixText: widget.model.textLengthCounterVisible
-            ? '${widget.controller.text.length}/${widget.model.maxTextLength}'
+        suffixText: widget.textLengthCounterVisible
+            ? '${widget.controller.text.length}/${widget.maxTextLength}'
             : null,
       ),
       style: _inputFieldTextStyle(
@@ -671,11 +668,14 @@ class _TextFieldState extends State<_TextField>
 
 // List field -----------------------------------------------------------------
 
-class _ListField extends StatefulWidget {
+class _ListField<M extends ItemValueModel> extends StatefulWidget {
   const _ListField({
     required this.model,
+    this.conversionGroupName,
+    this.conversionParams,
     this.controller,
     this.onValueChanged,
+    this.labelText,
     required this.foregroundColor,
     required this.warningColor,
     required this.hintColor,
@@ -689,12 +689,15 @@ class _ListField extends StatefulWidget {
     required this.theme,
   });
 
-  final ListBoxViewModel model;
+  final M model;
+  final String? conversionGroupName;
+  final ConversionParamSetValueModel? conversionParams;
   final TextEditingController? controller;
   final void Function(
     ValueModel, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
+  final String? labelText;
   final Color foregroundColor;
   final Color warningColor;
   final Color hintColor;
@@ -708,11 +711,13 @@ class _ListField extends StatefulWidget {
   final ConvertouchUITheme theme;
 
   @override
-  State<StatefulWidget> createState() => _ListFieldState();
+  State<_ListField<M>> createState() => _ListFieldState<M>();
 }
 
-class _ListFieldState extends State<_ListField> with FocusNodeMixin {
+class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
+    with FocusNodeMixin {
   late bool _isDropdownStateChangedProgrammatically;
+  late String? _labelText;
 
   late final ValueNotifier<bool> _dropdownIsOpenNotifier;
   late final ValueNotifier<ListValuesFetchResult?> _listValuesNotifier;
@@ -727,6 +732,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   void initState() {
     super.initState();
 
+    _labelText = widget.labelText ?? widget.model.name;
     _isDropdownStateChangedProgrammatically = false;
 
     _dropdownIsOpenNotifier = ValueNotifier(false);
@@ -788,11 +794,12 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   }
 
   @override
-  void didUpdateWidget(_ListField oldWidget) {
+  void didUpdateWidget(_ListField<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     log("list field didUpdateWidget(), widget model: ${widget.model}");
 
+    _labelText = widget.labelText ?? widget.model.name;
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
 
     _distributeSelectedValue(
@@ -823,8 +830,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
             final fetchParams = listFetchResult.fetchParams;
             final validatedSelectedValue = listFetchResult.selectedItem;
 
-            if (fetchParams == null ||
-                fetchParams.itemId != widget.model.itemId) {
+            if (fetchParams == null || fetchParams.itemId != widget.model.id) {
               return;
             }
 
@@ -894,11 +900,11 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                         context,
                         margin: widget.margin,
                         fontSize: widget.fontSize,
-                        labelText: widget.model.labelText,
+                        labelText: _labelText,
                         labelColor: widget.labelColor,
                         floatingLabelBehavior: widget.floatingLabelBehavior,
                         contentPadding: widget.contentPadding,
-                        labelPadding: widget.model.listType.defaultIconUri !=
+                        labelPadding: widget.model.listType!.defaultIconUri !=
                                     null &&
                                 (selectedValue != null || hint != _noValueHint)
                             ? const EdgeInsets.only(
@@ -1001,10 +1007,9 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                               searchBarWidget: Container(
                                 padding: const EdgeInsets.all(7),
                                 child: ConvertouchInputBox(
-                                  model: ItemValueModel(
+                                  model: const ItemValueModel(
                                     defaultValue: ValueModel.rawStr(
-                                      widget.model.searchHint ??
-                                          _defaultSearchHint,
+                                      _defaultSearchHint,
                                     ),
                                   ),
                                   colors: InputBoxColorScheme(
@@ -1062,15 +1067,14 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                             _fetchListValues(
                               context,
                               fetchParams: ListValuesFetchParams(
-                                itemId: widget.model.itemId,
-                                listType: widget.model.listType,
+                                itemId: widget.model.id,
+                                listType: widget.model.listType!,
                                 selectedValue: selectedValue ??
                                     (hint != _noValueHint ? hint : null),
-                                conversionGroupName:
-                                    widget.model.conversionGroupName,
-                                conversionParams: widget.model.conversionParams,
+                                conversionGroupName: widget.conversionGroupName,
+                                conversionParams: widget.conversionParams,
                                 leaveUnknownSelectedValue:
-                                    widget.model.listType.fetchedViaApi,
+                                    widget.model.listType!.fetchedViaApi,
                               ),
                             );
                           }
@@ -1094,7 +1098,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
   Widget _listItem(ValueModel value, {Widget? suffixIcon}) {
     return Row(
       children: [
-        widget.model.listType.defaultIconUri != null && value != _noValueHint
+        widget.model.listType!.defaultIconUri != null && value != _noValueHint
             ? Container(
                 width: _prefixIconContainerWidth,
                 padding: const EdgeInsets.only(
@@ -1102,7 +1106,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                 ),
                 child: ConvertouchSvgIcon(
                   uri: value.iconUri,
-                  defaultUri: widget.model.listType.defaultIconUri,
+                  defaultUri: widget.model.listType!.defaultIconUri,
                   defaultColor: widget.dropdownColors.icon.regular,
                 ),
               )
