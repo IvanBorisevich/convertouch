@@ -857,7 +857,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
             /* WA to refresh dropdown list values instantly */
             if (_dropdownIsOpenNotifier.value) {
-              log("Auto-closing the dropdown when list fetch finished");
+              log("[${DateTime.now()}] Auto-closing the dropdown when list fetch finished");
 
               _isDropdownStateChangedProgrammatically = true;
 
@@ -865,7 +865,7 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
 
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
-                  log("Auto-opening the dropdown when list fetch finished");
+                  log("[${DateTime.now()}] Auto-opening the dropdown when list fetch finished");
                   _openDropdownNotifier.value = Object();
                 }
               });
@@ -913,6 +913,8 @@ class _ListFieldState extends State<_ListField> with FocusNodeMixin {
                       onChanged: (selectedValue) {
                         if (selectedValue != null &&
                             selectedValue != _selectedMainValueNotifier.value) {
+                          log("Change selected list value to: $selectedValue");
+
                           _selectedMainValueNotifier.value = selectedValue;
                           widget.onValueChanged?.call(selectedValue);
                         }

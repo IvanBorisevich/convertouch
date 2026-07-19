@@ -162,7 +162,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
     return 'FetchResult{'
         'num of items: ${items.length}, '
         'pageNum: $pageNum, '
-        'selected: ${selectedItem != null ? selectedItem!.name : "-"}, '
+        'selected: ${selectedItem ?? "-"}, '
         'search by: ${searchString != null ? "$searchString" : "-"}, '
         'status: $status, '
         'more items: ${!hasReachedMax}, '

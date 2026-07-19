@@ -44,6 +44,9 @@ class ConvertouchConversionItemsView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
+        log("Unit values view ConversionBloc builder(), "
+            "state: $conversionState");
+
         if (conversionState.conversion.convertedUnitValues.isEmpty) {
           return Center(
             child: NoItemsInfoLabel(
@@ -98,7 +101,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                       itemState is ConversionUnitValueInitialState
                           ? unitValue
                           : (itemState.id == unitValue.id
-                              ? itemState.value!
+                              ? itemState.itemValue!
                               : unitValue);
 
                   log("ConversionUnitValueBloc builder(), "

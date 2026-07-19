@@ -266,12 +266,12 @@ class ConversionController {
           navigationController.showException(context, exception: error);
         },
         paramValuesPartialBuilder: (updatedConversion, {info}) {
-          for (final paramValue
+          for (final newParamValue
               in updatedConversion.params!.active!.paramValues) {
             conversionItemController.updateParamValue(
               context,
-              id: paramValue.id,
-              newParamValue: paramValue,
+              id: newParamValue.id,
+              newParamValue: newParamValue,
             );
           }
         },

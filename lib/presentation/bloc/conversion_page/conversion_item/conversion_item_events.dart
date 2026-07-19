@@ -45,24 +45,24 @@ class UpdateUnitValue extends ConversionUnitValueEvent {
 
 class UpdateParamValue extends ConversionParamValueEvent {
   final String id;
-  final ConversionParamValueModel newValue;
+  final ConversionParamValueModel newItemValue;
 
   const UpdateParamValue({
     required this.id,
-    required this.newValue,
+    required this.newItemValue,
   });
 
   @override
   List<Object?> get props => [
         id,
-        newValue,
+        newItemValue,
       ];
 
   @override
   String toString() {
     return 'UpdateParamValue{'
         'id: $id, '
-        'newValue: $newValue}';
+        'newValue: $newItemValue}';
   }
 }
 

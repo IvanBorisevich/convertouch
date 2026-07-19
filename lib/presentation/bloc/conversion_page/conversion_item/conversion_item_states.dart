@@ -4,17 +4,17 @@ import 'package:convertouch/presentation/bloc/abstract_state.dart';
 abstract class ConversionItemState<T extends ItemValueModel>
     extends ConvertouchState {
   final String? id;
-  final T? value;
+  final T? itemValue;
 
   const ConversionItemState({
     required this.id,
-    required this.value,
+    required this.itemValue,
   });
 
   @override
   List<Object?> get props => [
         id,
-        value,
+        itemValue,
       ];
 }
 
@@ -24,7 +24,7 @@ abstract class ConversionUnitValueState
 
   const ConversionUnitValueState({
     required super.id,
-    required super.value,
+    required super.itemValue,
     required this.isSource,
   });
 
@@ -39,7 +39,7 @@ class ConversionUnitValueInitialState extends ConversionUnitValueState {
   const ConversionUnitValueInitialState()
       : super(
           id: null,
-          value: null,
+          itemValue: null,
           isSource: false,
         );
 
@@ -52,7 +52,7 @@ class ConversionUnitValueInitialState extends ConversionUnitValueState {
 class ConversionUnitValueUpdating extends ConversionUnitValueState {
   const ConversionUnitValueUpdating({
     required super.id,
-    required super.value,
+    required super.itemValue,
     required super.isSource,
   });
 
@@ -60,7 +60,7 @@ class ConversionUnitValueUpdating extends ConversionUnitValueState {
   String toString() {
     return 'ConversionUnitValueUpdating{'
         'id: $id, '
-        'newValue: $value, '
+        'newValue: $itemValue, '
         'isSource: $isSource}';
   }
 }
@@ -68,7 +68,7 @@ class ConversionUnitValueUpdating extends ConversionUnitValueState {
 class ConversionUnitValueUpdated extends ConversionUnitValueState {
   const ConversionUnitValueUpdated({
     required super.id,
-    required super.value,
+    required super.itemValue,
     required super.isSource,
   });
 
@@ -76,7 +76,7 @@ class ConversionUnitValueUpdated extends ConversionUnitValueState {
   String toString() {
     return 'ConversionUnitValueUpdated{'
         'id: $id, '
-        'newValue: $value, '
+        'newValue: $itemValue, '
         'isSource: $isSource}';
   }
 }
@@ -85,14 +85,14 @@ abstract class ConversionParamValueState
     extends ConversionItemState<ConversionParamValueModel> {
   const ConversionParamValueState({
     required super.id,
-    required super.value,
+    required super.itemValue,
   });
 
   @override
   String toString() {
     return 'ConversionParamValueState{'
         'id: $id, '
-        'newValue: $value}';
+        'newValue: $itemValue}';
   }
 }
 
@@ -100,7 +100,7 @@ class ConversionParamValueInitialState extends ConversionParamValueState {
   const ConversionParamValueInitialState()
       : super(
           id: null,
-          value: null,
+          itemValue: null,
         );
 
   @override
@@ -112,27 +112,27 @@ class ConversionParamValueInitialState extends ConversionParamValueState {
 class ConversionParamValueUpdating extends ConversionParamValueState {
   const ConversionParamValueUpdating({
     required super.id,
-    required super.value,
+    required super.itemValue,
   });
 
   @override
   String toString() {
     return 'ConversionParamValueUpdating{'
         'id: $id, '
-        'newValue: $value}';
+        'newValue: $itemValue}';
   }
 }
 
 class ConversionParamValueUpdated extends ConversionParamValueState {
   const ConversionParamValueUpdated({
     required super.id,
-    required super.value,
+    required super.itemValue,
   });
 
   @override
   String toString() {
     return 'ConversionParamValueUpdated{'
         'id: $id, '
-        'newValue: $value}';
+        'newValue: $itemValue}';
   }
 }

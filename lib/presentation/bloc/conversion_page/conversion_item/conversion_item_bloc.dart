@@ -27,7 +27,7 @@ class ConversionUnitValueBloc extends ConversionItemBloc<
     emit(
       ConversionUnitValueUpdated(
         id: event.id,
-        value: event.newValue,
+        itemValue: event.newValue,
         isSource: event.isSource,
       ),
     );
@@ -57,7 +57,7 @@ class ConversionParamValueBloc extends ConversionItemBloc<
     emit(
       ConversionParamValueUpdated(
         id: event.id,
-        value: event.newValue,
+        itemValue: event.newItemValue,
       ),
     );
   }

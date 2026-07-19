@@ -33,7 +33,7 @@ class ConversionItemController {
     BlocProvider.of<ConversionParamValueBloc>(context).add(
       UpdateParamValue(
         id: id,
-        newValue: newParamValue,
+        newItemValue: newParamValue,
       ),
     );
   }

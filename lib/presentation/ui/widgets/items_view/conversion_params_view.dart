@@ -59,6 +59,8 @@ class ConversionParamsView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
+        log("Params view ConversionBloc builder(), state: $conversionState");
+
         final params = conversionState.conversion.params;
 
         if (params == null) {
@@ -382,14 +384,15 @@ class ConversionParamsView extends StatelessWidget {
               buildWhen: (prev, next) {
                 return prev != next &&
                     (next is ConversionParamValueInitialState ||
-                        next.id == paramValue.id);
+                        next.id == paramValue.id &&
+                            next.itemValue != paramValue);
               },
               builder: (_, itemState) {
                 final resultParamValue =
                     itemState is ConversionParamValueInitialState
                         ? paramValue
                         : (itemState.id == paramValue.id
-                            ? itemState.value!
+                            ? itemState.itemValue!
                             : paramValue);
 
                 log("ConversionParamValueBloc builder(), "
