@@ -28,7 +28,7 @@ class ConvertouchFailureDialog extends StatelessWidget {
         style: TextStyle(
           fontSize: 18,
           color: colors.foreground.regular,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           letterSpacing: 0,
         ),
       ),

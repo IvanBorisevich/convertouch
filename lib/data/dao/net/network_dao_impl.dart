@@ -25,16 +25,14 @@ class NetworkDaoImpl extends NetworkDao {
         () =>
         // throw ConvertouchException(
         //   message: "Data fetching failed",
-        //   stackTrace: null,
-        //   dateTime: DateTime.now(),
         //   severity: ExceptionSeverity.warning,
         // ),
-        '[]'
-        //     '['
-        //         '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
-        //         '{"value":"Exchange-api.com"},'
-        //         '{"value":"test-rates.com"}'
-        //     ']',
+        // '[]'
+            '['
+                '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
+                '{"value":"Exchange-api.com"},'
+                '{"value":"test-rates.com"}'
+            ']',
       );
     }
 
@@ -46,7 +44,7 @@ class NetworkDaoImpl extends NetworkDao {
         //   message: "Data fetching failed",
         //   severity: ExceptionSeverity.warning,
         // )
-        '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75}',
+        '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75, "BTN": 0.3}',
       );
     }
 

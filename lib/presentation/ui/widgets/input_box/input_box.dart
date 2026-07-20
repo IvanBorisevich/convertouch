@@ -847,26 +847,28 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             log("ListValuesBloc listener, "
                 "list values fetched: $listFetchResult");
 
-            if (!listFetchResult.isSuccess) {
+            if (listFetchResult.isLoading) {
               return;
             }
 
-            widget.onValueChanged?.call(
-              validatedSelectedValue ?? ValueModel.empty,
-              listValues: listFetchResult,
-            );
+            if (listFetchResult.isSuccess) {
+              widget.onValueChanged?.call(
+                validatedSelectedValue ?? ValueModel.empty,
+                listValues: listFetchResult,
+              );
 
-            _distributeSelectedValue(
-              selectedValue: validatedSelectedValue,
-              listValuesFetchResult: listFetchResult,
-            );
+              _distributeSelectedValue(
+                selectedValue: validatedSelectedValue,
+                listValuesFetchResult: listFetchResult,
+              );
 
-            log("Separated values: "
-                "main value: ${_selectedMainValueNotifier.value}, "
-                "hint: ${_hintNotifier.value}");
+              log("Separated values: "
+                  "main value: ${_selectedMainValueNotifier.value}, "
+                  "hint: ${_hintNotifier.value}");
 
-            if (listFetchResult.searchable) {
-              _initDropdownSearch();
+              if (listFetchResult.searchable) {
+                _initDropdownSearch();
+              }
             }
 
             _refreshDropdown();
@@ -1152,12 +1154,12 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       return _refreshFailureItem(
         context,
         listValuesFetchResult: listValuesFetchResult,
-        child: _refreshFailureSuffixIcon(),
+        child: _refreshFailureIcon(),
       );
     }
 
     if (listValuesFetchResult.isLoading) {
-      return _refreshInProgressSuffixIcon();
+      return _refreshInProgressIcon();
     }
 
     return _defaultSuffixIcon();
@@ -1168,14 +1170,14 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     ListValuesFetchResult? listValuesFetchResult,
   ) {
     if (listValuesFetchResult == null || listValuesFetchResult.isLoading) {
-      log("Show refresh in progress icon");
+      log("Show dropdown item 'refresh in progress'");
 
       return [
         DropdownItem<ValueModel>(
           enabled: false,
           alignment: Alignment.center,
           height: 40,
-          child: _refreshInProgressSuffixIcon(
+          child: _refreshInProgressIcon(
             size: 20,
           ),
         ),
@@ -1183,7 +1185,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     }
 
     if (listValuesFetchResult.isFailed) {
-      log("Show refresh failure icon");
+      log("Show dropdown item 'refresh failure'");
 
       return [
         DropdownItem(
@@ -1213,7 +1215,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                       ),
                     ),
                   ),
-                  _refreshFailureSuffixIcon(size: 20),
+                  _refreshFailureIcon(size: 20),
                 ],
               ),
             ),
@@ -1223,7 +1225,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     }
 
     if (listValuesFetchResult.isFinalEmpty) {
-      log("Show no result");
+      log("Show dropdown item 'no result'");
 
       return [
         DropdownItem(
@@ -1234,7 +1236,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       ];
     }
 
-    log("Show list items, list type: ${widget.model.listType}");
+    log("Show dropdown items, list type: ${widget.model.listType}");
 
     return listValuesFetchResult.items.map((value) {
       return DropdownItem(
@@ -1276,7 +1278,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                 listValuesFetchResult.error?.message ?? _fetchErrorMsg,
                 style: _inputFieldTextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   foregroundColor: widget.dialogColors.foreground.regular,
                 ),
               ),
@@ -1310,7 +1312,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     );
   }
 
-  Widget _refreshFailureSuffixIcon({
+  Widget _refreshFailureIcon({
     double size = _refreshButtonWidth,
   }) {
     return Container(
@@ -1324,7 +1326,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     );
   }
 
-  Widget _refreshInProgressSuffixIcon({
+  Widget _refreshInProgressIcon({
     double size = _refreshButtonWidth,
   }) {
     return Container(
