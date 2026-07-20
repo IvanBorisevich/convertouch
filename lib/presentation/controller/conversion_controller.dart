@@ -188,6 +188,14 @@ class ConversionController {
         paramId: paramValue.param.id,
         paramSetId: paramValue.param.paramSetId,
         doAfter: (updatedConversion, {info}) {
+          final updatedParamValue = updatedConversion.params!.active!
+              .getParamValueById(paramValue.param.id)!;
+
+          if (updatedParamValue.value == paramValue.value &&
+              updatedParamValue.defaultValue == paramValue.defaultValue) {
+            return;
+          }
+
           if (areParamsFilled(updatedConversion.params?.active)) {
             ifParamSetFilled?.call(updatedConversion);
           } else if (areParamsPartiallyFilled(
