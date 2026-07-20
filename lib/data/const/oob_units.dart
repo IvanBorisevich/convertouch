@@ -1570,6 +1570,18 @@ const unitsV8 = [
         "code": "BTN",
         "name": "Bhutanese Ngultrum",
       },
+      {
+        "code": "BTC",
+        "name": "Bitcoin",
+      },
+      {
+        "code": "ETH",
+        "name": "Ethereum",
+      },
+      {
+        "code": "SOL",
+        "name": "Solana",
+      }
     ],
   },
   {
