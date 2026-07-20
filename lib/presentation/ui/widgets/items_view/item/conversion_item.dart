@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -14,7 +16,7 @@ const double _removalButtonWidth = 35;
 const double _unitButtonWidth = 76;
 
 class ConvertouchConversionItem<M extends ItemValueModel>
-    extends StatefulWidget {
+    extends StatelessWidget {
   final M model;
   final String? conversionGroupName;
   final ConversionParamSetValueModel? conversionParams;
@@ -29,7 +31,6 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     ValueModel, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final void Function(ValueModel)? onValueFocused;
   final void Function()? onItemRemoved;
   final List<Widget?> prefixWidgets;
   final List<Widget?> suffixWidgets;
@@ -49,7 +50,6 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.readonly = false,
     this.onUnitItemTap,
     this.onValueChanged,
-    this.onValueFocused,
     this.onItemRemoved,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
@@ -60,93 +60,72 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   });
 
   @override
-  State<ConvertouchConversionItem<M>> createState() =>
-      _ConvertouchConversionItemState<M>();
-}
-
-class _ConvertouchConversionItemState<M extends ItemValueModel>
-    extends State<ConvertouchConversionItem<M>> {
-  bool _isFocused = false;
-
-  @override
   Widget build(BuildContext context) {
+    log("ConversionItem build(), hash: $hashCode, "
+        "item value: $model, item value: ${model.hashCode}, "
+        "context hash: ${context.hashCode}");
+
     return ConvertouchInputBox(
-      key: Key(widget.model.id),
-      model: widget.model,
-      conversionGroupName: widget.conversionGroupName,
-      conversionParams: widget.conversionParams,
-      readonly: widget.readonly,
-      colors: widget.colors.inputBox,
-      dialogColors: widget.dialogColors,
-      theme: widget.theme,
+      key: Key(model.id),
+      model: model,
+      conversionGroupName: conversionGroupName,
+      conversionParams: conversionParams,
+      readonly: readonly,
+      colors: colors.inputBox,
+      dialogColors: dialogColors,
+      theme: theme,
       validators: [
         const NumSignsValidator(),
-        NumInRangeValidator(widget.model.min, widget.model.max),
+        NumInRangeValidator(model.min, model.max),
       ],
       floatingLabelBehavior: FloatingLabelBehavior.always,
-      tooltipDirection:
-          widget.isLast ? TooltipDirection.up : TooltipDirection.down,
-      onValueChanged: widget.onValueChanged,
-      onValueFocused: (value) {
-        setState(() {
-          _isFocused = true;
-        });
-        widget.onValueFocused?.call(value);
-      },
-      onValueUnfocused: (value) {
-        setState(() {
-          _isFocused = false;
-        });
-      },
+      tooltipDirection: isLast ? TooltipDirection.up : TooltipDirection.down,
+      onValueChanged: onValueChanged,
       prefixWidgets: [
-        widget.draggable && widget.index != null
+        draggable && index != null
             ? ReorderableDragStartListener(
-                index: widget.index!,
+                index: index!,
                 child: Container(
                   width: _dragHandlerWidth,
                   color: Colors.transparent,
                   padding: const EdgeInsets.only(left: 3),
                   alignment: Alignment.center,
-                  child: widget.isSource
+                  child: isSource
                       ? Text(
                           '𝑥',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             height: -0.3,
-                            color: widget.colors.prefixWidget.selected,
+                            color: colors.prefixWidget.selected,
                           ),
                         )
                       : Icon(
                           Icons.drag_indicator_outlined,
-                          color: _isFocused
-                              ? widget.colors.prefixWidget.focused
-                              : widget.colors.prefixWidget.regular,
+                          color: colors.prefixWidget.regular,
                           size: 20,
                         ),
                 ),
               )
             : null,
-        ...widget.prefixWidgets,
+        ...prefixWidgets,
       ],
       suffixWidgets: [
-        ...widget.suffixWidgets,
-        widget.model.unitItem != null && widget.model.unitItem!.exists
+        ...suffixWidgets,
+        model.unitItem != null && model.unitItem!.exists
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
-                  widget.onUnitItemTap?.call();
+                  onUnitItemTap?.call();
                 },
                 child: Container(
                   alignment: Alignment.center,
                   width: _unitButtonWidth,
                   color: Colors.transparent,
                   child: Text(
-                    widget.model.unitItem!.code,
+                    model.unitItem!.code,
                     style: TextStyle(
-                      color: _isFocused
-                          ? widget.colors.unitButton.focused
-                          : widget.colors.unitButton.regular,
+                      color: colors.unitButton.regular,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                     ),
@@ -155,18 +134,18 @@ class _ConvertouchConversionItemState<M extends ItemValueModel>
                 ),
               )
             : null,
-        widget.removable
+        removable
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).unfocus();
-                  widget.onItemRemoved?.call();
+                  onItemRemoved?.call();
                 },
                 child: Container(
                   padding: const EdgeInsets.only(right: 1),
                   width: _removalButtonWidth,
                   child: Icon(
                     Icons.remove,
-                    color: widget.colors.removalIcon.regular,
+                    color: colors.removalIcon.regular,
                     size: 20,
                   ),
                 ),

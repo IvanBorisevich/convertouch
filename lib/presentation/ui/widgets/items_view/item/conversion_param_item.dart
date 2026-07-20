@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -34,8 +36,12 @@ class ConversionParamItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("ConversionParamItem build(), param value: $paramValue");
+
     return appBlocBuilder(
       builderFunc: (appState) {
+        log("ConversionParamItem appBlocBuilder(), param value: $paramValue");
+
         return ConvertouchConversionItem(
           model: paramValue,
           conversionGroupName: conversionGroupName,

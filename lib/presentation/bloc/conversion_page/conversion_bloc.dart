@@ -130,8 +130,6 @@ class ConversionBloc
     emit(
       ConversionBuilt(
         conversion: conversion,
-        rebuildUnitValues: event.rebuildUnitValues,
-        rebuildParams: event.rebuildParams,
       ),
     );
 
@@ -153,8 +151,6 @@ class ConversionBloc
       emit(
         ConversionBuilt(
           conversion: conversion,
-          rebuildUnitValues: event.rebuildUnitValues,
-          rebuildParams: event.rebuildParams,
         ),
       );
     }
@@ -172,8 +168,6 @@ class ConversionBloc
     emit(
       ConversionBuilt(
         conversion: conversion,
-        rebuildUnitValues: event.rebuildUnitValues,
-        rebuildParams: event.rebuildParams,
       ),
     );
 
@@ -205,8 +199,6 @@ class ConversionBloc
       emit(
         ConversionBuilt(
           conversion: emptyConversion,
-          rebuildUnitValues: event.rebuildUnitValues,
-          rebuildParams: false,
         ),
       );
     } else {
@@ -244,8 +236,6 @@ class ConversionBloc
         conversion: state.conversion.copyWith(
           convertedUnitValues: unitValues,
         ),
-        rebuildUnitValues: event.rebuildUnitValues,
-        rebuildParams: event.rebuildParams,
       ),
     );
   }
@@ -504,18 +494,8 @@ class ConversionBloc
       emit(
         ConversionBuilt(
           conversion: result.right,
-          rebuildUnitValues: event.rebuildUnitValues,
-          rebuildParams: event.rebuildParams,
         ),
       );
-
-      if (!event.rebuildParams) {
-        event.paramValuesPartialBuilder?.call(result.right);
-      }
-
-      if (!event.rebuildUnitValues) {
-        event.unitValuesPartialBuilder?.call(result.right);
-      }
 
       event.doAfter?.call(result.right);
     }

@@ -7,20 +7,14 @@ abstract class ConversionState extends ConvertouchState {
 
 class ConversionBuilt extends ConversionState {
   final ConversionModel conversion;
-  final bool rebuildUnitValues;
-  final bool rebuildParams;
 
   const ConversionBuilt({
     required this.conversion,
-    this.rebuildUnitValues = true,
-    this.rebuildParams = true,
   });
 
   @override
   List<Object?> get props => [
         conversion,
-        rebuildUnitValues,
-        rebuildParams,
       ];
 
   Map<String, dynamic> toJson() {
@@ -42,9 +36,6 @@ class ConversionBuilt extends ConversionState {
 
   @override
   String toString() {
-    return 'ConversionBuilt{'
-        'conversion: $conversion, '
-        'rebuildUnitValues: $rebuildUnitValues, '
-        'rebuildParams: $rebuildParams}';
+    return 'ConversionBuilt{conversion: $conversion}';
   }
 }

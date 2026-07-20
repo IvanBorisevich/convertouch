@@ -173,24 +173,18 @@ class ConvertouchConversionPage extends StatelessWidget {
             color: Colors.transparent,
             child: ScrollConfiguration(
               behavior: NoGlowScrollBehavior(),
-              child: singleGroupBlocBuilder(
-                builderFunc: (singleGroupState) {
-                  return Column(
-                    children: [
-                      ConversionParamsView(
-                        unitGroupId: singleGroupState.unitGroup.id,
-                        theme: appState.theme,
-                      ),
-                      Expanded(
-                        child: ConvertouchConversionItemsView(
-                          unitGroupId: singleGroupState.unitGroup.id,
-                          unitTapAction: appState.unitTapAction,
-                          theme: appState.theme,
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              child: Column(
+                children: [
+                  ConversionParamsView(
+                    theme: appState.theme,
+                  ),
+                  Expanded(
+                    child: ConvertouchConversionItemsView(
+                      unitTapAction: appState.unitTapAction,
+                      theme: appState.theme,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

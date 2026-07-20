@@ -234,6 +234,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
   void didUpdateWidget(ConvertouchInputBox<M> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    log("input box didUpdateWidget(), widget model: ${widget.model}");
+
     if (widget.colors != oldWidget.colors || widget.model != oldWidget.model) {
       _setColors();
     }
@@ -380,6 +382,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     } else {
       return _ListField(
         model: widget.model,
+        conversionGroupName: widget.conversionGroupName,
+        conversionParams: widget.conversionParams,
+        labelText: widget.labelText,
         controller: widget.controller,
         onValueChanged: _onValueChanged,
         foregroundColor: _foregroundColor,
@@ -560,10 +565,12 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
     super.initState();
 
     _labelText = widget.labelText ?? widget.model.name;
-    _hint = _getHint(focused: widget.autofocus);
+    _hint = _getHint(widget.model, focused: widget.autofocus);
 
     initTextControllerValue(
-        widget.controller, _getMainValue(focused: widget.autofocus));
+      widget.controller,
+      _getMainValue(widget.model, focused: widget.autofocus),
+    );
 
     _focusListener = addFocusListener(
       focusNode: widget.focusNode,
@@ -571,7 +578,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
         widget.onValueFocused?.call(widget.model.value ?? ValueModel.empty);
 
         setState(() {
-          _hint = _getHint(focused: true);
+          _hint = _getHint(widget.model, focused: true);
         });
       },
       onFocusLeft: () {
@@ -579,7 +586,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
             ?.call(widget.model.defaultValue ?? ValueModel.empty);
 
         setState(() {
-          _hint = _getHint(focused: false);
+          _hint = _getHint(widget.model, focused: false);
         });
       },
     );
@@ -603,23 +610,21 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
     if (widget.model.value != oldWidget.model.value) {
       updateTextControllerValue(
         widget.controller,
-        _getMainValue(focused: widget.focusNode.hasFocus),
+        _getMainValue(widget.model, focused: widget.focusNode.hasFocus),
       );
     }
 
     if (widget.model.defaultValue != oldWidget.model.defaultValue) {
-      _hint = _getHint(focused: widget.focusNode.hasFocus);
+      _hint = _getHint(widget.model, focused: widget.focusNode.hasFocus);
     }
   }
 
-  String _getMainValue({required bool focused}) {
-    return (focused ? widget.model.value?.raw : widget.model.value?.alt) ?? "";
+  String _getMainValue(M model, {required bool focused}) {
+    return (focused ? model.value?.raw : model.value?.alt) ?? "";
   }
 
-  String? _getHint({required bool focused}) {
-    return (focused
-            ? widget.model.defaultValue?.raw
-            : widget.model.defaultValue?.alt) ??
+  String? _getHint(M model, {required bool focused}) {
+    return (focused ? model.defaultValue?.raw : model.defaultValue?.alt) ??
         _noValueHint.raw;
   }
 
@@ -765,6 +770,9 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     required ValueModel? selectedValue,
     required ListValuesFetchResult? listValuesFetchResult,
   }) {
+    log("Distribute selected value: $selectedValue\n"
+        "list values: $listValuesFetchResult");
+
     bool showUnknownSelectedValue = selectedValue != null &&
         (listValuesFetchResult == null ||
             listValuesFetchResult.isEmpty ||
@@ -861,21 +869,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
               _initDropdownSearch();
             }
 
-            /* WA to refresh dropdown list values instantly */
-            if (_dropdownIsOpenNotifier.value) {
-              log("[${DateTime.now()}] Auto-closing the dropdown when list fetch finished");
-
-              _isDropdownStateChangedProgrammatically = true;
-
-              Navigator.of(context).pop();
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) {
-                  log("[${DateTime.now()}] Auto-opening the dropdown when list fetch finished");
-                  _openDropdownNotifier.value = Object();
-                }
-              });
-            }
+            _refreshDropdown();
           },
         ),
       ],
@@ -1095,6 +1089,24 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     );
   }
 
+  void _refreshDropdown() {
+    /* WA to refresh dropdown list values instantly */
+    if (_dropdownIsOpenNotifier.value) {
+      log("[${DateTime.now()}] Auto-closing the dropdown when list fetch finished");
+
+      _isDropdownStateChangedProgrammatically = true;
+
+      Navigator.of(context).pop();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          log("[${DateTime.now()}] Auto-opening the dropdown when list fetch finished");
+          _openDropdownNotifier.value = Object();
+        }
+      });
+    }
+  }
+
   Widget _listItem(ValueModel value, {Widget? suffixIcon}) {
     return Row(
       children: [
@@ -1222,7 +1234,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       ];
     }
 
-    log("Show list items");
+    log("Show list items, list type: ${widget.model.listType}");
 
     return listValuesFetchResult.items.map((value) {
       return DropdownItem(

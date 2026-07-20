@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
@@ -29,6 +31,8 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("ConvertouchUnitDetailsPage build()");
+
     return appBlocBuilder(
       builderFunc: (appState) {
         DetailsItemColorsScheme detailsItemColors =
