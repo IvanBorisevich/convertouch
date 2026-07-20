@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_model.dart';
@@ -150,6 +152,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
     return itemsListBlocBuilder(
       bloc: widget.itemsListBloc,
       builderFunc: (state) {
+        log("itemListBlocBuilder builder(), state: $state");
+
         return Column(
           children: [
             ConvertouchSearchBar(
@@ -171,6 +175,8 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
                 child: LayoutBuilder(
                   builder: (_, constraints) {
                     List<T> allItems = state.itemsFetch.items;
+
+                    log("allItems size: ${allItems.length}");
 
                     if (allItems.isEmpty) {
                       return Center(

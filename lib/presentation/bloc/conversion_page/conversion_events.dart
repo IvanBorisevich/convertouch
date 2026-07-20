@@ -5,7 +5,6 @@ import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/abstract_event.dart';
 
@@ -22,12 +21,7 @@ abstract class ConversionEvent extends ConvertouchEvent {
 }
 
 abstract class ConversionParamsEvent extends ConversionEvent {
-  final ParamSetValueChangedCallback? ifParamSetFilled;
-  final ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty;
-
   const ConversionParamsEvent({
-    this.ifParamSetFilled,
-    this.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
     super.doAfter,
   });
@@ -277,7 +271,6 @@ class AddParamSetsToConversion extends ConversionParamsEvent {
   const AddParamSetsToConversion({
     required this.paramSetIds,
     required this.fetchListValues,
-    super.ifParamSetFilled,
     super.doAfter,
     super.onError,
   });
@@ -352,8 +345,6 @@ class EditConversionParamValue extends ConversionParamsEvent {
     this.listValues,
     required this.paramId,
     required this.paramSetId,
-    super.ifParamSetFilled,
-    super.ifParamSetFilledPartiallyOrEmpty,
     super.onError,
     super.doAfter,
   });

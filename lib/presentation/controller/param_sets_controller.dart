@@ -1,5 +1,6 @@
 import 'package:convertouch/di.dart' as di;
 import 'package:convertouch/domain/constants/constants.dart';
+import 'package:convertouch/domain/model/conversion_param_set_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_items_fetch_model.dart';
 import 'package:convertouch/presentation/bloc/common/items_list/items_list_events.dart';
 import 'package:convertouch/presentation/bloc/common/items_selection/items_selection_bloc.dart';
@@ -26,7 +27,7 @@ class ConversionParamSetsController {
     List<int> addedParamSetIds = const [],
   }) {
     BlocProvider.of<ConversionParamSetsBloc>(context).add(
-      FetchItems(
+      FetchItems<ConversionParamSetModel, ParamSetsFetchParams>(
         fetchParams: ParamSetsFetchParams(
           parentItemId: unitGroupId,
         ),

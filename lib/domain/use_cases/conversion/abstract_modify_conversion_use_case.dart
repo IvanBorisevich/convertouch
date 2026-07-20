@@ -62,10 +62,6 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
           params: newParams,
         );
 
-        if (paramValueChanged) {
-          _doOnParamValueChanged(input, newConversion);
-        }
-
         return Right(newConversion);
       }
 
@@ -94,10 +90,6 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         srcUnitValue: newSrcUnitValue,
         params: newParams,
       );
-
-      if (paramValueChanged) {
-        _doOnParamValueChanged(input, conversion);
-      }
 
       bool recalculateUnitValues = input.delta.recalculateUnitValues &&
           paramValueChanged &&
@@ -197,16 +189,5 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
     }
 
     return paramValueChanged;
-  }
-
-  void _doOnParamValueChanged(
-    InputConversionModifyModel<D> input,
-    ConversionModel newConversion,
-  ) {
-    if (areParamsFilled(newConversion.params?.active)) {
-      input.ifParamSetFilled?.call(newConversion);
-    } else if (areParamsPartiallyFilled(newConversion.params?.active)) {
-      input.ifParamSetFilledPartiallyOrEmpty?.call(newConversion);
-    }
   }
 }

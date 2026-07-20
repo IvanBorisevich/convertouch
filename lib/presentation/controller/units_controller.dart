@@ -25,7 +25,7 @@ class UnitsController {
     void Function()? onFirstFetch,
   }) {
     BlocProvider.of<B>(context).add(
-      FetchItems(
+      FetchItems<UnitModel, UnitsFetchParams>(
         fetchParams: UnitsFetchParams(
           parentItemId: groupId,
           parentItemType: ItemType.unitGroup,
@@ -114,7 +114,7 @@ class UnitsController {
     );
 
     BlocProvider.of<UnitsBloc>(context).add(
-      FetchItems(
+      FetchItems<UnitModel, UnitsFetchParams>(
         fetchParams: UnitsFetchParams(
           parentItemId: paramValue.param.id,
           parentItemType: ItemType.conversionParam,

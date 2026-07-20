@@ -18,8 +18,6 @@ Future<void> testCase<T extends ConversionModifyDelta>({
   ConversionUnitValueModel? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
   required List<ConversionUnitValueModel> expectedUnitValues,
-  ParamSetValueChangedCallback? ifParamSetFilled,
-  ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
 }) async {
   ConversionModel actual = ObjectUtils.tryGet(
     await useCase.execute(
@@ -31,8 +29,6 @@ Future<void> testCase<T extends ConversionModifyDelta>({
           params: currentParams,
         ),
         delta: delta,
-        ifParamSetFilled: ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
       ),
     ),
   );
@@ -65,8 +61,6 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
   UnitValueRawRecord? expectedSrc,
   ConversionParamSetValueBulkModel? expectedParams,
   required List<UnitValueRawRecord> expectedUnitValues,
-  ParamSetValueChangedCallback? ifParamSetFilled,
-  ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
 }) async {
   await testCase(
     useCase: useCase,
@@ -110,8 +104,6 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
           ),
         )
         .toList(),
-    ifParamSetFilled: ifParamSetFilled,
-    ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
   );
 }
 

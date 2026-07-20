@@ -372,9 +372,6 @@ class ConversionBloc
           paramSetIds: event.paramSetIds,
           fetchListValues: event.fetchListValues,
         ),
-        ifParamSetFilled: event.ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty:
-            event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 
@@ -439,9 +436,6 @@ class ConversionBloc
           paramId: event.paramId,
           paramSetId: event.paramSetId,
         ),
-        ifParamSetFilled: event.ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty:
-            event.ifParamSetFilledPartiallyOrEmpty,
       ),
     );
 

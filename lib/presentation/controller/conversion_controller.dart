@@ -3,11 +3,11 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
 import 'package:convertouch/domain/model/conversion_param_model.dart';
+import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
 import 'package:convertouch/presentation/bloc/conversion_page/conversion_events.dart';
@@ -178,8 +178,8 @@ class ConversionController {
     required ConversionParamValueModel paramValue,
     required ValueModel? newValue,
     ListValuesFetchResult? listValues,
-    ParamSetValueChangedCallback? ifParamSetFilled,
-    ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty,
+    void Function(ConversionModel)? ifParamSetFilled,
+    void Function(ConversionModel)? ifParamSetFilledPartiallyOrEmpty,
   }) {
     BlocProvider.of<ConversionBloc>(context).add(
       EditConversionParamValue(
@@ -187,8 +187,14 @@ class ConversionController {
         listValues: listValues,
         paramId: paramValue.param.id,
         paramSetId: paramValue.param.paramSetId,
-        ifParamSetFilled: ifParamSetFilled,
-        ifParamSetFilledPartiallyOrEmpty: ifParamSetFilledPartiallyOrEmpty,
+        doAfter: (updatedConversion, {info}) {
+          if (areParamsFilled(updatedConversion.params?.active)) {
+            ifParamSetFilled?.call(updatedConversion);
+          } else if (areParamsPartiallyFilled(
+              updatedConversion.params?.active)) {
+            ifParamSetFilledPartiallyOrEmpty?.call(updatedConversion);
+          }
+        },
         onError: (error) {
           navigationController.showException(context, exception: error);
         },

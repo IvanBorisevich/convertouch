@@ -6,19 +6,13 @@ import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 
-typedef ParamSetValueChangedCallback = void Function(ConversionModel);
-
 class InputConversionModifyModel<T extends ConversionModifyDelta> {
   final ConversionModel conversion;
   final T delta;
-  final ParamSetValueChangedCallback? ifParamSetFilled;
-  final ParamSetValueChangedCallback? ifParamSetFilledPartiallyOrEmpty;
 
   const InputConversionModifyModel({
     required this.conversion,
     required this.delta,
-    this.ifParamSetFilled,
-    this.ifParamSetFilledPartiallyOrEmpty,
   });
 }
 

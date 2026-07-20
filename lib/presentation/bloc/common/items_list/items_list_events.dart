@@ -12,7 +12,7 @@ abstract class ItemsListEvent extends ConvertouchEvent {
 class FetchItems<T extends IdNameItemModel, P extends ItemsFetchParams>
     extends ItemsListEvent {
   final String? searchString;
-  final int? pageNum;
+  final int pageNum;
   final int pageSize;
   final bool firstFetch;
   final T? selectedItem;
@@ -22,7 +22,7 @@ class FetchItems<T extends IdNameItemModel, P extends ItemsFetchParams>
 
   const FetchItems({
     this.searchString,
-    this.pageNum,
+    this.pageNum = 0,
     this.pageSize = 100,
     this.firstFetch = true,
     this.selectedItem,

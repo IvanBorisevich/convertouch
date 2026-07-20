@@ -1295,7 +1295,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     required ValueModel? selectedValue,
   }) {
     BlocProvider.of<ListValuesBloc>(context).add(
-      FetchItems(
+      FetchItems<ValueModel, ListValuesFetchParams>(
         fetchParams: fetchParams,
         emitLoadingState: true,
         selectedItem: selectedValue,

@@ -43,7 +43,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     on<CancelFetch>(_onCancelFetch);
   }
 
-  _onFetchItems<E extends FetchItems>(
+  _onFetchItems(
     FetchItems<T, P> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
@@ -67,7 +67,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       selectedItem = event.selectedItem;
     } else {
       allItems = state.itemsFetch.items;
-      pageNum = event.pageNum ?? state.itemsFetch.pageNum;
+      pageNum = state.itemsFetch.pageNum;
       fetchParams = state.itemsFetch.fetchParams;
       searchString = state.itemsFetch.searchString;
       hasReachedMax = state.itemsFetch.hasReachedMax;
