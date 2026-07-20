@@ -359,6 +359,70 @@ void main() {
     });
   });
 
+  group('By coefficients - currency', () {
+    group("Should NOT recalculate conversion by changed param 'Source / Bank'",
+        () {
+      test("Should NOT change param 'Source / Bank'", () async {
+        await testCaseCompact(
+          unitGroup: currencyGroup,
+          useCase: useCase,
+          delta: EditConversionParamValueDelta.raw(
+            newValue: exchangeRateSources.items[0],
+            listValues: exchangeRateSources,
+            paramId: exchangeRateSourceBankParam.id,
+            paramSetId: exchangeRateParamSet.id,
+          ),
+          currentParams: ConversionParamSetValueBulkModel.singleCompact(
+            paramSet: exchangeRateParamSet,
+            paramValues: [
+              (
+                exchangeRateSourceBankParam,
+                exchangeRateSources.items[0],
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: null,
+              ),
+            ],
+          ),
+          currentSrc: (usd, 1, 1, listValuesFetchResult: null),
+          currentUnitValues: [
+            (usd, 1, 1, listValuesFetchResult: null),
+            (
+              aud,
+              1 / aud.coefficient!,
+              1 / aud.coefficient!,
+              listValuesFetchResult: null
+            )
+          ],
+          expectedParams: ConversionParamSetValueBulkModel.singleCompact(
+            paramSet: exchangeRateParamSet,
+            paramValues: [
+              (
+                exchangeRateSourceBankParam,
+                exchangeRateSources.items[0],
+                null,
+                unit: null,
+                calculated: false,
+                listValuesFetchResult: exchangeRateSources,
+              ),
+            ],
+          ),
+          expectedSrc: (usd, 1, 1, listValuesFetchResult: null),
+          expectedUnitValues: [
+            (usd, 1, 1, listValuesFetchResult: null),
+            (
+              aud,
+              1 / aud.coefficient!,
+              1 / aud.coefficient!,
+              listValuesFetchResult: null
+            )
+          ],
+        );
+      });
+    });
+  });
+
   group('By formula - clothes size', () {
     group("Should change 'Person' list value [Man -> Woman]", () {
       group("Should recalc 'Garment' list value [empty -> default Shirt]", () {

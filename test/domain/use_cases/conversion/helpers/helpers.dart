@@ -106,16 +106,3 @@ Future<void> testCaseCompact<T extends ConversionModifyDelta>({
         .toList(),
   );
 }
-
-class TestClass {
-  int method1CallCount = 0;
-  int method2CallCount = 0;
-
-  void mockTestMethod1() {
-    method1CallCount++;
-  }
-
-  void mockTestMethod2() {
-    method2CallCount++;
-  }
-}
