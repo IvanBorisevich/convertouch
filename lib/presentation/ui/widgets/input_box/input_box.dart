@@ -1063,13 +1063,13 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                               fetchParams: ListValuesFetchParams(
                                 itemId: widget.model.id,
                                 listType: widget.model.listType!,
-                                selectedValue: selectedValue ??
-                                    (hint != _noValueHint ? hint : null),
                                 conversionGroupName: widget.conversionGroupName,
                                 conversionParams: widget.conversionParams,
                                 leaveUnknownSelectedValue:
                                     widget.model.listType!.fetchedViaApi,
                               ),
+                              selectedValue: selectedValue ??
+                                  (hint != _noValueHint ? hint : null),
                             );
                           }
                         } else {
@@ -1266,6 +1266,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                 _fetchListValues(
                   context,
                   fetchParams: listValuesFetchResult.fetchParams,
+                  selectedValue: listValuesFetchResult.selectedItem,
                 );
 
                 onHandle?.call();
@@ -1291,11 +1292,13 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
   void _fetchListValues(
     BuildContext context, {
     required ListValuesFetchParams? fetchParams,
+    required ValueModel? selectedValue,
   }) {
     BlocProvider.of<ListValuesBloc>(context).add(
       FetchItems(
         fetchParams: fetchParams,
         emitLoadingState: true,
+        selectedItem: selectedValue,
       ),
     );
   }

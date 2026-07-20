@@ -16,7 +16,7 @@ class FetchListValuesUseCase
 
   @override
   Future<List<ValueModel>> fetchItemsPage(
-    InputItemsFetchModel<ListValuesFetchParams> input,
+    InputItemsFetchModel<ValueModel, ListValuesFetchParams> input,
   ) async {
     if (input.fetchParams == null) {
       return [];
@@ -38,7 +38,7 @@ class FetchListValuesUseCase
   @override
   Future<ValueModel?> validateSelectedValue(
     List<ValueModel> listValues,
-    InputItemsFetchModel<ListValuesFetchParams> input,
+    InputItemsFetchModel<ValueModel, ListValuesFetchParams> input,
   ) async {
     if (input.fetchParams == null) {
       return null;
@@ -48,7 +48,7 @@ class FetchListValuesUseCase
         input.fetchParams!.leaveUnknownSelectedValue;
     bool leaveEmptySelectedValue = input.fetchParams!.leaveEmptySelectedValue;
 
-    ValueModel? selectedValue = input.fetchParams!.selectedValue;
+    ValueModel? selectedValue = input.selectedItem;
     ValueModel? preselectedValue =
         input.fetchParams!.listType.preselected ? listValues.firstOrNull : null;
 

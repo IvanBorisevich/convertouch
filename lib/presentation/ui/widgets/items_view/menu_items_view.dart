@@ -104,7 +104,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
 
     onLoadMore() {
       widget.itemsListBloc.add(
-        FetchItems<P>(firstFetch: false),
+        FetchItems<T, P>(firstFetch: false),
       );
     }
 
@@ -158,7 +158,7 @@ class _ConvertouchMenuItemsViewState<T extends IdNameSearchableItemModel,
               viewModeSettingKey: widget.viewModeSettingKey,
               onValueChanged: (value) {
                 widget.itemsListBloc.add(
-                  FetchItems<P>(
+                  FetchItems<T, P>(
                     searchString: value.raw,
                     fetchParams: state.itemsFetch.fetchParams,
                   ),

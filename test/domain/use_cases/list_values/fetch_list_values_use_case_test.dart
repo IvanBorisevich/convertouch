@@ -48,9 +48,9 @@ void main() {
         InputItemsFetchModel(
           pageSize: listValuesPageSize,
           pageNum: pageNum,
+          selectedItem: itemValue.value,
           fetchParams: ListValuesFetchParams(
             itemId: "",
-            selectedValue: itemValue.value,
             listType: itemValue.listType!,
             unit: itemValue.unitItem,
             conversionGroupName: conversionGroupName,

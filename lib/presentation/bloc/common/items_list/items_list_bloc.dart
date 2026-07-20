@@ -24,7 +24,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         P extends ItemsFetchParams>
     extends ConvertouchBloc<ItemsListEvent, ItemsFetched<T, P>> {
-  final EventTransformer<FetchItems<P>>? fetchItemsEventTransformer;
+  final EventTransformer<FetchItems<T, P>>? fetchItemsEventTransformer;
 
   ItemsListBloc({
     this.fetchItemsEventTransformer,
@@ -33,7 +33,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
             itemsFetch: const OutputItemsFetchModel.successEmpty(),
           ),
         ) {
-    on<FetchItems<P>>(
+    on<FetchItems<T, P>>(
       _onFetchItems,
       transformer: this.fetchItemsEventTransformer ??
           throttleDroppable(throttleDuration),
@@ -44,7 +44,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
   }
 
   _onFetchItems<E extends FetchItems>(
-    FetchItems<P> event,
+    FetchItems<T, P> event,
     Emitter<ItemsFetched<T, P>> emit,
   ) async {
     await cancelFetch();
@@ -55,6 +55,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
     bool hasReachedMax;
     List<int> oobIds;
     List<T> allItems;
+    T? selectedItem;
 
     if (event.firstFetch) {
       allItems = [];
@@ -63,6 +64,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       searchString = event.searchString;
       hasReachedMax = false;
       oobIds = [];
+      selectedItem = event.selectedItem;
     } else {
       allItems = state.itemsFetch.items;
       pageNum = event.pageNum ?? state.itemsFetch.pageNum;
@@ -70,6 +72,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
       searchString = state.itemsFetch.searchString;
       hasReachedMax = state.itemsFetch.hasReachedMax;
       oobIds = List.of(state.oobIds);
+      selectedItem = state.itemsFetch.selectedItem;
     }
 
     if (hasReachedMax) {
@@ -81,7 +84,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel.loading(
             items: allItems,
-            selectedItem: state.itemsFetch.selectedItem,
+            selectedItem: selectedItem,
             searchString: searchString,
             pageNum: pageNum,
             fetchParams: fetchParams,
@@ -97,6 +100,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
           pageSize: event.pageSize,
           pageNum: pageNum,
           fetchParams: fetchParams,
+          selectedItem: selectedItem,
         ),
       );
 
@@ -141,7 +145,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
         ItemsFetched<T, P>(
           itemsFetch: OutputItemsFetchModel.failure(
             items: state.itemsFetch.items,
-            selectedItem: state.itemsFetch.selectedItem,
+            selectedItem: selectedItem,
             error: e is ConvertouchException
                 ? e
                 : ConvertouchException(message: e.toString()),
@@ -184,7 +188,7 @@ abstract class ItemsListBloc<T extends IdNameSearchableItemModel,
   }
 
   Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> fetchBatch(
-    InputItemsFetchModel<P> input,
+    InputItemsFetchModel<T, P> input,
   );
 
   Future<Either<ConvertouchException, T>> saveItem(T item);

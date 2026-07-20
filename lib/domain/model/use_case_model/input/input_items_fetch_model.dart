@@ -1,19 +1,22 @@
 import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
+import 'package:convertouch/domain/model/item_model.dart';
 import 'package:convertouch/domain/model/unit_model.dart';
-import 'package:convertouch/domain/model/value_model.dart';
 import 'package:equatable/equatable.dart';
 
-class InputItemsFetchModel<P extends ItemsFetchParams> {
+class InputItemsFetchModel<T extends IdNameItemModel,
+    P extends ItemsFetchParams> {
   final String? searchString;
   final int pageSize;
   final int pageNum;
+  final T? selectedItem;
   final P? fetchParams;
 
   const InputItemsFetchModel({
     this.searchString,
     required this.pageSize,
     required this.pageNum,
+    this.selectedItem,
     this.fetchParams,
   });
 }
@@ -98,7 +101,6 @@ class ParamSetsFetchParams extends ItemsFetchParams {
 class ListValuesFetchParams extends ItemsFetchParams {
   final String itemId;
   final ConvertouchListType listType;
-  final ValueModel? selectedValue;
   final String? conversionGroupName;
   final UnitModel? unit;
   final ConversionParamSetValueModel? conversionParams;
@@ -108,7 +110,6 @@ class ListValuesFetchParams extends ItemsFetchParams {
   const ListValuesFetchParams({
     required this.itemId,
     required this.listType,
-    this.selectedValue,
     this.unit,
     this.conversionGroupName,
     this.conversionParams,
@@ -120,8 +121,8 @@ class ListValuesFetchParams extends ItemsFetchParams {
   List<Object?> get props => [
         itemId,
         listType,
-        selectedValue,
         leaveUnknownSelectedValue,
+        leaveEmptySelectedValue,
         unit,
         conversionGroupName,
         conversionParams,
@@ -157,7 +158,6 @@ class ListValuesFetchParams extends ItemsFetchParams {
     return 'ListValuesFetchParams{'
         'itemId: $itemId, '
         'listType: $listType, '
-        'selected: ${selectedValue ?? "-"}, '
         'leaveUnknownSelectedValue: $leaveUnknownSelectedValue, '
         'leaveEmptySelectedValue: $leaveEmptySelectedValue}';
   }

@@ -13,7 +13,7 @@ class FetchUnitsUseCase
 
   @override
   Future<List<UnitModel>> fetchItemsPage(
-    InputItemsFetchModel<UnitsFetchParams> input,
+    InputItemsFetchModel<UnitModel, UnitsFetchParams> input,
   ) async {
     UnitsFetchParams? params = input.fetchParams;
 

@@ -7,12 +7,12 @@ import 'package:either_dart/either.dart';
 
 abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
         P extends ItemsFetchParams>
-    extends UseCase<InputItemsFetchModel<P>, OutputItemsFetchModel<T, P>> {
+    extends UseCase<InputItemsFetchModel<T, P>, OutputItemsFetchModel<T, P>> {
   const FetchItemsBatchUseCase();
 
   @override
   Future<Either<ConvertouchException, OutputItemsFetchModel<T, P>>> execute(
-    InputItemsFetchModel<P> input,
+    InputItemsFetchModel<T, P> input,
   ) async {
     String? searchString = input.searchString;
     int pageSize = input.pageSize;
@@ -64,11 +64,11 @@ abstract class FetchItemsBatchUseCase<T extends IdNameSearchableItemModel,
     );
   }
 
-  Future<List<T>> fetchItemsPage(InputItemsFetchModel<P> input);
+  Future<List<T>> fetchItemsPage(InputItemsFetchModel<T, P> input);
 
   Future<T?> validateSelectedValue(
     List<T> listValues,
-    InputItemsFetchModel<P> input,
+    InputItemsFetchModel<T, P> input,
   ) async =>
       null;
 

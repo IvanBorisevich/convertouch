@@ -19,7 +19,7 @@ class ConversionParamSetsBloc
 
   @override
   Future<Either<ConvertouchException, OutputParamSetsFetch>> fetchBatch(
-    InputItemsFetchModel<ParamSetsFetchParams> input,
+    InputItemsFetchModel<ConversionParamSetModel, ParamSetsFetchParams> input,
   ) async {
     return await fetchParamSetsUseCase.execute(input);
   }

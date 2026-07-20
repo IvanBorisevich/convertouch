@@ -9,11 +9,13 @@ abstract class ItemsListEvent extends ConvertouchEvent {
   });
 }
 
-class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
+class FetchItems<T extends IdNameItemModel, P extends ItemsFetchParams>
+    extends ItemsListEvent {
   final String? searchString;
   final int? pageNum;
   final int pageSize;
   final bool firstFetch;
+  final T? selectedItem;
   final void Function()? onFirstFetch;
   final P? fetchParams;
   final bool emitLoadingState;
@@ -23,6 +25,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
     this.pageNum,
     this.pageSize = 100,
     this.firstFetch = true,
+    this.selectedItem,
     this.fetchParams,
     this.onFirstFetch,
     this.emitLoadingState = false,
@@ -32,6 +35,7 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   @override
   List<Object?> get props => [
         searchString,
+        selectedItem,
         pageNum,
         pageSize,
         firstFetch,
@@ -43,11 +47,12 @@ class FetchItems<P extends ItemsFetchParams> extends ItemsListEvent {
   String toString() {
     return 'FetchItems{'
         'searchString: $searchString, '
+        'fetchParams: $fetchParams, '
+        'selectedItem: $selectedItem, '
         'pageNum: $pageNum, '
         'pageSize: $pageSize, '
         'firstFetch: $firstFetch, '
-        'onFirstFetch: $onFirstFetch, '
-        'fetchParams: $fetchParams}';
+        'onFirstFetch: $onFirstFetch}';
   }
 }
 

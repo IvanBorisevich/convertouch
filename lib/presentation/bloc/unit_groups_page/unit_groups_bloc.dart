@@ -25,7 +25,7 @@ class UnitGroupsBloc
 
   @override
   Future<Either<ConvertouchException, OutputUnitGroupsFetch>> fetchBatch(
-    InputItemsFetchModel<UnitGroupsFetchParams> input,
+    InputItemsFetchModel<UnitGroupModel, UnitGroupsFetchParams> input,
   ) async {
     return await fetchUnitGroupsUseCase.execute(input);
   }

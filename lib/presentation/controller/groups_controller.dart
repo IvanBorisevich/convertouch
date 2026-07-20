@@ -27,7 +27,7 @@ class ConversionGroupsController {
     required int currentGroupId,
   }) {
     BlocProvider.of<UnitGroupsBlocForUnitDetails>(context).add(
-      const FetchItems<UnitGroupsFetchParams>(),
+      const FetchItems<UnitGroupModel, UnitGroupsFetchParams>(),
     );
 
     BlocProvider.of<ItemsSelectionBlocForUnitDetails>(context).add(
@@ -73,7 +73,7 @@ class ConversionGroupsController {
         item: unitGroup,
         onItemSave: (savedGroup) {
           BlocProvider.of<UnitGroupsBloc>(context).add(
-            const FetchItems<UnitGroupsFetchParams>(),
+            const FetchItems<UnitGroupModel, UnitGroupsFetchParams>(),
           );
 
           showGroup(context, unitGroup: savedGroup);
@@ -94,7 +94,7 @@ class ConversionGroupsController {
         ids: groupIds,
         onSuccess: ({info}) {
           BlocProvider.of<UnitGroupsBloc>(context).add(
-            const FetchItems<UnitGroupsFetchParams>(),
+            const FetchItems<UnitGroupModel, UnitGroupsFetchParams>(),
           );
         },
       ),

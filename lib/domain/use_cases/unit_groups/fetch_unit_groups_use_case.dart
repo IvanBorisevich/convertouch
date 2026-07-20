@@ -12,7 +12,7 @@ class FetchUnitGroupsUseCase
 
   @override
   Future<List<UnitGroupModel>> fetchItemsPage(
-    InputItemsFetchModel<UnitGroupsFetchParams> input,
+    InputItemsFetchModel<UnitGroupModel, UnitGroupsFetchParams> input,
   ) async {
     return ObjectUtils.tryGet(
       await unitGroupRepository.search(

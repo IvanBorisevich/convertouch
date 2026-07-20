@@ -22,7 +22,7 @@ class ListValuesBloc extends ItemsListBloc<ValueModel, ListValuesFetchParams> {
 
   @override
   Future<Either<ConvertouchException, ListValuesFetchResult>> fetchBatch(
-    InputItemsFetchModel<ListValuesFetchParams> input,
+    InputItemsFetchModel<ValueModel, ListValuesFetchParams> input,
   ) async {
     _cancellableOperation = CancelableOperation.fromFuture(
       fetchListValuesUseCase.execute(input),

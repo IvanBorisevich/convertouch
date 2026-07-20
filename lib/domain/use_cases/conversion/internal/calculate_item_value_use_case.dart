@@ -76,10 +76,10 @@ abstract class CalculateItemValueUseCase<
             InputItemsFetchModel(
               pageSize: listValuesPageSize,
               pageNum: 0,
+              selectedItem: itemValue.value,
               fetchParams: ListValuesFetchParams(
                 itemId: itemValue.id,
                 listType: itemValue.listType!,
-                selectedValue: itemValue.value,
                 unit: itemValue.unitItem,
                 conversionGroupName: input.conversionGroup.name,
                 conversionParams: paramSetValue,

@@ -23,7 +23,7 @@ class UnitsBloc extends ItemsListBloc<UnitModel, UnitsFetchParams> {
 
   @override
   Future<Either<ConvertouchException, OutputUnitsFetch>> fetchBatch(
-    InputItemsFetchModel<UnitsFetchParams> input,
+    InputItemsFetchModel<UnitModel, UnitsFetchParams> input,
   ) async {
     return await fetchUnitsUseCase.execute(input);
   }

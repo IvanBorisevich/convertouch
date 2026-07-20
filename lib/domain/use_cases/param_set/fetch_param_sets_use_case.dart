@@ -14,7 +14,7 @@ class FetchParamSetsUseCase extends FetchItemsBatchUseCase<
 
   @override
   Future<List<ConversionParamSetModel>> fetchItemsPage(
-    InputItemsFetchModel<ParamSetsFetchParams> input,
+    InputItemsFetchModel<ConversionParamSetModel, ParamSetsFetchParams> input,
   ) async {
     ParamSetsFetchParams? params = input.fetchParams;
 
