@@ -99,7 +99,14 @@ abstract class AbstractModifyConversionUseCase<D extends ConversionModifyDelta>
         _doOnParamValueChanged(input, conversion);
       }
 
-      if (input.delta.recalculateUnitValues && paramValueChanged) {
+      bool recalculateUnitValues = input.delta.recalculateUnitValues &&
+          paramValueChanged &&
+          (input.delta is! EditConversionParamValueDelta ||
+              !modifiedGroup.refreshable);
+
+      if (recalculateUnitValues) {
+        log("Recalculate unit values, group: ${modifiedGroup.name}");
+
         var convertedUnitValues = rules.calculateUnitValues(
           InputConversionModel(
             unitGroup: modifiedGroup,

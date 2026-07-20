@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_model.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
+import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
@@ -11,7 +8,6 @@ import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 const double _spacing = 10;
 const double _bottomSpacing = 85;
@@ -28,18 +24,8 @@ class ConvertouchConversionItemsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConversionBloc, ConversionState>(
-      buildWhen: (prev, next) {
-        return prev != next && next is ConversionBuilt;
-      },
-      builder: (_, conversionState) {
-        if (conversionState is! ConversionBuilt) {
-          return const SizedBox.shrink();
-        }
-
-        log("Unit values view ConversionBloc builder(), "
-            "state: $conversionState");
-
+    return conversionBlocBuilder(
+      builderFunc: (conversionState) {
         if (conversionState.conversion.convertedUnitValues.isEmpty) {
           return Center(
             child: NoItemsInfoLabel(
@@ -76,9 +62,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
           itemBuilder: (context, index) {
             final unitValue = unitValues[index];
             bool isLast = index == unitValues.length - 1;
-
-            log("ConversionItemsView list view itemBuilder(), "
-                "unit value: $unitValue");
 
             return Padding(
               key: ValueKey(unitValue.id),

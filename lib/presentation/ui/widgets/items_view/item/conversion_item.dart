@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
@@ -61,10 +59,6 @@ class ConvertouchConversionItem<M extends ItemValueModel>
 
   @override
   Widget build(BuildContext context) {
-    log("ConversionItem build(), hash: $hashCode, "
-        "item value: $model, item value: ${model.hashCode}, "
-        "context hash: ${context.hashCode}");
-
     return ConvertouchInputBox(
       key: Key(model.id),
       model: model,

@@ -5,8 +5,6 @@ import 'package:convertouch/domain/constants/constants.dart';
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/conversion_param_set_value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_bloc.dart';
-import 'package:convertouch/presentation/bloc/conversion_page/conversion_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/param_sets_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
@@ -17,7 +15,6 @@ import 'package:convertouch/presentation/ui/widgets/sliding_panel_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:dynamic_tabbar/dynamic_tabbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -43,17 +40,8 @@ class ConversionParamsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = appColors[theme].paramSetPanel;
 
-    return BlocBuilder<ConversionBloc, ConversionState>(
-      buildWhen: (prev, next) {
-        return prev != next && next is ConversionBuilt;
-      },
-      builder: (_, conversionState) {
-        if (conversionState is! ConversionBuilt) {
-          return const SizedBox.shrink();
-        }
-
-        log("Params view ConversionBloc builder(), state: $conversionState");
-
+    return conversionBlocBuilder(
+      builderFunc: (conversionState) {
         final params = conversionState.conversion.params;
 
         if (params == null) {
