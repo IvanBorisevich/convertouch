@@ -13,6 +13,8 @@ abstract class ConversionItemValueEntity extends ConvertouchEntity {
   final int sequenceNum;
   @ColumnInfo(name: 'conversion_id')
   final int conversionId;
+  @ColumnInfo(name: 'icon_uri')
+  final String? iconUri;
 
   const ConversionItemValueEntity({
     super.id,
@@ -20,6 +22,7 @@ abstract class ConversionItemValueEntity extends ConvertouchEntity {
     this.defaultValue,
     required this.sequenceNum,
     required this.conversionId,
+    this.iconUri,
   });
 }
 
@@ -96,6 +99,7 @@ class ConversionParamValueEntity extends ConversionItemValueEntity {
     super.defaultValue,
     required super.sequenceNum,
     required super.conversionId,
+    super.iconUri,
   });
 
   @override
@@ -110,6 +114,7 @@ class ConversionParamValueEntity extends ConversionItemValueEntity {
       'default_value': defaultValue,
       'sequence_num': sequenceNum,
       'conversion_id': conversionId,
+      'icon_uri': iconUri,
     };
   }
 }

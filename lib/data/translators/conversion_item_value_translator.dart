@@ -63,6 +63,7 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
       defaultValue: model.defaultValue?.raw,
       sequenceNum: sequenceNum ?? 0,
       conversionId: conversionId!,
+      iconUri: model.value?.iconUri,
     );
   }
 
@@ -76,7 +77,7 @@ class ConversionParamValueTranslator extends ConversionItemValueTranslator<
       param: param!,
       unit: unit,
       calculated: int2bool(entity.calculated),
-      value: ValueModel.any(entity.value),
+      value: ValueModel.any(entity.value, iconUri: entity.iconUri),
       defaultValue: ValueModel.any(entity.defaultValue),
     );
   }

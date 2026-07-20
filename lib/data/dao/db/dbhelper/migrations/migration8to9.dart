@@ -12,6 +12,18 @@ class Migration8to9 extends ConvertouchDbMigration {
   Future<void> execute(Database database) async {
     log("Migration database from version 8 to 9");
 
+    bool columnNew = await SqlUtils.isColumnNew(
+      database,
+      tableName: 'conversion_param_values',
+      columnName: 'icon_uri',
+    );
+
+    if (columnNew) {
+      await database.execute(
+        "ALTER TABLE conversion_param_values ADD COLUMN icon_uri TEXT",
+      );
+    }
+
     await SqlUtils.mergeGroupsAndUnits(
       database,
       items: unitsV8,
