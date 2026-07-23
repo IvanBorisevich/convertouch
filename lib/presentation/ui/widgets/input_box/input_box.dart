@@ -20,6 +20,7 @@ import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/outline_input_border_ext.dart';
 import 'package:convertouch/presentation/ui/widgets/input_validation_tooltip.dart';
 import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -59,15 +60,8 @@ final Map<ConvertouchValueType, RegExp> _valueTypeToRegExp = {
 };
 
 const BorderRadius _borderRadius = BorderRadius.all(Radius.circular(15));
-const double _textHeightCoefficient = 1.2;
 
-const double _defaultFontSize = 17;
-const EdgeInsets _defaultInputFieldMargin = EdgeInsets.only(
-  top: 10,
-  bottom: 10,
-  left: 14,
-  right: 14,
-);
+const double _defaultFontSize = 18;
 
 const double _refreshButtonWidth = 25;
 const double _prefixIconPadding = 10;
@@ -101,7 +95,6 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.suffixWidgets = const [],
     this.prefixRightmostDividerVisible = true,
     this.suffixLeftmostDividerVisible = true,
-    this.inputFieldMargin = _defaultInputFieldMargin,
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
     this.labelText,
@@ -133,7 +126,6 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final List<Widget?> suffixWidgets;
   final bool prefixRightmostDividerVisible;
   final bool suffixLeftmostDividerVisible;
-  final EdgeInsets inputFieldMargin;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final String? labelText;
@@ -303,7 +295,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
                     _focusNode.requestFocus();
                   },
                   child: Container(
-                    padding: widget.inputFieldMargin,
                     alignment: Alignment.center,
                     decoration: const BoxDecoration(
                       borderRadius: _borderRadius,
@@ -375,8 +366,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelColor: _labelColor,
         dialogColors: widget.dialogColors,
         fontSize: widget.fontSize,
-        margin: widget.inputFieldMargin,
-        contentPadding: const EdgeInsets.only(top: 10, bottom: 0),
         floatingLabelBehavior: widget.floatingLabelBehavior,
       );
     } else {
@@ -392,8 +381,6 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         hintColor: _hintColor,
         labelColor: _labelColor,
         fontSize: widget.fontSize,
-        margin: widget.inputFieldMargin,
-        contentPadding: const EdgeInsets.only(top: 8, bottom: 0),
         dropdownColors: widget.colors.dropdown,
         dialogColors: widget.dialogColors,
         floatingLabelBehavior: widget.floatingLabelBehavior,
@@ -521,8 +508,6 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     required this.fontSize,
     this.maxTextLength,
     this.textLengthCounterVisible = false,
-    required this.margin,
-    required this.contentPadding,
     this.floatingLabelBehavior,
   });
 
@@ -545,8 +530,6 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final double fontSize;
   final int? maxTextLength;
   final bool textLengthCounterVisible;
-  final EdgeInsets margin;
-  final EdgeInsets contentPadding;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   @override
@@ -649,14 +632,11 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
       },
       decoration: _inputFieldDecoration(
         context,
-        margin: widget.margin,
-        fontSize: widget.fontSize,
         labelText: _labelText,
         hintText: _hint,
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
         floatingLabelBehavior: widget.floatingLabelBehavior,
-        contentPadding: widget.contentPadding,
       ).copyWith(
         suffixText: widget.textLengthCounterVisible
             ? '${widget.controller.text.length}/${widget.maxTextLength}'
@@ -686,8 +666,6 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     required this.hintColor,
     required this.labelColor,
     required this.fontSize,
-    required this.margin,
-    required this.contentPadding,
     required this.dropdownColors,
     required this.dialogColors,
     this.floatingLabelBehavior,
@@ -708,8 +686,6 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
   final Color hintColor;
   final Color labelColor;
   final double fontSize;
-  final EdgeInsets margin;
-  final EdgeInsets contentPadding;
   final DropdownColorScheme dropdownColors;
   final WidgetColorScheme dialogColors;
   final FloatingLabelBehavior? floatingLabelBehavior;
@@ -894,12 +870,9 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                       isExpanded: true,
                       decoration: _inputFieldDecoration(
                         context,
-                        margin: widget.margin,
-                        fontSize: widget.fontSize,
                         labelText: _labelText,
                         labelColor: widget.labelColor,
                         floatingLabelBehavior: widget.floatingLabelBehavior,
-                        contentPadding: widget.contentPadding,
                         labelPadding: widget.model.listType!.defaultIconUri !=
                                     null &&
                                 (selectedValue != null || hint != _noValueHint)
@@ -1012,10 +985,6 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                     textBox: widget.dropdownColors.searchBox,
                                   ),
                                   dialogColors: widget.dialogColors,
-                                  inputFieldMargin: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 5,
-                                  ),
                                   prefixWidgets: [
                                     Padding(
                                       padding: const EdgeInsets.only(left: 7),
@@ -1363,21 +1332,23 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
 
 InputDecoration _inputFieldDecoration(
   BuildContext context, {
-  required EdgeInsets margin,
-  required double fontSize,
-  required String? labelText,
+  String? labelText,
   String? hintText,
   Color? hintColor,
   required Color? labelColor,
-  required EdgeInsets contentPadding,
   EdgeInsets? labelPadding,
   FloatingLabelBehavior? floatingLabelBehavior,
 }) {
   return InputDecoration(
-    border: const OutlineInputBorder(
-      borderRadius: _borderRadius,
-      borderSide: BorderSide.none,
-    ),
+    border: labelText != null
+        ? const CustomOutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide.none,
+          )
+        : const OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide.none,
+          ),
     label: labelText != null && labelColor != null
         ? Container(
             padding: labelPadding,
@@ -1389,7 +1360,7 @@ InputDecoration _inputFieldDecoration(
               maxLines: 1,
               softWrap: false,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 17,
                 overflow: TextOverflow.fade,
                 fontWeight: FontWeight.w600,
                 foreground: Paint()..color = labelColor,
@@ -1399,14 +1370,15 @@ InputDecoration _inputFieldDecoration(
           )
         : null,
     floatingLabelBehavior: floatingLabelBehavior,
-    alignLabelWithHint: true,
-    isDense: true,
-    contentPadding: labelText != null ? contentPadding : EdgeInsets.zero,
-    filled: true,
-    fillColor: Colors.transparent,
-    constraints: BoxConstraints(
-      maxHeight: fontSize * _textHeightCoefficient + margin.vertical,
+    contentPadding: const EdgeInsets.only(
+      left: 12,
+      top: 5,
+      bottom: 12,
+      right: 12,
     ),
+    filled: true,
+    isDense: true,
+    fillColor: Colors.transparent,
     counterText: "",
     hintText: hintText,
     hintStyle: hintColor != null
@@ -1428,7 +1400,7 @@ TextStyle _inputFieldTextStyle({
     fontWeight: fontWeight,
     fontFamily: quicksandFontFamily,
     overflow: TextOverflow.fade,
-    height: _textHeightCoefficient,
+    height: 1,
     foreground: Paint()..color = foregroundColor,
     letterSpacing: 0,
   );

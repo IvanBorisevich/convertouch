@@ -335,22 +335,20 @@ const _conversionPageFloatingButton = WidgetColorScheme(
 );
 
 const _conversionItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(_pageBackground),
+  background: MultiColor.only(Color(0xFFD3E6FF)),
   border: MultiColor(
-    regular: Color(0xFF4F7498),
-    focused: Color(0xFF1B2F40),
-    disabled: Color(0xFF90A8C0),
+    regular: Color(0xFFBED8FA),
+    focused: Color(0xFF6F99BF),
   ),
   foreground: MultiColor(
-    regular: Color(0xBE143656),
-    disabled: Color(0xFF90A8C0),
+    regular: Color(0xFF0F5898),
+    disabled: Color(0xFF445B6E),
   ),
   hint: MultiColor(
-    regular: Color(0xFF799BBB),
-    disabled: Color(0xBE73ACE5),
+    regular: Color(0xFF5493CC),
   ),
   label: MultiColor(
-    regular: Color(0xFF2C6396),
+    regular: Color(0xFF2474BD),
     disabled: Color(0xFF7298BC),
   ),
   tooltip: _notification,
@@ -373,11 +371,12 @@ const _conversionItem = ConversionItemColorScheme(
     textBox: _conversionItemTextBox,
     dropdown: _dropdown,
     divider: MultiColor(
-      regular: Color(0xFFBAD2EC),
-      disabled: Color(0xFF90A8C0),
+      regular: Color(0xFF9ECDF8),
     ),
   ),
-  unitButton: MultiColor.only(Color(0xFF2C6396)),
+  unitButton: MultiColor(
+    regular: Color(0xFF2474BD),
+  ),
   prefixWidget: MultiColor(
     regular: Color(0xFF7799B9),
     selected: Color(0xFF2C6396),

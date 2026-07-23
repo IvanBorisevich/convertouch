@@ -71,13 +71,8 @@ class ConvertouchSearchBar extends StatelessWidget {
             colors: searchBarColorScheme.inputBox,
             dialogColors: dialogColors,
             theme: appState.theme,
-            fontSize: 15,
+            fontSize: 17,
             borderWidth: 0,
-            inputFieldMargin: const EdgeInsets.only(
-              top: 0,
-              bottom: 0,
-              right: 7,
-            ),
             prefixWidgets: [
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 5),
