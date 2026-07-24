@@ -265,35 +265,31 @@ const _unitDetailsInputBox = InputBoxColorScheme(
 
 const _paramsMenu = MenuViewColorScheme(
   menuItem: MenuItemColorScheme(
-    border: MultiColor(
-      regular: Color(0xFF394B4E),
-      disabled: Color(0xFF3C4D50),
-    ),
     background: MultiColor(
-      regular: Color(0xFF334A59),
-      disabled: Color(0xFF334D55),
+      regular: Color(0xFF31465E),
+      disabled: Color(0xFF37495E),
     ),
     titleBackground: MultiColor(
-      regular: Color(0xFF365060),
-      disabled: Color(0xFF36525A),
+      regular: Color(0xFF364D67),
+      disabled: Color(0xFF465C75),
     ),
-    matchBackground: MultiColor.only(Color(0xFF78BBE4)),
+    matchBackground: MultiColor.only(Color(0xFF7BB2F1)),
     matchForeground: MultiColor.only(Color(0xFF334A59)),
     foreground: MultiColor(
-      regular: Color(0xFF73ADD1),
-      disabled: Color(0xFF76AED1),
+      regular: Color(0xFF72A7E3),
+      disabled: Color(0xFF597CA3),
     ),
     divider: MultiColor(
-      regular: Color(0xFF7FBECA),
+      regular: Color(0xFF4C6D91),
       disabled: Color(0xFF85C0CC),
     ),
     checkBox: WidgetColorScheme(
       border: MultiColor(
-        regular: Color(0xFF5181A3),
+        regular: Color(0xFF5079A8),
       ),
       background: MultiColor(
         regular: _pageBackground,
-        selected: Color(0xFF5181A3),
+        selected: Color(0xFF5079A8),
       ),
       foreground: MultiColor(
         regular: Colors.transparent,
@@ -390,23 +386,21 @@ const _removalFloatingButton = WidgetColorScheme(
 );
 
 const _paramItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(Color(0xFF323944)),
+  background: MultiColor.only(Color(0xFF334559)),
   border: MultiColor(
-    regular: Color(0xFF84A1BD),
-    focused: Color(0xFFA1C7EA),
-    disabled: Color(0xFF687A8C),
+    regular: Color(0xFF3B5370),
+    focused: Color(0xFF547CAC),
   ),
   foreground: MultiColor(
-    regular: Color(0xFFA3C2DE),
-    disabled: Color(0xFF687A8C),
+    regular: Color(0xFF699CDA),
+    disabled: Color(0xFF7191B8),
     warning: Color(0xFFF18461),
   ),
   hint: MultiColor(
-    regular: Color(0xFF84A1BD),
-    disabled: Color(0xFF7C9EBE),
+    regular: Color(0xFF567BA6),
   ),
   label: MultiColor(
-    regular: Color(0xFF63A4E4),
+    regular: Color(0xFF5DA5FB),
     disabled: Color(0xFF5382B1),
   ),
   tooltip: _notification,
@@ -417,14 +411,12 @@ const _paramItem = ConversionItemColorScheme(
     textBox: _paramItemTextBox,
     dropdown: _dropdown,
     divider: MultiColor(
-      regular: Color(0xFF506578),
-      disabled: Color(0xFF687A8C),
+      regular: Color(0xFF3B516A),
     ),
   ),
   unitButton: MultiColor.only(Color(0xFF63A4E4)),
   prefixWidget: MultiColor(
-    regular: Color(0xFF7E9CB7),
-    selected: Color(0xFFA6C7E5),
+    regular: Color(0xFF6296D8),
   ),
   suffixWidget: MultiColor(
     regular: Color(0xFF7E9CB7),

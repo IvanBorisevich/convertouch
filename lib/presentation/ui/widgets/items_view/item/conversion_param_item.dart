@@ -105,9 +105,7 @@ class ConversionParamItem extends StatelessWidget {
                         paramValue.calculated
                             ? Icons.calculate
                             : Icons.calculate_outlined,
-                        color: paramValue.calculated
-                            ? colors.suffixWidget.selected
-                            : colors.suffixWidget.regular,
+                        color: colors.prefixWidget.regular,
                       ),
                     ),
                   )
