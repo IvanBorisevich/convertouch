@@ -17,7 +17,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double topMargin;
-  final DetailsItemColorsScheme colors;
+  final InputBoxColorScheme colors;
   final WidgetColorScheme dialogColors;
   final ConvertouchUITheme theme;
 
@@ -49,61 +49,25 @@ class ConvertouchDetailsItem extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(top: topMargin),
-      child: editable
-          ? ConvertouchInputBox(
-              model: ItemValueModel(
-                value: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
-                defaultValue: ValueModel.rawStr(
-                  draftValue ?? '',
-                  alt: savedValue,
-                ),
-              ),
-              labelText: headerTitle,
-              maxTextLength: editableValueMaxLength,
-              textLengthCounterVisible: editableValueLengthVisible,
-              onValueChanged: (value, {listValues}) {
-                onValueChanged?.call(value);
-              },
-              colors: colors.editable,
-              dialogColors: dialogColors,
-              theme: theme,
-            )
-          : Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-              decoration: BoxDecoration(
-                color: colors.readonly.textBox.background.regular,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  headerTitle != null
-                      ? Text(
-                          headerTitle,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: colors.readonly.textBox.border.regular,
-                            letterSpacing: 0,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  savedValue != null
-                      ? Text(
-                          savedValue!,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: colors.readonly.textBox.foreground.regular,
-                            letterSpacing: 0,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  content ?? const SizedBox.shrink(),
-                ],
-              ),
-            ),
+      child: ConvertouchInputBox(
+        model: ItemValueModel(
+          value: ValueModel.rawStr(draftValue ?? '', alt: savedValue),
+          defaultValue: ValueModel.rawStr(
+            draftValue ?? '',
+            alt: savedValue,
+          ),
+        ),
+        readonly: !editable,
+        labelText: headerTitle,
+        maxTextLength: editableValueMaxLength,
+        textLengthCounterVisible: editableValueLengthVisible,
+        onValueChanged: (value, {listValues}) {
+          onValueChanged?.call(value);
+        },
+        colors: colors,
+        dialogColors: dialogColors,
+        theme: theme,
+      ),
     );
   }
 }

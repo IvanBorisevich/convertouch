@@ -11,14 +11,8 @@ import 'package:convertouch/presentation/ui/widgets/floating_action_button.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-const double _verticalSpacing = 12;
-
-const EdgeInsets _pagePadding = EdgeInsets.only(
-  left: 10,
-  top: 10,
-  right: 10,
-  bottom: 0,
-);
+const double _spacing = 10;
+const double _bottomSpacing = 85;
 
 class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
   const ConvertouchUnitGroupDetailsPage({super.key});
@@ -29,7 +23,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
 
     return appBlocBuilder(
       builderFunc: (appState) {
-        DetailsItemColorsScheme detailsItemColors =
+        InputBoxColorScheme detailsItemColors =
             appColors[appState.theme].unitGroupDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitGroupsPageFloatingButton;
@@ -43,7 +37,12 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
               colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
-                  padding: _pagePadding,
+                  padding: const EdgeInsets.only(
+                    top: _spacing,
+                    left: _spacing,
+                    right: _spacing,
+                    bottom: _bottomSpacing,
+                  ),
                   child: Column(
                     children: [
                       ConvertouchDetailsItem(
@@ -67,7 +66,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Type",
@@ -75,7 +74,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Minimum",
@@ -84,7 +83,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                       ConvertouchDetailsItem(
                         name: "Values Maximum",
@@ -93,7 +92,7 @@ class ConvertouchUnitGroupDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                     ],
                   ),

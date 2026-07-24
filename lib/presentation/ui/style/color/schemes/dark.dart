@@ -167,32 +167,20 @@ const _unitGroupsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitGroupDetailsInputBox = DetailsItemColorsScheme(
-  editable: InputBoxColorScheme(
-    textBox: TextBoxColorScheme(
-      background: MultiColor.only(_pageBackground),
-      border: MultiColor(
-        regular: Color(0xFF8594F1),
-        disabled: Color(0x90A5B2FF),
-      ),
-      foreground: MultiColor(
-        regular: Color(0xFFC9D0FD),
-        disabled: Color(0x90B3BBEA),
-      ),
-      hint: MultiColor(
-        regular: Color(0xFF8594F1),
-      ),
-      label: MultiColor(
-        regular: Color(0xFF8594F1),
-        disabled: Color(0x90A5B2FF),
-      ),
+const _unitGroupDetailsInputBox = InputBoxColorScheme(
+  textBox: TextBoxColorScheme(
+    background: MultiColor.only(Color(0xFF3D4253)),
+    border: MultiColor(
+      regular: Color(0xFF4A5167),
     ),
-  ),
-  readonly: InputBoxColorScheme(
-    textBox: TextBoxColorScheme(
-      background: MultiColor.only(Color(0xFF3D4253)),
-      border: MultiColor.only(Color(0xFF8594F1)),
-      foreground: MultiColor.only(Color(0xFFC9D0FD)),
+    foreground: MultiColor(
+      regular: Color(0xFFC9D0FD),
+    ),
+    hint: MultiColor(
+      regular: Color(0xFF8594F1),
+    ),
+    label: MultiColor(
+      regular: Color(0xFF97A4F8),
     ),
   ),
 );
@@ -256,35 +244,21 @@ const _unitsMenu = MenuViewColorScheme(
   ),
 );
 
-const _unitDetailsInputBox = DetailsItemColorsScheme(
-  editable: InputBoxColorScheme(
-    textBox: TextBoxColorScheme(
-      background: MultiColor.only(_pageBackground),
-      border: MultiColor(
-        regular: Color(0xFF84A1BD),
-        focused: Color(0xFF98BAD9),
-        disabled: Color(0xFF687A8C),
-      ),
-      foreground: MultiColor(
-        regular: Color(0xFFC5DDF3),
-        disabled: Color(0xFF687A8C),
-      ),
-      hint: MultiColor(
-        regular: Color(0xFF84A1BD),
-        disabled: Color(0xFF7C9EBE),
-      ),
-      label: MultiColor(
-        regular: Color(0xFF84A1BD),
-        focused: Color(0xFF98BAD9),
-        disabled: Color(0xFF687A8C),
-      ),
+const _unitDetailsInputBox = InputBoxColorScheme(
+  textBox: TextBoxColorScheme(
+    background: MultiColor.only(Color(0xFF3E4A59)),
+    border: MultiColor(
+      regular: Color(0xFF455465),
+      focused: Color(0xFF98BAD9),
     ),
-  ),
-  readonly: InputBoxColorScheme(
-    textBox: TextBoxColorScheme(
-      background: MultiColor.only(Color(0xFF3C4655)),
-      border: MultiColor.only(Color(0xFF84A1BD)),
-      foreground: MultiColor.only(Color(0xFFC5DDF3)),
+    foreground: MultiColor(
+      regular: Color(0xFFC5DDF3),
+    ),
+    hint: MultiColor(
+      regular: Color(0xFF84A1BD),
+    ),
+    label: MultiColor(
+      regular: Color(0xFF789EC3),
     ),
   ),
 );
@@ -335,7 +309,7 @@ const _conversionPageFloatingButton = WidgetColorScheme(
 );
 
 const _conversionItemTextBox = TextBoxColorScheme(
-  background: MultiColor.only(Color(0xFF3F4A57)),
+  background: MultiColor.only(Color(0xFF3C4755)),
   border: MultiColor(
     regular: Color(0xFF485667),
     focused: Color(0xFF597698),

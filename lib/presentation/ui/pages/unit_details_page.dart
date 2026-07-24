@@ -1,9 +1,9 @@
-import 'dart:developer';
-
+import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_details_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/bloc/bloc_wrappers.dart';
+import 'package:convertouch/presentation/bloc/unit_details_page/unit_details_states.dart';
 import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/groups_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
@@ -18,24 +18,17 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/menu_list_it
 import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 
-const double _verticalSpacing = 12;
-
-const EdgeInsets _pagePadding = EdgeInsets.only(
-  left: 10,
-  right: 10,
-  bottom: 70,
-);
+const double _spacing = 10;
+const double _bottomSpacing = 85;
 
 class ConvertouchUnitDetailsPage extends StatelessWidget {
   const ConvertouchUnitDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    log("ConvertouchUnitDetailsPage build()");
-
     return appBlocBuilder(
       builderFunc: (appState) {
-        DetailsItemColorsScheme detailsItemColors =
+        InputBoxColorScheme detailsItemColors =
             appColors[appState.theme].unitDetailsInputBox;
         WidgetColorScheme floatingButtonColor =
             appColors[appState.theme].unitsPageFloatingButton;
@@ -48,49 +41,49 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
               colors: appColors[appState.theme].page,
               body: SingleChildScrollView(
                 child: Container(
-                  padding: _pagePadding,
+                  padding: const EdgeInsets.only(
+                    top: _spacing,
+                    left: _spacing,
+                    right: _spacing,
+                    bottom: _bottomSpacing,
+                  ),
                   child: Column(
                     children: [
                       pageState.details.editMode
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                top: _verticalSpacing,
-                              ),
-                              child: ConvertouchMenuListItem(
-                                pageState.details.unitGroup,
-                                checkIconVisible: false,
-                                checkIconVisibleIfUnchecked: false,
-                                checked: false,
-                                colors: appColors[appState.theme]
-                                    .unitGroupsMenu
-                                    .menuItem,
-                                disabled: false,
-                                editIconVisible: false,
-                                logoFunc: (
-                                  item, {
-                                  required Color foreground,
-                                  required Color matchForeground,
-                                  required Color matchBackground,
-                                  required double fontSize,
-                                  required double iconSize,
-                                }) {
-                                  return ConvertouchSvgIcon.group(
-                                    iconUri: item.iconName,
-                                    defaultColor: foreground,
-                                    size: iconSize,
-                                  );
-                                },
-                                onTap: () {
-                                  FocusScope.of(context).unfocus();
+                          ? ConvertouchMenuListItem(
+                              pageState.details.unitGroup,
+                              checkIconVisible: false,
+                              checkIconVisibleIfUnchecked: false,
+                              checked: false,
+                              colors: appColors[appState.theme]
+                                  .unitGroupsMenu
+                                  .menuItem,
+                              disabled: false,
+                              editIconVisible: false,
+                              logoFunc: (
+                                item, {
+                                required Color foreground,
+                                required Color matchForeground,
+                                required Color matchBackground,
+                                required double fontSize,
+                                required double iconSize,
+                              }) {
+                                return ConvertouchSvgIcon.group(
+                                  iconUri: item.iconName,
+                                  defaultColor: foreground,
+                                  size: iconSize,
+                                );
+                              },
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
 
-                                  groupsController
-                                      .showGroupsForChangeInUnitDetails(
-                                    context,
-                                    currentGroupId:
-                                        pageState.details.unitGroup.id,
-                                  );
-                                },
-                              ),
+                                groupsController
+                                    .showGroupsForChangeInUnitDetails(
+                                  context,
+                                  currentGroupId:
+                                      pageState.details.unitGroup.id,
+                                );
+                              },
                             )
                           : ConvertouchDetailsItem(
                               name: 'Unit Group',
@@ -99,7 +92,6 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                               colors: detailsItemColors,
                               dialogColors: dialogColors,
                               theme: appState.theme,
-                              topMargin: _verticalSpacing,
                             ),
                       ConvertouchDetailsItem(
                         name: 'Unit Name',
@@ -109,7 +101,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                         onValueChanged: (value) {
                           unitDetailsController.updateUnitName(
                             context,
@@ -125,7 +117,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                         editableValueMaxLength:
                             UnitDetailsModel.unitCodeMaxLength,
                         editableValueLengthVisible: true,
@@ -143,7 +135,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Min Value',
@@ -154,7 +146,7 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
                       ConvertouchDetailsItem(
                         name: 'Max Value',
@@ -165,85 +157,14 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
                         colors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
+                        topMargin: _spacing,
                       ),
-                      ConvertouchDetailsItem(
-                        name: 'Conversion Rule',
-                        nameVisible: pageState.details.conversionRule
-                                    .readOnlyDescription !=
-                                null ||
-                            pageState.details.conversionRule.configVisible,
-                        savedValue: pageState
-                            .details.conversionRule.readOnlyDescription,
-                        colors: detailsItemColors,
+                      _conversionRule(
+                        context,
+                        pageState: pageState,
+                        detailsItemColors: detailsItemColors,
                         dialogColors: dialogColors,
                         theme: appState.theme,
-                        topMargin: _verticalSpacing,
-                        content: Visibility(
-                          visible: pageState.details.editMode &&
-                              pageState.details.conversionRule.configVisible,
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 7),
-                              ConvertouchConversionItem(
-                                model: ConversionUnitValueModel(
-                                  unit: pageState.details.resultUnit,
-                                  value: pageState
-                                      .details.conversionRule.unitValue,
-                                  defaultValue: ValueModel.one,
-                                ),
-                                readonly: !pageState
-                                    .details.conversionRule.configEditable,
-                                onValueChanged: (value, {listValues}) {
-                                  unitDetailsController.updateUnitValue(
-                                    context,
-                                    newValue: value,
-                                  );
-                                },
-                                colors:
-                                    appColors[appState.theme].conversionItem,
-                                dialogColors: dialogColors,
-                                theme: appState.theme,
-                              ),
-                              const SizedBox(height: 8),
-                              ConvertouchConversionItem(
-                                model: ConversionUnitValueModel(
-                                  unit:
-                                      pageState.details.conversionRule.argUnit,
-                                  value: pageState
-                                      .details.conversionRule.draftArgValue,
-                                  defaultValue: pageState
-                                      .details.conversionRule.savedArgValue,
-                                ),
-                                readonly: !pageState
-                                    .details.conversionRule.configEditable,
-                                isLast: true,
-                                onValueChanged: (value, {listValues}) {
-                                  unitDetailsController.updateArgUnitValue(
-                                    context,
-                                    newValue: value,
-                                  );
-                                },
-                                onUnitItemTap: () {
-                                  unitsController.showArgUnitsForChange(
-                                    context,
-                                    currentUnitId:
-                                        pageState.details.resultUnit.id,
-                                    currentGroupId:
-                                        pageState.details.unitGroup.id,
-                                    currentArgUnitId: pageState
-                                        .details.conversionRule.argUnit.id,
-                                  );
-                                },
-                                colors:
-                                    appColors[appState.theme].conversionItem,
-                                dialogColors: dialogColors,
-                                theme: appState.theme,
-                              ),
-                              const SizedBox(height: 25),
-                            ],
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -278,5 +199,94 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _conversionRule(
+    BuildContext context, {
+    required UnitDetailsReady pageState,
+    required InputBoxColorScheme detailsItemColors,
+    required WidgetColorScheme dialogColors,
+    required ConvertouchUITheme theme,
+  }) {
+    if (pageState.details.editMode &&
+        pageState.details.conversionRule.configVisible) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 5,
+            ),
+            child: Text(
+              'Conversion Rule',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: detailsItemColors.textBox.label.regular,
+                letterSpacing: 0,
+              ),
+            ),
+          ),
+          const SizedBox(height: 7),
+          ConvertouchConversionItem(
+            model: ConversionUnitValueModel(
+              unit: pageState.details.resultUnit,
+              value: pageState.details.conversionRule.unitValue,
+              defaultValue: ValueModel.one,
+            ),
+            readonly: !pageState.details.conversionRule.configEditable,
+            onValueChanged: (value, {listValues}) {
+              unitDetailsController.updateUnitValue(
+                context,
+                newValue: value,
+              );
+            },
+            colors: appColors[theme].conversionItem,
+            dialogColors: dialogColors,
+            theme: theme,
+          ),
+          const SizedBox(height: _spacing),
+          ConvertouchConversionItem(
+            model: ConversionUnitValueModel(
+              unit: pageState.details.conversionRule.argUnit,
+              value: pageState.details.conversionRule.draftArgValue,
+              defaultValue: pageState.details.conversionRule.savedArgValue,
+            ),
+            readonly: !pageState.details.conversionRule.configEditable,
+            isLast: true,
+            onValueChanged: (value, {listValues}) {
+              unitDetailsController.updateArgUnitValue(
+                context,
+                newValue: value,
+              );
+            },
+            onUnitItemTap: () {
+              unitsController.showArgUnitsForChange(
+                context,
+                currentUnitId: pageState.details.resultUnit.id,
+                currentGroupId: pageState.details.unitGroup.id,
+                currentArgUnitId: pageState.details.conversionRule.argUnit.id,
+              );
+            },
+            colors: appColors[theme].conversionItem,
+            dialogColors: dialogColors,
+            theme: theme,
+          ),
+        ],
+      );
+    } else if (pageState.details.conversionRule.readOnlyDescription != null ||
+        pageState.details.conversionRule.configVisible) {
+      return ConvertouchDetailsItem(
+        name: 'Conversion Rule',
+        savedValue: pageState.details.conversionRule.readOnlyDescription,
+        colors: detailsItemColors,
+        dialogColors: dialogColors,
+        theme: theme,
+        topMargin: _spacing,
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }

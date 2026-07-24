@@ -171,8 +171,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     _closeIconVisibilityNotifier = ValueNotifier(false);
 
     _onValueChanged = (value, {listValues}) {
-      _closeIconVisibilityNotifier.value =
-          widget.model.listType == null && value.hasRawValue;
+      _closeIconVisibilityNotifier.value = !widget.readonly &&
+          widget.model.listType == null &&
+          value.hasRawValue;
       widget.onValueChanged?.call(value, listValues: listValues);
     };
 
@@ -181,7 +182,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
     _focusListener = addFocusListener(
       focusNode: _focusNode,
       onFocusSelected: () {
-        if (!mounted) return;
+        if (!mounted || widget.readonly) return;
 
         _closeIconVisibilityNotifier.value =
             widget.model.listType == null && _controller.text.isNotEmpty;
@@ -191,7 +192,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         });
       },
       onFocusLeft: () {
-        if (!mounted) return;
+        if (!mounted || widget.readonly) return;
 
         _closeIconVisibilityNotifier.value = false;
 
@@ -343,7 +344,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         conversionParams: widget.conversionParams,
         readonly: widget.readonly,
         maxTextLength: widget.maxTextLength,
-        textLengthCounterVisible: widget.textLengthCounterVisible,
+        textLengthCounterVisible:
+            !widget.readonly && widget.textLengthCounterVisible,
         labelText: widget.labelText,
         autofocus: widget.autofocus,
         controller: _controller,
