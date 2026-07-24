@@ -639,6 +639,12 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
         hintColor: widget.hintColor,
         labelColor: widget.labelColor,
         floatingLabelBehavior: widget.floatingLabelBehavior,
+        contentPadding: const EdgeInsets.only(
+          left: 12,
+          top: 5,
+          bottom: 12,
+          right: 12,
+        ),
       ).copyWith(
         suffixText: widget.textLengthCounterVisible
             ? '${widget.controller.text.length}/${widget.maxTextLength}'
@@ -882,6 +888,12 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                 left: _labelPaddingWhenPrefixIconExists,
                               )
                             : null,
+                        contentPadding: const EdgeInsets.only(
+                          left: 12,
+                          top: 5,
+                          bottom: 8,
+                          right: 12,
+                        ),
                       ),
                       style: _inputFieldTextStyle(
                         fontSize: widget.fontSize,
@@ -1339,6 +1351,7 @@ InputDecoration _inputFieldDecoration(
   Color? hintColor,
   required Color? labelColor,
   EdgeInsets? labelPadding,
+  required EdgeInsets contentPadding,
   FloatingLabelBehavior? floatingLabelBehavior,
 }) {
   return InputDecoration(
@@ -1372,12 +1385,7 @@ InputDecoration _inputFieldDecoration(
           )
         : null,
     floatingLabelBehavior: floatingLabelBehavior,
-    contentPadding: const EdgeInsets.only(
-      left: 12,
-      top: 5,
-      bottom: 12,
-      right: 12,
-    ),
+    contentPadding: contentPadding,
     filled: true,
     isDense: true,
     fillColor: Colors.transparent,
