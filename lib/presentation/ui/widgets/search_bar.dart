@@ -8,6 +8,7 @@ import 'package:convertouch/presentation/ui/animation/items_view_mode_button_ani
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
 import 'package:flutter/material.dart';
 
 const Map<ItemsViewMode, IconData> _itemViewModeIconMap = {
@@ -74,31 +75,22 @@ class ConvertouchSearchBar extends StatelessWidget {
             fontSize: 17,
             borderWidth: 0,
             prefixWidgets: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 5),
-                child: Icon(
-                  Icons.search,
-                  color:
-                      searchBarColorScheme.inputBox.textBox.foreground.regular,
-                  size: 22,
+              ConvertouchInputBoxIcon.prefix(
+                builder: () => Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Icon(
+                    Icons.search,
+                    color: searchBarColorScheme
+                        .inputBox.textBox.foreground.regular,
+                  ),
                 ),
               ),
             ],
-            prefixRightmostDividerVisible: false,
             suffixWidgets: [
-              IconButton(
-                padding: const EdgeInsets.only(right: 2),
-                visualDensity: VisualDensity.compact,
-                icon: ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                  Icon(
-                    _itemViewModeIconMap[pageViewMode.next],
-                    key: ValueKey(pageViewMode),
-                    size: 22,
-                  ),
-                ),
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onPressed: () {
+              ConvertouchInputBoxIcon.suffix(
+                height: 40,
+                dividerColor: searchBarColorScheme.inputBox.divider.regular,
+                onTap: () {
                   settingsController.changeSetting(
                     context,
                     key: viewModeSettingKey,
@@ -106,7 +98,18 @@ class ConvertouchSearchBar extends StatelessWidget {
                     fromPage: pageName,
                   );
                 },
-                color: searchBarColorScheme.viewModeButton.foreground.regular,
+                builder: () => Padding(
+                  padding: const EdgeInsets.only(right: 2),
+                  child:
+                      ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                    Icon(
+                      _itemViewModeIconMap[pageViewMode.next],
+                      key: ValueKey(pageViewMode),
+                      color: searchBarColorScheme
+                          .viewModeButton.foreground.regular,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

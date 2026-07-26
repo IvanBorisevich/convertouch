@@ -9,10 +9,12 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
 const double _calculationSuffixIconWidth = 40;
+const double _unitButtonWidth = 76;
 
 class ConversionParamItem extends StatelessWidget {
   final ConversionParamValueModel paramValue;
@@ -46,17 +48,9 @@ class ConversionParamItem extends StatelessWidget {
           model: paramValue,
           conversionGroupName: conversionGroupName,
           conversionParams: conversionParams,
-          draggable: false,
-          removable: false,
           colors: colors,
           dialogColors: dialogColors,
           theme: theme,
-          onUnitItemTap: () {
-            unitsController.showUnitsForChangeInParam(
-              context,
-              paramValue: paramValue,
-            );
-          },
           onValueChanged: (value, {listValues}) {
             conversionController.editConversionParamValue(
               context,
@@ -84,32 +78,51 @@ class ConversionParamItem extends StatelessWidget {
             );
           },
           prefixWidgets: [
-            calculationSwitchersVisible && paramValue.param.calculable
-                ? GestureDetector(
-                    onTap: () {
-                      conversionController.toggleParamCalculable(
-                        context,
-                        paramId: paramValue.param.id,
-                        paramSetId: paramValue.param.paramSetId,
-                      );
-                    },
-                    child: Container(
-                      width: _calculationSuffixIconWidth,
-                      padding: const EdgeInsets.only(left: 2),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12),
-                        ),
-                      ),
-                      child: Icon(
-                        paramValue.calculated
-                            ? Icons.calculate
-                            : Icons.calculate_outlined,
-                        color: colors.prefixWidget.regular,
-                      ),
-                    ),
-                  )
-                : null,
+            ConvertouchInputBoxIcon.prefix(
+              width: _calculationSuffixIconWidth,
+              dividerColor: colors.inputBox.divider.regular,
+              visible:
+                  calculationSwitchersVisible && paramValue.param.calculable,
+              onTap: () {
+                conversionController.toggleParamCalculable(
+                  context,
+                  paramId: paramValue.param.id,
+                  paramSetId: paramValue.param.paramSetId,
+                );
+              },
+              builder: () => Icon(
+                paramValue.calculated
+                    ? Icons.calculate
+                    : Icons.calculate_outlined,
+                color: colors.prefixWidget.regular,
+              ),
+            ),
+            const ConvertouchInputBoxIcon.empty(),
+          ],
+          suffixWidgets: [
+            ConvertouchInputBoxIcon.suffix(
+              width: _unitButtonWidth,
+              dividerColor: colors.inputBox.divider.regular,
+              visible:
+                  paramValue.unitItem != null && paramValue.unitItem!.exists,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+
+                unitsController.showUnitsForChangeInParam(
+                  context,
+                  paramValue: paramValue,
+                );
+              },
+              builder: () => Text(
+                paramValue.unitItem!.code,
+                style: TextStyle(
+                  color: colors.unitButton.regular,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+                maxLines: 1,
+              ),
+            ),
           ],
         );
       },

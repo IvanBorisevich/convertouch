@@ -5,12 +5,17 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 const double _spacing = 10;
 const double _bottomSpacing = 85;
+const double _dragHandlerWidth = 35;
+const double _removalButtonWidth = 35;
+const double _unitButtonWidth = 76;
 
 class ConvertouchConversionItemsView extends StatelessWidget {
   final UnitTapAction unitTapAction;
@@ -72,40 +77,118 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                 model: unitValue,
                 conversionGroupName: unitGroup.name,
                 conversionParams: params,
-                draggable: true,
-                index: index,
                 readonly: !unitValue.unit.invertible,
-                isSource: unitValue.unit.id == srcUnitId,
-                isLast: isLast,
-                removable: removable,
-                onUnitItemTap: () {
-                  if (unitTapAction == UnitTapAction.selectReplacingUnit) {
-                    unitsController.showUnitsForChangeInConversionItem(
-                      context,
-                      currentUnitId: unitValue.unit.id,
-                      unitGroupId: unitGroup.id,
-                      convertedUnitValues: unitValues,
-                    );
-                  } else if (unitTapAction == UnitTapAction.showUnitInfo) {
-                    unitDetailsController.showUnitDetails(
-                      context,
-                      unit: unitValue.unit,
-                      unitGroup: unitGroup,
-                    );
-                  }
-                },
+                tooltipDirection:
+                    isLast ? TooltipDirection.up : TooltipDirection.down,
+                prefixWidgets: [
+                  ConvertouchInputBoxIcon.prefix(
+                    dividerColor: appColors[theme]
+                        .conversionItem
+                        .inputBox
+                        .divider
+                        .regular,
+                    builder: () => ReorderableDragStartListener(
+                      index: index,
+                      child: Container(
+                        width: _dragHandlerWidth,
+                        color: Colors.transparent,
+                        padding: const EdgeInsets.only(left: 3),
+                        alignment: Alignment.center,
+                        child: unitValue.unit.id == srcUnitId
+                            ? Text(
+                                '𝑥',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  height: -0.3,
+                                  color: appColors[theme]
+                                      .conversionItem
+                                      .prefixWidget
+                                      .selected,
+                                ),
+                              )
+                            : Icon(
+                                Icons.drag_indicator_outlined,
+                                color: appColors[theme]
+                                    .conversionItem
+                                    .prefixWidget
+                                    .regular,
+                                size: 20,
+                              ),
+                      ),
+                    ),
+                  ),
+                  const ConvertouchInputBoxIcon.empty(),
+                ],
+                suffixWidgets: [
+                  ConvertouchInputBoxIcon.suffix(
+                    width: _unitButtonWidth,
+                    dividerColor: appColors[theme]
+                        .conversionItem
+                        .inputBox
+                        .divider
+                        .regular,
+                    visible: unitValue.unitItem != null &&
+                        unitValue.unitItem!.exists,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+
+                      if (unitTapAction == UnitTapAction.selectReplacingUnit) {
+                        unitsController.showUnitsForChangeInConversionItem(
+                          context,
+                          currentUnitId: unitValue.unit.id,
+                          unitGroupId: unitGroup.id,
+                          convertedUnitValues: unitValues,
+                        );
+                      } else if (unitTapAction == UnitTapAction.showUnitInfo) {
+                        unitDetailsController.showUnitDetails(
+                          context,
+                          unit: unitValue.unit,
+                          unitGroup: unitGroup,
+                        );
+                      }
+                    },
+                    builder: () => Text(
+                      unitValue.unitItem!.code,
+                      style: TextStyle(
+                        color:
+                            appColors[theme].conversionItem.unitButton.regular,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 1,
+                    ),
+                  ),
+                  ConvertouchInputBoxIcon.suffix(
+                    width: _removalButtonWidth,
+                    dividerColor: appColors[theme]
+                        .conversionItem
+                        .inputBox
+                        .divider
+                        .regular,
+                    visible: removable,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+
+                      conversionController.removeConversionItem(
+                        context,
+                        unitId: unitValue.unit.id,
+                      );
+                    },
+                    builder: () => Icon(
+                      Icons.remove,
+                      color:
+                          appColors[theme].conversionItem.removalIcon.regular,
+                      size: 20,
+                    ),
+                  ),
+                ],
                 onValueChanged: (value, {listValues}) {
                   conversionController.editConversionUnitValue(
                     context,
                     unitId: unitValue.unit.id,
                     newValue: value,
                     listValues: listValues,
-                  );
-                },
-                onItemRemoved: () {
-                  conversionController.removeConversionItem(
-                    context,
-                    unitId: unitValue.unit.id,
                   );
                 },
                 colors: appColors[theme].conversionItem,
