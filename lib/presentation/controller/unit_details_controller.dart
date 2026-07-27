@@ -75,8 +75,12 @@ class UnitDetailsController {
 
   void updateUnitName(
     BuildContext context, {
-    required ValueModel newValue,
+    required ValueModel? newValue,
   }) {
+    if (newValue == null) {
+      return;
+    }
+
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitNameInUnitDetails(
         newValue: newValue,
@@ -89,8 +93,12 @@ class UnitDetailsController {
 
   void updateUnitCode(
     BuildContext context, {
-    required ValueModel newValue,
+    required ValueModel? newValue,
   }) {
+    if (newValue == null) {
+      return;
+    }
+
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitCodeInUnitDetails(
         newValue: newValue,
@@ -103,7 +111,7 @@ class UnitDetailsController {
 
   void updateUnitValue(
     BuildContext context, {
-    required ValueModel newValue,
+    required ValueModel? newValue,
   }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateUnitValueInUnitDetails(
@@ -117,7 +125,7 @@ class UnitDetailsController {
 
   void updateArgUnitValue(
     BuildContext context, {
-    required ValueModel newValue,
+    required ValueModel? newValue,
   }) {
     BlocProvider.of<UnitDetailsBloc>(context).add(
       UpdateArgumentUnitValueInUnitDetails(

@@ -43,7 +43,11 @@ class UnitGroupDetailsController {
     );
   }
 
-  void updateGroupName(BuildContext context, {required ValueModel newValue}) {
+  void updateGroupName(BuildContext context, {required ValueModel? newValue}) {
+    if (newValue == null) {
+      return;
+    }
+
     BlocProvider.of<UnitGroupDetailsBloc>(context).add(
       UpdateUnitGroupName(newValue: newValue.raw),
     );

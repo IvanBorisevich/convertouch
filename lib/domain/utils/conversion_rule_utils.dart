@@ -165,7 +165,7 @@ ConversionUnitValueModel calculateSrcValueByParams({
     );
   } else {
     ConversionRule srcByParam = ConversionRule.srcValueByParam(
-      paramValueFunc: (paramValue) => paramValue.value,
+      paramValueFunc: (paramValue) => paramValue.eitherValue,
       srcValueFunc: _nonListSrcValueByParamsRules[unitGroupName]
           ?[params.paramSet.name],
       srcUnit: srcUnit,

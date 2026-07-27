@@ -18,7 +18,7 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final TooltipDirection tooltipDirection;
   final bool readonly;
   final void Function(
-    ValueModel, {
+    ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
   final List<ConvertouchInputBoxIcon> prefixWidgets;

@@ -7,8 +7,6 @@ import 'package:convertouch/domain/utils/double_value_utils.dart';
 class ValueModel extends IdNameSearchableItemModel {
   static const zero = ValueModel(raw: "0", numVal: 0, alt: "0", range: null);
   static const one = ValueModel(raw: "1", numVal: 1, alt: "1", range: null);
-  static const empty =
-      ValueModel(raw: "", numVal: null, alt: null, range: null);
 
   final String raw;
   final String? alt;

@@ -189,7 +189,8 @@ class CalculateParamValueUseValue extends CalculateItemValueUseCase<
     ConversionParamValueModel itemValue,
     InputParamValueCalculationModel input,
   ) async {
-    if (itemValue.calculated &&
+    if (input.delta is! EditConversionParamValueDelta &&
+        itemValue.calculated &&
         (input.srcUnitValue != null || itemValue.value != null)) {
       return itemValue.defaultValue;
     }

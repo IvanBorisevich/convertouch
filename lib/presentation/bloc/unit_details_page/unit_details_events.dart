@@ -98,7 +98,7 @@ class ChangeArgumentUnitInUnitDetails extends UnitDetailsEvent {
 }
 
 abstract class UpdateUnitTextValues extends UnitDetailsEvent {
-  final ValueModel newValue;
+  final ValueModel? newValue;
 
   const UpdateUnitTextValues({
     required this.newValue,

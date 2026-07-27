@@ -540,7 +540,7 @@ void main() {
       });
 
       test(
-          "Should calculate value of param 'One Side Weight' kg by src value (calculated = true)",
+          "Should change value of param 'One Side Weight' kg [1 -> empty] (calculated = true)",
           () async {
         final currentParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
@@ -553,13 +553,13 @@ void main() {
         final expectedParamValue = ConversionParamValueModel.tuple(
           oneSideWeightParam,
           null,
-          25,
+          1,
           unit: kilogram,
           calculated: true,
         );
 
         await testCase(
-          srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 60, 1),
+          srcUnitValue: ConversionUnitValueModel.tuple(kilogram, 12, 1),
           conversionGroup: massGroup,
           paramSetValue: ConversionParamSetValueModel(
             paramSet: barbellWeightParamSet,

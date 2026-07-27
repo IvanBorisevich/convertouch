@@ -107,11 +107,11 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final TooltipDirection tooltipDirection;
   final TextEditingController? controller;
   final void Function(
-    ValueModel, {
+    ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final void Function(ValueModel)? onValueFocused;
-  final void Function(ValueModel)? onValueUnfocused;
+  final void Function(ValueModel?)? onValueFocused;
+  final void Function(ValueModel?)? onValueUnfocused;
   final List<InputValidator> validators;
   final double borderWidth;
   final InputBoxColorScheme colors;
@@ -356,9 +356,9 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final TextEditingController controller;
   final bool autofocus;
   final FocusNode focusNode;
-  final void Function(ValueModel)? onValueChanged;
-  final void Function(ValueModel)? onValueFocused;
-  final void Function(ValueModel)? onValueUnfocused;
+  final void Function(ValueModel?)? onValueChanged;
+  final void Function(ValueModel?)? onValueFocused;
+  final void Function(ValueModel?)? onValueUnfocused;
   final List<ConvertouchInputBoxIcon> prefixWidgets;
   final List<ConvertouchInputBoxIcon> suffixWidgets;
   final bool leftSpacing;
@@ -385,9 +385,9 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
     with FocusNodeMixin, TextControllerMixin {
   late void Function() _focusListener;
 
-  void Function(ValueModel)? _onValueChanged;
-  void Function(ValueModel)? _onValueFocused;
-  void Function(ValueModel)? _onValueUnfocused;
+  void Function(ValueModel?)? _onValueChanged;
+  void Function(ValueModel?)? _onValueFocused;
+  void Function(ValueModel?)? _onValueUnfocused;
 
   late final ValueNotifier<bool> _closeIconVisibilityNotifier;
 
@@ -410,6 +410,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
       func: (value) {
         _closeIconVisibilityNotifier.value = !widget.readonly &&
             widget.model.listType == null &&
+            value != null &&
             value.hasRawValue;
         widget.onValueChanged?.call(value);
       },
@@ -440,7 +441,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
 
         _closeIconVisibilityNotifier.value = widget.controller.text.isNotEmpty;
 
-        _onValueFocused?.call(widget.model.value ?? ValueModel.empty);
+        _onValueFocused?.call(widget.model.value);
 
         setState(() {
           _hint = _getHint(widget.model, focused: true);
@@ -451,7 +452,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
 
         _closeIconVisibilityNotifier.value = false;
 
-        _onValueUnfocused?.call(widget.model.defaultValue ?? ValueModel.empty);
+        _onValueUnfocused?.call(widget.model.defaultValue);
 
         setState(() {
           _hint = _getHint(widget.model, focused: false);
@@ -521,7 +522,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
                   context: context,
                   validationKey: widget.validationKey,
                   func: _onValueChanged,
-                )?.call(ValueModel.empty);
+                )?.call(null);
               },
               builder: () => Container(
                 padding: const EdgeInsets.all(2),
@@ -633,7 +634,7 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
   final ConversionParamSetValueModel? conversionParams;
   final TextEditingController? controller;
   final void Function(
-    ValueModel, {
+    ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
   final List<ConvertouchInputBoxIcon> prefixWidgets;
@@ -715,7 +716,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             listValuesFetchResult.isEmpty ||
             listValuesFetchResult.selectedItem == null);
 
-    ValueModel? mainValue = showUnknownSelectedValue ? null : currentSelectedValue;
+    ValueModel? mainValue =
+        showUnknownSelectedValue ? null : currentSelectedValue;
     ValueModel hintValue =
         showUnknownSelectedValue ? currentSelectedValue : _noValueHint;
 
@@ -792,7 +794,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
 
             if (listFetchResult.isSuccess) {
               widget.onValueChanged?.call(
-                validatedSelectedValue ?? ValueModel.empty,
+                validatedSelectedValue,
                 listValues: listFetchResult,
               );
 
@@ -1436,11 +1438,11 @@ Widget _validationWrapper({
   );
 }
 
-void Function(ValueModel)? _wrapWithValidation({
+void Function(ValueModel?)? _wrapWithValidation({
   required BuildContext context,
   required Key? validationKey,
   required List<InputValidator> validators,
-  required void Function(ValueModel)? func,
+  required void Function(ValueModel?)? func,
   bool validateEmptyValue = false,
 }) {
   if (validationKey == null) {
@@ -1448,7 +1450,7 @@ void Function(ValueModel)? _wrapWithValidation({
   }
 
   return (value) {
-    if (!validateEmptyValue && !value.hasRawValue) {
+    if (!validateEmptyValue && (value == null || !value.hasRawValue)) {
       return _wrapWithValidationReset(
         context: context,
         validationKey: validationKey,
@@ -1458,7 +1460,7 @@ void Function(ValueModel)? _wrapWithValidation({
 
     validationController.validateInput(
       context,
-      value: value.raw,
+      value: value?.raw ?? "",
       key: validationKey,
       validators: validators,
       onSuccess: ({info}) {
@@ -1468,10 +1470,10 @@ void Function(ValueModel)? _wrapWithValidation({
   };
 }
 
-void Function(ValueModel)? _wrapWithValidationReset({
+void Function(ValueModel?)? _wrapWithValidationReset({
   required BuildContext context,
   required Key? validationKey,
-  required void Function(ValueModel)? func,
+  required void Function(ValueModel?)? func,
 }) {
   return (value) {
     if (validationKey != null) {

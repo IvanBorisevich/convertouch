@@ -109,7 +109,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       draftUnit: inputParam.draftUnitData.copyWith(
-        name: event.newValue.raw,
+        name: event.newValue?.raw,
       ),
     );
 
@@ -123,7 +123,7 @@ class UnitDetailsBloc
     var inputParam = _buildInputParams();
     inputParam = inputParam.copyWith(
       draftUnit: inputParam.draftUnitData.copyWith(
-        code: event.newValue.raw,
+        code: event.newValue?.raw,
       ),
     );
 

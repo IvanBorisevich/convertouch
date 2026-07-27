@@ -61,7 +61,9 @@ class ItemValueModel extends ItemModel {
 
   String? get name => null;
 
-  ValueModel? get eitherValue => value ?? defaultValue;
+  ValueModel? get eitherValue =>
+      (value != null && value!.hasRawValue ? value : null) ??
+      (defaultValue != null && defaultValue!.hasRawValue ? defaultValue : null);
 
   String? get eitherRaw => eitherValue?.raw;
 

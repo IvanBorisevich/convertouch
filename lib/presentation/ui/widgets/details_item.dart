@@ -13,7 +13,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
   final Widget? content;
   final bool visible;
   final bool editable;
-  final void Function(ValueModel)? onValueChanged;
+  final void Function(ValueModel?)? onValueChanged;
   final int? editableValueMaxLength;
   final bool editableValueLengthVisible;
   final double topMargin;

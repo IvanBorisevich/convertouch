@@ -20,7 +20,7 @@ class ConvertouchSearchBar extends StatelessWidget {
   final PageName pageName;
   final SettingKey viewModeSettingKey;
   final String placeholder;
-  final void Function(ValueModel)? onValueChanged;
+  final void Function(ValueModel?)? onValueChanged;
   final SearchBoxColorScheme? customColor;
 
   const ConvertouchSearchBar({
