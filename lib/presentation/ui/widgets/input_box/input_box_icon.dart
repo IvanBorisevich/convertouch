@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const double inputBoxIconDefaultWidth = 40;
 const double defaultBorderRadius = 15;
 const double inputBoxIconSpacing = 7;
+const double _dividerWidth = 2;
 
 enum IconType {
   prefix,
@@ -92,9 +93,44 @@ class ConvertouchInputBoxIcon extends StatelessWidget {
         color: dividerColor,
         indent: 10,
         endIndent: 10,
-        width: 2,
+        width: _dividerWidth,
         thickness: 2,
       ),
     );
   }
+}
+
+Widget _defaultBuilder() => const SizedBox.shrink();
+
+class InputBoxIconModel {
+  final IconType? iconType;
+  final double width;
+  final double? height;
+  final bool visible;
+  final Widget Function() builder;
+  final void Function()? onTap;
+
+  const InputBoxIconModel.prefix({
+    required this.width,
+    this.height,
+    required this.builder,
+    this.visible = true,
+    this.onTap,
+  }) : iconType = IconType.prefix;
+
+  const InputBoxIconModel.suffix({
+    required this.width,
+    this.height,
+    required this.builder,
+    this.visible = true,
+    this.onTap,
+  }) : iconType = IconType.suffix;
+
+  const InputBoxIconModel.divider({
+    this.visible = true,
+  })  : iconType = null,
+        width = _dividerWidth,
+        height = null,
+        builder = _defaultBuilder,
+        onTap = null;
 }
