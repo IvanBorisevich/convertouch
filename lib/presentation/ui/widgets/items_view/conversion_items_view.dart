@@ -118,7 +118,6 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const ConvertouchInputBoxIcon.empty(),
                 ],
                 suffixWidgets: [
                   ConvertouchInputBoxIcon.suffix(

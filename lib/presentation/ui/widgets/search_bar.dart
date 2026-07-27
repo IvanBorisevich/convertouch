@@ -74,15 +74,15 @@ class ConvertouchSearchBar extends StatelessWidget {
             theme: appState.theme,
             fontSize: 17,
             borderWidth: 0,
+            leftSpacing: false,
+            rightSpacing: false,
             prefixWidgets: [
               ConvertouchInputBoxIcon.prefix(
-                builder: () => Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Icon(
-                    Icons.search,
-                    color: searchBarColorScheme
-                        .inputBox.textBox.foreground.regular,
-                  ),
+                dividerVisible: false,
+                builder: () => Icon(
+                  Icons.search,
+                  color:
+                      searchBarColorScheme.inputBox.textBox.foreground.regular,
                 ),
               ),
             ],

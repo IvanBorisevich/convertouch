@@ -97,7 +97,6 @@ class ConversionParamItem extends StatelessWidget {
                 color: colors.prefixWidget.regular,
               ),
             ),
-            const ConvertouchInputBoxIcon.empty(),
           ],
           suffixWidgets: [
             ConvertouchInputBoxIcon.suffix(

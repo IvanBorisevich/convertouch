@@ -60,6 +60,7 @@ final Map<ConvertouchValueType, RegExp> _valueTypeToRegExp = {
 };
 
 const double _defaultFontSize = 18;
+const double _defaultDropdownItemFontSize = 17;
 const double _refreshButtonWidth = 25;
 
 const String _defaultSearchHint = "Search...";
@@ -86,6 +87,8 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     required this.dialogColors,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
+    this.leftSpacing = true,
+    this.rightSpacing = true,
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
     this.labelText,
@@ -115,6 +118,8 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final WidgetColorScheme dialogColors;
   final List<ConvertouchInputBoxIcon> prefixWidgets;
   final List<ConvertouchInputBoxIcon> suffixWidgets;
+  final bool leftSpacing;
+  final bool rightSpacing;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final String? labelText;
@@ -268,6 +273,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueUnfocused: widget.onValueUnfocused,
         prefixWidgets: widget.prefixWidgets,
         suffixWidgets: widget.suffixWidgets,
+        leftSpacing: widget.leftSpacing,
+        rightSpacing: widget.rightSpacing,
         backgroundColor: _backgroundColor,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
@@ -288,6 +295,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueChanged: widget.onValueChanged,
         prefixWidgets: widget.prefixWidgets,
         suffixWidgets: widget.suffixWidgets,
+        leftSpacing: widget.leftSpacing,
+        rightSpacing: widget.rightSpacing,
         foregroundColor: _foregroundColor,
         warningColor: widget.colors.textBox.foreground.warning,
         hintColor: _hintColor,
@@ -321,6 +330,8 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueUnfocused,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
+    this.leftSpacing = true,
+    this.rightSpacing = true,
     this.labelText,
     this.readonly = false,
     required this.backgroundColor,
@@ -350,6 +361,8 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel)? onValueUnfocused;
   final List<ConvertouchInputBoxIcon> prefixWidgets;
   final List<ConvertouchInputBoxIcon> suffixWidgets;
+  final bool leftSpacing;
+  final bool rightSpacing;
   final String? labelText;
   final bool readonly;
   final Color backgroundColor;
@@ -496,7 +509,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
           valueListenable: _closeIconVisibilityNotifier,
           builder: (_, visible, child) {
             if (!visible) {
-              return const ConvertouchInputBoxIcon.empty();
+              return const SizedBox.shrink();
             }
 
             return ConvertouchInputBoxIcon.suffix(
@@ -565,7 +578,9 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
                 hintColor: widget.hintColor,
                 labelColor: widget.labelColor,
                 floatingLabelBehavior: widget.floatingLabelBehavior,
-                contentPadding: const EdgeInsets.only(
+                contentPadding: EdgeInsets.only(
+                  left: widget.leftSpacing ? 15 : 0,
+                  right: widget.rightSpacing ? 15 : 0,
                   top: 5,
                   bottom: 12,
                 ),
@@ -598,6 +613,8 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.prefixWidgets = const [],
     this.suffixWidgets = const [],
+    this.leftSpacing = true,
+    this.rightSpacing = true,
     this.labelText,
     required this.foregroundColor,
     required this.warningColor,
@@ -621,6 +638,8 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
   })? onValueChanged;
   final List<ConvertouchInputBoxIcon> prefixWidgets;
   final List<ConvertouchInputBoxIcon> suffixWidgets;
+  final bool leftSpacing;
+  final bool rightSpacing;
   final String? labelText;
   final Color foregroundColor;
   final Color warningColor;
@@ -697,7 +716,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             listValuesFetchResult.selectedItem == null);
 
     ValueModel? mainValue = showUnknownSelectedValue ? null : selectedValue;
-    ValueModel? hintValue =
+    ValueModel hintValue =
         showUnknownSelectedValue ? selectedValue : _noValueHint;
 
     _selectedMainValueNotifier.value = mainValue;
@@ -798,32 +817,48 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
         builder: (_, listValuesFetchResult, child) {
           final items = _buildDropdownItems(context, listValuesFetchResult);
 
-          return _wrapWithIcons(
-            prefixWidgets: widget.prefixWidgets,
-            suffixWidgets: [
-              ConvertouchInputBoxIcon.suffix(
-                dividerVisible: false,
-                builder: () => ValueListenableBuilder(
-                  valueListenable: _dropdownIsOpenNotifier,
-                  builder: (_, isOpen, child) {
-                    return _suffixRefreshIcon(
-                      context,
-                      listValuesFetchResult: listValuesFetchResult,
-                      isDropdownOpen: isOpen,
-                    );
-                  },
-                ),
-              ),
-              ...widget.suffixWidgets,
-            ],
-            child: ValueListenableBuilder(
-              valueListenable: _selectedMainValueNotifier,
-              builder: (_, selectedValue, child) {
-                return DropdownButtonHideUnderline(
-                  child: ValueListenableBuilder(
-                    valueListenable: _hintNotifier,
-                    builder: (_, hint, child) {
-                      return DropdownButtonFormField2<ValueModel>(
+          return ValueListenableBuilder(
+            valueListenable: _selectedMainValueNotifier,
+            builder: (_, selectedValue, child) {
+              return DropdownButtonHideUnderline(
+                child: ValueListenableBuilder(
+                  valueListenable: _hintNotifier,
+                  builder: (_, hint, child) {
+                    bool selectedValueIconVisible =
+                        widget.model.listType!.defaultIconUri != null &&
+                            (selectedValue ?? hint) != _noValueHint;
+
+                    return _wrapWithIcons(
+                      prefixWidgets: [
+                        ...widget.prefixWidgets,
+                        ConvertouchInputBoxIcon.prefix(
+                          width: 50,
+                          dividerVisible: false,
+                          visible: selectedValueIconVisible,
+                          builder: () => ConvertouchSvgIcon(
+                            uri: (selectedValue ?? hint).iconUri,
+                            defaultUri: widget.model.listType!.defaultIconUri,
+                            defaultColor: widget.dropdownColors.icon.regular,
+                          ),
+                        ),
+                      ],
+                      suffixWidgets: [
+                        ConvertouchInputBoxIcon.suffix(
+                          dividerVisible: false,
+                          builder: () => ValueListenableBuilder(
+                            valueListenable: _dropdownIsOpenNotifier,
+                            builder: (_, isOpen, child) {
+                              return _suffixRefreshIcon(
+                                context,
+                                listValuesFetchResult: listValuesFetchResult,
+                                isDropdownOpen: isOpen,
+                              );
+                            },
+                          ),
+                        ),
+                        ...widget.suffixWidgets,
+                      ],
+                      child: DropdownButtonFormField2<ValueModel>(
                         items: items,
                         valueListenable: _selectedMainValueNotifier,
                         openDropdownListenable: _openDropdownNotifier,
@@ -833,7 +868,15 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                           labelText: _labelText,
                           labelColor: widget.labelColor,
                           floatingLabelBehavior: widget.floatingLabelBehavior,
-                          contentPadding: const EdgeInsets.only(
+                          contentPadding: EdgeInsets.only(
+                            left:
+                                !selectedValueIconVisible && widget.leftSpacing
+                                    ? 15
+                                    : 0,
+                            right:
+                                !selectedValueIconVisible && widget.rightSpacing
+                                    ? 15
+                                    : 0,
                             top: 5,
                             bottom: 8,
                           ),
@@ -952,6 +995,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                       textBox: widget.dropdownColors.searchBox,
                                     ),
                                     dialogColors: widget.dialogColors,
+                                    leftSpacing: false,
+                                    rightSpacing: false,
                                     prefixWidgets: [
                                       ConvertouchInputBoxIcon.suffix(
                                         dividerVisible: false,
@@ -1017,12 +1062,12 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
 
                           _dropdownIsOpenNotifier.value = isOpen;
                         },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
           );
         },
       ),
@@ -1114,7 +1159,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                       child: Text(
                         "Refresh failed",
                         style: _inputFieldTextStyle(
-                          fontSize: widget.fontSize,
+                          fontSize: _defaultDropdownItemFontSize,
                           fontWeight: FontWeight.w600,
                           foregroundColor: widget.warningColor,
                         ),
@@ -1154,20 +1199,26 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             children: [
               widget.model.listType!.defaultIconUri != null &&
                       value != _noValueHint
-                  ? ConvertouchSvgIcon(
-                      uri: value.iconUri,
-                      defaultUri: widget.model.listType!.defaultIconUri,
-                      defaultColor: widget.dropdownColors.icon.regular,
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: ConvertouchSvgIcon(
+                        uri: value.iconUri,
+                        defaultUri: widget.model.listType!.defaultIconUri,
+                        defaultColor: widget.dropdownColors.icon.regular,
+                      ),
                     )
                   : const SizedBox.shrink(),
               Expanded(
-                child: Text(
-                  value.itemName,
-                  style: _inputFieldTextStyle(
-                    fontSize: widget.fontSize,
-                    foregroundColor: value != _noValueHint
-                        ? widget.foregroundColor
-                        : widget.hintColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Text(
+                    value.itemName,
+                    style: _inputFieldTextStyle(
+                      fontSize: _defaultDropdownItemFontSize,
+                      foregroundColor: value != _noValueHint
+                          ? widget.foregroundColor
+                          : widget.hintColor,
+                    ),
                   ),
                 ),
               ),
@@ -1278,7 +1329,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       child: Text(
         'No Items',
         style: _inputFieldTextStyle(
-          fontSize: widget.fontSize,
+          fontSize: _defaultDropdownItemFontSize,
           fontWeight: FontWeight.w600,
           foregroundColor: widget.dropdownColors.foreground.regular,
         ),
@@ -1437,13 +1488,9 @@ Widget _wrapWithIcons({
   return IntrinsicHeight(
     child: Row(
       children: [
-        ...(prefixWidgets.isNotEmpty
-            ? prefixWidgets
-            : [const ConvertouchInputBoxIcon.empty()]),
+        ...prefixWidgets,
         Expanded(child: child),
-        ...(suffixWidgets.isNotEmpty
-            ? suffixWidgets
-            : [const ConvertouchInputBoxIcon.empty()]),
+        ...suffixWidgets,
       ],
     ),
   );

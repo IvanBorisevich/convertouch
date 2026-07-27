@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 const double inputBoxIconDefaultWidth = 40;
 const double defaultBorderRadius = 15;
-
-Widget _emptyBuilder() => const SizedBox.shrink();
+const double inputBoxIconSpacing = 7;
 
 enum IconType {
   prefix,
@@ -33,17 +32,6 @@ class ConvertouchInputBoxIcon extends StatelessWidget {
     super.key,
   }) : iconType = IconType.suffix;
 
-  const ConvertouchInputBoxIcon.empty({
-    this.visible = true,
-    super.key,
-  })  : iconType = IconType.prefix,
-        width = 12,
-        height = null,
-        onTap = null,
-        builder = _emptyBuilder,
-        dividerVisible = false,
-        dividerColor = Colors.transparent;
-
   final Widget Function() builder;
   final IconType iconType;
   final double width;
@@ -59,13 +47,13 @@ class ConvertouchInputBoxIcon extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Row(
-      children: [
-        dividerVisible && iconType == IconType.suffix
-            ? _divider()
-            : const SizedBox.shrink(),
-        _wrapInGestureDetector(
-          child: Container(
+    return _wrapInGestureDetector(
+      child: Row(
+        children: [
+          dividerVisible && iconType == IconType.suffix
+              ? _divider()
+              : const SizedBox.shrink(),
+          Container(
             width: width,
             height: height ?? double.infinity,
             alignment: Alignment.center,
@@ -78,11 +66,11 @@ class ConvertouchInputBoxIcon extends StatelessWidget {
             ),
             child: builder.call(),
           ),
-        ),
-        dividerVisible && iconType == IconType.prefix
-            ? _divider()
-            : const SizedBox.shrink(),
-      ],
+          dividerVisible && iconType == IconType.prefix
+              ? _divider()
+              : const SizedBox.shrink(),
+        ],
+      ),
     );
   }
 
@@ -95,13 +83,18 @@ class ConvertouchInputBoxIcon extends StatelessWidget {
         : child;
   }
 
-  Widget _divider() {
-    return VerticalDivider(
-      color: dividerColor,
-      indent: 10,
-      endIndent: 10,
-      width: 2,
-      thickness: 2,
+  Widget _divider({
+    EdgeInsets padding = EdgeInsets.zero,
+  }) {
+    return Padding(
+      padding: padding,
+      child: VerticalDivider(
+        color: dividerColor,
+        indent: 10,
+        endIndent: 10,
+        width: 2,
+        thickness: 2,
+      ),
     );
   }
 }
