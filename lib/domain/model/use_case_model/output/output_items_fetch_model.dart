@@ -126,6 +126,7 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
   Map<String, dynamic> toJson({bool removeNulls = true}) {
     var result = {
       'items': items.map((e) => e.toJson()).toList(),
+      'selectedItem': selectedItem?.toJson(),
       'searchString': searchString,
       'hasReachedMax': hasReachedMax,
       'pageNum': pageNum,
@@ -151,6 +152,9 @@ class OutputItemsFetchModel<T extends IdNameSearchableItemModel,
       items: json['items'] != null
           ? (json['items'] as List).map((e) => fromItemJson.call(e)).toList()
           : [],
+      selectedItem: json['selectedItem'] != null
+          ? fromItemJson.call(json['selectedItem'])
+          : null,
       searchString: json['searchString'],
       hasReachedMax: json['hasReachedMax'],
       pageNum: json['pageNum'],

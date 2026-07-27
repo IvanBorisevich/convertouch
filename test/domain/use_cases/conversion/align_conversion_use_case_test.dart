@@ -232,13 +232,21 @@ void main() {
                   personParam,
                   'Man',
                   null,
-                  listValuesFetchResult: personParamListValues,
+                  listValuesFetchResult: personParamListValues.copyWith(
+                    selectedItem: Patchable(
+                      ValueModel.str('Man'),
+                    ),
+                  ),
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
                   'Shirt',
                   null,
-                  listValuesFetchResult: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues.copyWith(
+                    selectedItem: Patchable(
+                      ValueModel.str('Shirt'),
+                    ),
+                  ),
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
@@ -246,7 +254,11 @@ void main() {
                   null,
                   unit: meter,
                   listValuesFetchResult:
-                      manShirtHeightRangesFrom0_164To190InMeter,
+                      manShirtHeightRangesFrom0_164To190InMeter.copyWith(
+                    selectedItem: Patchable(
+                      manShirtHeightRangesFrom0_164To190InMeter.items[3],
+                    ),
+                  ),
                 ),
               ],
             )
@@ -257,20 +269,32 @@ void main() {
           jpClothesSize,
           'LL',
           null,
-          listValuesFetchResult: jpClothesSizes,
+          listValuesFetchResult: jpClothesSizes.copyWith(
+            selectedItem: Patchable(
+              ValueModel.str('LL'),
+            ),
+          ),
         ),
         convertedUnitValues: [
           ConversionUnitValueModel.tuple(
             jpClothesSize,
             'LL',
             null,
-            listValuesFetchResult: jpClothesSizes,
+            listValuesFetchResult: jpClothesSizes.copyWith(
+              selectedItem: Patchable(
+                ValueModel.str('LL'),
+              ),
+            ),
           ),
           ConversionUnitValueModel.tuple(
             deClothesSize,
             46,
             null,
-            listValuesFetchResult: deClothesSizes,
+            listValuesFetchResult: deClothesSizes.copyWith(
+              selectedItem: Patchable(
+                ValueModel.num(46),
+              ),
+            ),
           ),
         ],
       ).toJson(saveListValues: true),
@@ -331,13 +355,21 @@ void main() {
                   personParam,
                   'Woman',
                   null,
-                  listValuesFetchResult: personParamListValues,
+                  listValuesFetchResult: personParamListValues.copyWith(
+                    selectedItem: Patchable(
+                      ValueModel.str('Woman'),
+                    ),
+                  ),
                 ),
                 ConversionParamValueModel.tuple(
                   garmentParam,
                   'Shirt',
                   null,
-                  listValuesFetchResult: garmentParamListValues,
+                  listValuesFetchResult: garmentParamListValues.copyWith(
+                    selectedItem: Patchable(
+                      ValueModel.str('Shirt'),
+                    ),
+                  ),
                 ),
                 ConversionParamValueModel.tuple(
                   heightParam,
@@ -346,7 +378,11 @@ void main() {
                   unit: centimeter,
                   calculated: true,
                   listValuesFetchResult:
-                      womanShirtHeightRangesFrom0_156To186InCm,
+                      womanShirtHeightRangesFrom0_156To186InCm.copyWith(
+                    selectedItem: Patchable(
+                      womanShirtHeightRangesFrom0_156To186InCm.items[2],
+                    ),
+                  ),
                 ),
               ],
             )
@@ -614,13 +650,21 @@ void main() {
                     personParam,
                     'Man',
                     null,
-                    listValuesFetchResult: personParamListValues,
+                    listValuesFetchResult: personParamListValues.copyWith(
+                      selectedItem: Patchable(
+                        ValueModel.str('Man'),
+                      ),
+                    ),
                   ),
                   ConversionParamValueModel.tuple(
                     garmentParam,
                     'Shirt',
                     null,
-                    listValuesFetchResult: garmentParamListValues,
+                    listValuesFetchResult: garmentParamListValues.copyWith(
+                      selectedItem: Patchable(
+                        ValueModel.str('Shirt'),
+                      ),
+                    ),
                   ),
                   ConversionParamValueModel.tuple(
                     heightParam,
@@ -628,7 +672,11 @@ void main() {
                     null,
                     unit: meter,
                     listValuesFetchResult:
-                        manShirtHeightRangesFrom0_164To190InMeter,
+                        manShirtHeightRangesFrom0_164To190InMeter.copyWith(
+                      selectedItem: Patchable(
+                        manShirtHeightRangesFrom0_164To190InMeter.items[2],
+                      ),
+                    ),
                   ),
                 ],
               )
@@ -639,20 +687,32 @@ void main() {
             jpClothesSize,
             'L',
             null,
-            listValuesFetchResult: jpClothesSizes,
+            listValuesFetchResult: jpClothesSizes.copyWith(
+              selectedItem: Patchable(
+                ValueModel.str('L'),
+              ),
+            ),
           ),
           convertedUnitValues: [
             ConversionUnitValueModel.tuple(
               jpClothesSize,
               'L',
               null,
-              listValuesFetchResult: jpClothesSizes,
+              listValuesFetchResult: jpClothesSizes.copyWith(
+                selectedItem: Patchable(
+                  ValueModel.str('L'),
+                ),
+              ),
             ),
             ConversionUnitValueModel.tuple(
               deClothesSize,
               44,
               null,
-              listValuesFetchResult: deClothesSizes,
+              listValuesFetchResult: deClothesSizes.copyWith(
+                selectedItem: Patchable(
+                  ValueModel.num(44),
+                ),
+              ),
             ),
           ],
         ).toJson(saveListValues: true),
@@ -733,7 +793,11 @@ void main() {
                     ringDiameterRangesInMm.items[3],
                     null,
                     unit: millimeter,
-                    listValuesFetchResult: ringDiameterRangesInMm,
+                    listValuesFetchResult: ringDiameterRangesInMm.copyWith(
+                      selectedItem: Patchable(
+                        ringDiameterRangesInMm.items[3],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -745,7 +809,11 @@ void main() {
                     ringCircumferenceRangesInCm.items[4],
                     null,
                     unit: centimeter,
-                    listValuesFetchResult: ringCircumferenceRangesInCm,
+                    listValuesFetchResult: ringCircumferenceRangesInCm.copyWith(
+                      selectedItem: Patchable(
+                        ringCircumferenceRangesInCm.items[4],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -756,20 +824,32 @@ void main() {
             esRingSize,
             8,
             null,
-            listValuesFetchResult: esRingSizes,
+            listValuesFetchResult: esRingSizes.copyWith(
+              selectedItem: Patchable(
+                ValueModel.num(8),
+              ),
+            ),
           ),
           convertedUnitValues: [
             ConversionUnitValueModel.tuple(
               esRingSize,
               8,
               null,
-              listValuesFetchResult: esRingSizes,
+              listValuesFetchResult: esRingSizes.copyWith(
+                selectedItem: Patchable(
+                  ValueModel.num(8),
+                ),
+              ),
             ),
             ConversionUnitValueModel.tuple(
               usRingSize,
               4.5,
               null,
-              listValuesFetchResult: usRingSizes,
+              listValuesFetchResult: usRingSizes.copyWith(
+                selectedItem: Patchable(
+                  ValueModel.num(4.5),
+                ),
+              ),
             ),
           ],
         ).toJson(saveListValues: true),

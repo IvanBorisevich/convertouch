@@ -4,6 +4,7 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/unit_group_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_conversion_modify_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_item_value_calculation_model.dart';
+import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_item_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/conversion/internal/calculate_non_list_default_value_use_case.dart';
 import 'package:convertouch/domain/use_cases/dynamic_data/fetch_dynamic_value_use_use.dart';
@@ -81,7 +82,11 @@ void main() {
           10,
           null,
           unit: kilogram,
-          listValuesFetchResult: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues.copyWith(
+            selectedItem: Patchable(
+              ValueModel.num(10),
+            ),
+          ),
         );
 
         await testCase(
@@ -112,7 +117,11 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValuesFetchResult: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues.copyWith(
+            selectedItem: Patchable(
+              ValueModel.num(20),
+            ),
+          ),
         );
 
         await testCase(
@@ -143,7 +152,11 @@ void main() {
           10,
           null,
           unit: kilogram,
-          listValuesFetchResult: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues.copyWith(
+            selectedItem: Patchable(
+              ValueModel.num(10),
+            ),
+          ),
         );
 
         await testCase(
@@ -177,7 +190,11 @@ void main() {
           20,
           null,
           unit: kilogram,
-          listValuesFetchResult: barWeightParamKgListValues,
+          listValuesFetchResult: barWeightParamKgListValues.copyWith(
+            selectedItem: Patchable(
+              ValueModel.num(20),
+            ),
+          ),
         );
 
         await testCase(
@@ -214,7 +231,11 @@ void main() {
           barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
-          listValuesFetchResult: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues.copyWith(
+            selectedItem: Patchable(
+              barWeightParamPoundListValues.items[1],
+            ),
+          ),
         );
 
         await testCase(
@@ -253,7 +274,12 @@ void main() {
           null,
           unit: meter,
           calculated: false,
-          listValuesFetchResult: manShirtHeightRangesFrom0_164To190InMeter,
+          listValuesFetchResult:
+              manShirtHeightRangesFrom0_164To190InMeter.copyWith(
+            selectedItem: Patchable(
+              manShirtHeightRangesFrom0_164To190InMeter.items[4],
+            ),
+          ),
         );
 
         await testCase(
@@ -309,7 +335,12 @@ void main() {
           null,
           unit: centimeter,
           calculated: true,
-          listValuesFetchResult: womanShirtHeightRangesFrom0_156To186InCm,
+          listValuesFetchResult:
+              womanShirtHeightRangesFrom0_156To186InCm.copyWith(
+            selectedItem: Patchable(
+              womanShirtHeightRangesFrom0_156To186InCm.items[2],
+            ),
+          ),
         );
 
         final expectedParamValue = currentParamValue;
@@ -366,7 +397,11 @@ void main() {
           barWeightParamPoundListValues.items[1],
           null,
           unit: pound,
-          listValuesFetchResult: barWeightParamPoundListValues,
+          listValuesFetchResult: barWeightParamPoundListValues.copyWith(
+            selectedItem: Patchable(
+              barWeightParamPoundListValues.items[1],
+            ),
+          ),
         );
 
         await testCase(
@@ -620,42 +655,42 @@ void main() {
 
       test(
           "Should keep current main value of param 'One Side Weight' kg "
-              "in empty conversion (i. e. src value does not exist) (calculated = true)",
-              () async {
-            final currentParamValue = ConversionParamValueModel.tuple(
-              oneSideWeightParam,
-              20,
-              null,
-              unit: kilogram,
-              calculated: true,
-            );
+          "in empty conversion (i. e. src value does not exist) (calculated = true)",
+          () async {
+        final currentParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          20,
+          null,
+          unit: kilogram,
+          calculated: true,
+        );
 
-            final expectedParamValue = ConversionParamValueModel.tuple(
-              oneSideWeightParam,
-              20,
-              null,
-              unit: kilogram,
-              calculated: true,
-            );
+        final expectedParamValue = ConversionParamValueModel.tuple(
+          oneSideWeightParam,
+          20,
+          null,
+          unit: kilogram,
+          calculated: true,
+        );
 
-            await testCase(
-              conversionGroup: massGroup,
-              paramSetValue: ConversionParamSetValueModel(
-                paramSet: barbellWeightParamSet,
-                paramValues: [
-                  ConversionParamValueModel.tuple(
-                    barWeightParam,
-                    null,
-                    null,
-                    unit: kilogram,
-                  ),
-                  currentParamValue,
-                ],
+        await testCase(
+          conversionGroup: massGroup,
+          paramSetValue: ConversionParamSetValueModel(
+            paramSet: barbellWeightParamSet,
+            paramValues: [
+              ConversionParamValueModel.tuple(
+                barWeightParam,
+                null,
+                null,
+                unit: kilogram,
               ),
-              currentParamValue: currentParamValue,
-              expectedParamValue: expectedParamValue,
-            );
-          });
+              currentParamValue,
+            ],
+          ),
+          currentParamValue: currentParamValue,
+          expectedParamValue: expectedParamValue,
+        );
+      });
     });
 
     group("Should NOT calculate value of param 'One Side Weight' kg", () {

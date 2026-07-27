@@ -81,7 +81,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamKgListValues,
+        expectedListFetchResult: barWeightParamKgListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.num(10),
+          ),
+        ),
         expectedSelectedValue: ValueModel.num(10),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -136,7 +140,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamKgListValues,
+        expectedListFetchResult: barWeightParamKgListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.num(20),
+          ),
+        ),
         expectedSelectedValue: ValueModel.num(20),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -164,7 +172,11 @@ void main() {
       await testCase(
         leaveUnknownSelectedValue: true,
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamKgListValues,
+        expectedListFetchResult: barWeightParamKgListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.num(15),
+          ),
+        ),
         expectedSelectedValue: ValueModel.num(15),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -191,7 +203,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamKgListValues,
+        expectedListFetchResult: barWeightParamKgListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.num(10),
+          ),
+        ),
         expectedSelectedValue: ValueModel.num(10),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -248,8 +264,13 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamPoundListValues,
-        expectedSelectedValue: const ValueModel(raw: '10', alt: '22'),
+        expectedListFetchResult: barWeightParamPoundListValues.copyWith(
+          selectedItem: const Patchable(
+            ValueModel(raw: '10', alt: '22', numVal: 10),
+          ),
+        ),
+        expectedSelectedValue:
+            const ValueModel(raw: '10', alt: '22', numVal: 10),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
           paramValues: [
@@ -296,14 +317,18 @@ void main() {
     test("Should leave known value: 44 -> 44", () async {
       final currentParamValue = ConversionParamValueModel.tuple(
         barWeightParam,
-        const ValueModel(raw: '20', alt: '44'),
+        const ValueModel(raw: '20', alt: '44', numVal: 20),
         null,
         unit: pound,
       );
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamPoundListValues,
+        expectedListFetchResult: barWeightParamPoundListValues.copyWith(
+          selectedItem: const Patchable(
+            ValueModel(raw: '20', alt: '44', numVal: 20),
+          ),
+        ),
         expectedSelectedValue: const ValueModel(raw: '20', alt: '44'),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -331,7 +356,11 @@ void main() {
       await testCase(
         leaveUnknownSelectedValue: true,
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamPoundListValues,
+        expectedListFetchResult: barWeightParamPoundListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.num(15),
+          ),
+        ),
         expectedSelectedValue: ValueModel.num(15),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
@@ -358,8 +387,13 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: barWeightParamPoundListValues,
-        expectedSelectedValue: const ValueModel(raw: '10', alt: '22'),
+        expectedListFetchResult: barWeightParamPoundListValues.copyWith(
+          selectedItem: const Patchable(
+            ValueModel(raw: '10', alt: '22', numVal: 10),
+          ),
+        ),
+        expectedSelectedValue:
+            const ValueModel(raw: '10', alt: '22', numVal: 10),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: barbellWeightParamSet,
           paramValues: [
@@ -411,7 +445,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: garmentParamListValues,
+        expectedListFetchResult: garmentParamListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.str('Shirt'),
+          ),
+        ),
         expectedSelectedValue: ValueModel.str('Shirt'),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: clothesSizeParamSet,
@@ -455,7 +493,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: garmentParamListValues,
+        expectedListFetchResult: garmentParamListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.str('Shirt'),
+          ),
+        ),
         expectedSelectedValue: ValueModel.str('Shirt'),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: clothesSizeParamSet,
@@ -479,7 +521,11 @@ void main() {
       await testCase(
         leaveUnknownSelectedValue: true,
         itemValue: currentParamValue,
-        expectedListFetchResult: garmentParamListValues,
+        expectedListFetchResult: garmentParamListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.str('Pants'),
+          ),
+        ),
         expectedSelectedValue: ValueModel.str('Pants'),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: clothesSizeParamSet,
@@ -503,7 +549,11 @@ void main() {
 
       await testCase(
         itemValue: currentParamValue,
-        expectedListFetchResult: garmentParamListValues,
+        expectedListFetchResult: garmentParamListValues.copyWith(
+          selectedItem: Patchable(
+            ValueModel.str('Shirt'),
+          ),
+        ),
         expectedSelectedValue: ValueModel.str('Shirt'),
         paramSetValue: ConversionParamSetValueModel(
           paramSet: clothesSizeParamSet,
@@ -565,7 +615,14 @@ void main() {
         leaveUnknownSelectedValue: true,
         itemValue: currentParamValue,
         conversionGroupName: GroupNames.currency,
-        expectedListFetchResult: exchangeRateSources,
+        expectedListFetchResult: exchangeRateSources.copyWith(
+          selectedItem: const Patchable(
+            ValueModel.rawStr(
+              'FloatRates',
+              iconUri: IconKeys.dataSource,
+            ),
+          ),
+        ),
         expectedSelectedValue: const ValueModel.rawStr(
           'FloatRates',
           iconUri: IconKeys.dataSource,

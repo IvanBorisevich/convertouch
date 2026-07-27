@@ -685,7 +685,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     log("list field initState(), widget model: ${widget.model}");
 
     _distributeSelectedValue(
-      selectedValue: widget.model.value,
+      currentSelectedValue: widget.model.value,
       listValuesFetchResult: widget.model.listValuesFetchResult,
     );
 
@@ -704,20 +704,22 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
   }
 
   void _distributeSelectedValue({
-    required ValueModel? selectedValue,
+    required ValueModel? currentSelectedValue,
     required ListValuesFetchResult? listValuesFetchResult,
   }) {
-    log("Distribute selected value: $selectedValue\n"
+    log("Distribute selected value: $currentSelectedValue\n"
         "list values: $listValuesFetchResult");
 
-    bool showUnknownSelectedValue = selectedValue != null &&
+    bool showUnknownSelectedValue = currentSelectedValue != null &&
         (listValuesFetchResult == null ||
             listValuesFetchResult.isEmpty ||
             listValuesFetchResult.selectedItem == null);
 
-    ValueModel? mainValue = showUnknownSelectedValue ? null : selectedValue;
+    ValueModel? mainValue = showUnknownSelectedValue ? null : currentSelectedValue;
     ValueModel hintValue =
-        showUnknownSelectedValue ? selectedValue : _noValueHint;
+        showUnknownSelectedValue ? currentSelectedValue : _noValueHint;
+
+    log("Distributed values, main: $mainValue, hint: $hintValue");
 
     _selectedMainValueNotifier.value = mainValue;
     _hintNotifier.value = hintValue;
@@ -748,7 +750,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     _listValuesNotifier.value = widget.model.listValuesFetchResult;
 
     _distributeSelectedValue(
-      selectedValue: widget.model.value,
+      currentSelectedValue: widget.model.value,
       listValuesFetchResult: widget.model.listValuesFetchResult,
     );
 
@@ -795,7 +797,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
               );
 
               _distributeSelectedValue(
-                selectedValue: validatedSelectedValue,
+                currentSelectedValue: validatedSelectedValue,
                 listValuesFetchResult: listFetchResult,
               );
 
