@@ -77,10 +77,9 @@ class ConversionParamItem extends StatelessWidget {
               },
             );
           },
-          prefixWidgets: [
-            ConvertouchInputBoxIcon.prefix(
+          prefixIcons: [
+            InputBoxIconModel.icon(
               width: _calculationSuffixIconWidth,
-              dividerColor: colors.inputBox.divider.regular,
               visible:
                   calculationSwitchersVisible && paramValue.param.calculable,
               onTap: () {
@@ -98,10 +97,9 @@ class ConversionParamItem extends StatelessWidget {
               ),
             ),
           ],
-          suffixWidgets: [
-            ConvertouchInputBoxIcon.suffix(
+          suffixIcons: [
+            InputBoxIconModel.iconWithDivider(
               width: _unitButtonWidth,
-              dividerColor: colors.inputBox.divider.regular,
               visible:
                   paramValue.unitItem != null && paramValue.unitItem!.exists,
               onTap: () {

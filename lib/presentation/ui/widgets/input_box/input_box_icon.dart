@@ -1,136 +1,197 @@
 import 'package:flutter/material.dart';
 
-const double inputBoxIconDefaultWidth = 40;
+const double inputBoxIconDefaultWidth = 35;
 const double defaultBorderRadius = 15;
-const double inputBoxIconSpacing = 7;
+const double _dividerSpacing = 7;
+const double _iconSpacing = 10;
 const double _dividerWidth = 2;
+const double _childSpacingWithoutIcons = 15;
 
 enum IconType {
   prefix,
   suffix,
 }
 
-class ConvertouchInputBoxIcon extends StatelessWidget {
-  const ConvertouchInputBoxIcon.prefix({
-    required this.builder,
-    this.width = inputBoxIconDefaultWidth,
-    this.height,
-    this.visible = true,
-    this.dividerVisible = true,
-    this.dividerColor = Colors.transparent,
-    this.onTap,
-    super.key,
-  }) : iconType = IconType.prefix;
-
-  const ConvertouchInputBoxIcon.suffix({
-    required this.builder,
-    this.width = inputBoxIconDefaultWidth,
-    this.height,
-    this.visible = true,
-    this.dividerVisible = true,
-    this.dividerColor = Colors.transparent,
-    this.onTap,
-    super.key,
-  }) : iconType = IconType.suffix;
-
-  final Widget Function() builder;
-  final IconType iconType;
+class InputBoxIconModel {
   final double width;
   final double? height;
   final bool visible;
-  final bool dividerVisible;
-  final Color dividerColor;
+  final bool hasDivider;
+  final Widget Function() builder;
   final void Function()? onTap;
+
+  const InputBoxIconModel.icon({
+    this.width = inputBoxIconDefaultWidth,
+    this.height,
+    required this.builder,
+    this.visible = true,
+    this.onTap,
+  }) : hasDivider = false;
+
+  const InputBoxIconModel.iconWithDivider({
+    this.width = inputBoxIconDefaultWidth,
+    this.height,
+    required this.builder,
+    this.visible = true,
+    this.onTap,
+  }) : hasDivider = true;
+}
+
+class InputBoxIconWrapper extends StatelessWidget {
+  final List<InputBoxIconModel> prefixIconsModels;
+  final List<InputBoxIconModel> suffixIconsModels;
+  final Color dividerColor;
+  final Widget child;
+
+  const InputBoxIconWrapper({
+    this.prefixIconsModels = const [],
+    this.suffixIconsModels = const [],
+    this.dividerColor = Colors.transparent,
+    required this.child,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (!visible) {
-      return const SizedBox.shrink();
-    }
+    double prefixIconsTotalWidth = _getIconsTotalWidth(prefixIconsModels);
+    double suffixIconsTotalWidth = _getIconsTotalWidth(suffixIconsModels);
 
-    return _wrapInGestureDetector(
+    bool visiblePrefixIconsExist =
+        prefixIconsModels.isNotEmpty && prefixIconsTotalWidth > 0;
+    bool visibleSuffixIconsExist =
+        suffixIconsModels.isNotEmpty && suffixIconsTotalWidth > 0;
+
+    return IntrinsicHeight(
       child: Row(
         children: [
-          dividerVisible && iconType == IconType.suffix
-              ? _divider()
-              : const SizedBox.shrink(),
-          Container(
-            width: width,
-            height: height ?? double.infinity,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              // color: Colors.green,
-              color: Colors.transparent,
-              borderRadius: BorderRadius.all(
-                Radius.circular(defaultBorderRadius),
-              ),
-            ),
-            child: builder.call(),
-          ),
-          dividerVisible && iconType == IconType.prefix
-              ? _divider()
-              : const SizedBox.shrink(),
+          ...(visiblePrefixIconsExist
+              ? prefixIconsModels
+                  .map(
+                    (model) => _InputBoxIcon.prefix(
+                      model: model,
+                      dividerColor: dividerColor,
+                    ),
+                  )
+                  .toList()
+              : [const SizedBox.shrink()]),
+          visiblePrefixIconsExist
+              ? const SizedBox(width: _iconSpacing)
+              : const SizedBox(width: _childSpacingWithoutIcons),
+          Expanded(child: child),
+          visibleSuffixIconsExist
+              ? const SizedBox(width: _iconSpacing)
+              : const SizedBox(width: _childSpacingWithoutIcons),
+          ...(visibleSuffixIconsExist
+              ? suffixIconsModels
+                  .map(
+                    (model) => _InputBoxIcon.suffix(
+                      model: model,
+                      dividerColor: dividerColor,
+                    ),
+                  )
+                  .toList()
+              : [const SizedBox.shrink()]),
         ],
-      ),
-    );
-  }
-
-  Widget _wrapInGestureDetector({required Widget child}) {
-    return onTap != null
-        ? GestureDetector(
-            onTap: onTap,
-            child: child,
-          )
-        : child;
-  }
-
-  Widget _divider({
-    EdgeInsets padding = EdgeInsets.zero,
-  }) {
-    return Padding(
-      padding: padding,
-      child: VerticalDivider(
-        color: dividerColor,
-        indent: 10,
-        endIndent: 10,
-        width: _dividerWidth,
-        thickness: 2,
       ),
     );
   }
 }
 
-Widget _defaultBuilder() => const SizedBox.shrink();
+double _getIconsTotalWidth(List<InputBoxIconModel> icons) {
+  final visibleIcons = icons.where((item) => item.visible);
 
-class InputBoxIconModel {
-  final IconType? iconType;
-  final double width;
-  final double? height;
-  final bool visible;
-  final Widget Function() builder;
-  final void Function()? onTap;
+  if (visibleIcons.isEmpty) {
+    return 0;
+  }
 
-  const InputBoxIconModel.prefix({
-    required this.width,
-    this.height,
-    required this.builder,
-    this.visible = true,
-    this.onTap,
+  return visibleIcons
+      .map((item) => item.width)
+      .reduce((value, width) => value + width);
+}
+
+class _InputBoxIcon extends StatelessWidget {
+  const _InputBoxIcon.prefix({
+    required this.model,
+    this.dividerColor = Colors.transparent,
   }) : iconType = IconType.prefix;
 
-  const InputBoxIconModel.suffix({
-    required this.width,
-    this.height,
-    required this.builder,
-    this.visible = true,
-    this.onTap,
+  const _InputBoxIcon.suffix({
+    required this.model,
+    this.dividerColor = Colors.transparent,
   }) : iconType = IconType.suffix;
 
-  const InputBoxIconModel.divider({
-    this.visible = true,
-  })  : iconType = null,
-        width = _dividerWidth,
-        height = null,
-        builder = _defaultBuilder,
-        onTap = null;
+  final InputBoxIconModel model;
+  final IconType iconType;
+  final Color dividerColor;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!model.visible) {
+      return const SizedBox.shrink();
+    }
+
+    return _wrapInGestureDetector(
+      child: _wrapInDivider(
+        child: Container(
+          width: model.width,
+          height: model.height ?? double.infinity,
+          padding: EdgeInsets.only(
+            left: iconType == IconType.prefix ? _iconSpacing : 0,
+            right: iconType == IconType.suffix ? _iconSpacing : 0,
+          ),
+          decoration: const BoxDecoration(
+            // color: Colors.green,
+            color: Colors.transparent,
+            borderRadius: BorderRadius.all(
+              Radius.circular(defaultBorderRadius),
+            ),
+          ),
+          child: model.builder.call(),
+        ),
+      ),
+    );
+  }
+
+  Widget _wrapInGestureDetector({required Widget child}) {
+    return model.onTap != null
+        ? GestureDetector(
+            onTap: model.onTap,
+            child: child,
+          )
+        : child;
+  }
+
+  Widget _wrapInDivider({required Widget child}) {
+    if (!model.hasDivider) {
+      return child;
+    }
+
+    if (iconType == IconType.suffix) {
+      return Row(
+        children: [
+          _divider(),
+          const SizedBox(width: _dividerSpacing),
+          child,
+        ],
+      );
+    }
+
+    return Row(
+      children: [
+        child,
+        const SizedBox(width: _dividerSpacing),
+        _divider(),
+      ],
+    );
+  }
+
+  VerticalDivider _divider() {
+    return VerticalDivider(
+      color: dividerColor,
+      indent: 10,
+      endIndent: 10,
+      width: _dividerWidth,
+      thickness: 2,
+    );
+  }
 }

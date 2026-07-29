@@ -85,10 +85,8 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.borderWidth = 1,
     required this.colors,
     required this.dialogColors,
-    this.prefixWidgets = const [],
-    this.suffixWidgets = const [],
-    this.leftSpacing = true,
-    this.rightSpacing = true,
+    this.prefixIcons = const [],
+    this.suffixIcons = const [],
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
     this.labelText,
@@ -116,10 +114,8 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final double borderWidth;
   final InputBoxColorScheme colors;
   final WidgetColorScheme dialogColors;
-  final List<ConvertouchInputBoxIcon> prefixWidgets;
-  final List<ConvertouchInputBoxIcon> suffixWidgets;
-  final bool leftSpacing;
-  final bool rightSpacing;
+  final List<InputBoxIconModel> prefixIcons;
+  final List<InputBoxIconModel> suffixIcons;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final String? labelText;
@@ -271,10 +267,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueChanged: widget.onValueChanged,
         onValueFocused: widget.onValueFocused,
         onValueUnfocused: widget.onValueUnfocused,
-        prefixWidgets: widget.prefixWidgets,
-        suffixWidgets: widget.suffixWidgets,
-        leftSpacing: widget.leftSpacing,
-        rightSpacing: widget.rightSpacing,
+        prefixIcons: widget.prefixIcons,
+        suffixIcons: widget.suffixIcons,
         backgroundColor: _backgroundColor,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
@@ -293,10 +287,8 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelText: widget.labelText,
         controller: widget.controller,
         onValueChanged: widget.onValueChanged,
-        prefixWidgets: widget.prefixWidgets,
-        suffixWidgets: widget.suffixWidgets,
-        leftSpacing: widget.leftSpacing,
-        rightSpacing: widget.rightSpacing,
+        prefixIcons: widget.prefixIcons,
+        suffixIcons: widget.suffixIcons,
         foregroundColor: _foregroundColor,
         warningColor: widget.colors.textBox.foreground.warning,
         hintColor: _hintColor,
@@ -328,10 +320,8 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.prefixWidgets = const [],
-    this.suffixWidgets = const [],
-    this.leftSpacing = true,
-    this.rightSpacing = true,
+    this.prefixIcons = const [],
+    this.suffixIcons = const [],
     this.labelText,
     this.readonly = false,
     required this.backgroundColor,
@@ -359,10 +349,8 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel?)? onValueChanged;
   final void Function(ValueModel?)? onValueFocused;
   final void Function(ValueModel?)? onValueUnfocused;
-  final List<ConvertouchInputBoxIcon> prefixWidgets;
-  final List<ConvertouchInputBoxIcon> suffixWidgets;
-  final bool leftSpacing;
-  final bool rightSpacing;
+  final List<InputBoxIconModel> prefixIcons;
+  final List<InputBoxIconModel> suffixIcons;
   final String? labelText;
   final bool readonly;
   final Color backgroundColor;
@@ -503,19 +491,16 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
   Widget build(BuildContext context) {
     RegExp? inputRegExp = _valueTypeToRegExp[widget.model.valueType];
 
-    return _wrapWithIcons(
-      prefixWidgets: widget.prefixWidgets,
-      suffixWidgets: [
-        ValueListenableBuilder(
-          valueListenable: _closeIconVisibilityNotifier,
-          builder: (_, visible, child) {
-            if (!visible) {
-              return const SizedBox.shrink();
-            }
-
-            return ConvertouchInputBoxIcon.suffix(
-              dividerVisible: false,
-              visible: visible,
+    return ValueListenableBuilder(
+      valueListenable: _closeIconVisibilityNotifier,
+      builder: (_, closeIconVisible, child) {
+        return InputBoxIconWrapper(
+          dividerColor: widget.dividerColor,
+          prefixIconsModels: widget.prefixIcons,
+          suffixIconsModels: [
+            InputBoxIconModel.icon(
+              width: 28,
+              visible: closeIconVisible,
               onTap: () {
                 widget.controller.clear();
                 _wrapWithValidationReset(
@@ -536,69 +521,68 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
                   size: 12,
                 ),
               ),
-            );
-          },
-        ),
-        ...widget.suffixWidgets,
-      ],
-      child: _validationWrapper(
-        validationKey: widget.validationKey,
-        focusNode: widget.focusNode,
-        tooltipDirection: widget.tooltipDirection,
-        tooltipColors: widget.tooltipColors,
-        child: GestureDetector(
-          onTap: () {
-            widget.focusNode.requestFocus();
-          },
-          child: Container(
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(defaultBorderRadius),
-              ),
             ),
-            child: TextField(
-              readOnly: widget.readonly,
-              maxLength: widget.maxTextLength,
-              textAlignVertical: TextAlignVertical.center,
-              obscureText: false,
-              autofocus: widget.autofocus,
-              focusNode: widget.focusNode,
-              controller: widget.controller,
-              inputFormatters: inputRegExp != null
-                  ? [FilteringTextInputFormatter.allow(inputRegExp)]
-                  : null,
-              keyboardType: _valueTypeToKeyboardType[widget.model.valueType],
-              onChanged: (value) {
-                _onValueChanged?.call(ValueModel.str(value));
+            ...widget.suffixIcons,
+          ],
+          child: _validationWrapper(
+            validationKey: widget.validationKey,
+            focusNode: widget.focusNode,
+            tooltipDirection: widget.tooltipDirection,
+            tooltipColors: widget.tooltipColors,
+            child: GestureDetector(
+              onTap: () {
+                widget.focusNode.requestFocus();
               },
-              decoration: _inputFieldDecoration(
-                context,
-                labelText: _labelText,
-                hintText: _hint,
-                hintColor: widget.hintColor,
-                labelColor: widget.labelColor,
-                floatingLabelBehavior: widget.floatingLabelBehavior,
-                contentPadding: EdgeInsets.only(
-                  left: widget.leftSpacing ? 15 : 0,
-                  right: widget.rightSpacing ? 15 : 0,
-                  top: 5,
-                  bottom: 12,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(defaultBorderRadius),
+                  ),
                 ),
-              ).copyWith(
-                suffixText: widget.textLengthCounterVisible
-                    ? '${widget.controller.text.length}/${widget.maxTextLength}'
-                    : null,
+                child: TextField(
+                  readOnly: widget.readonly,
+                  maxLength: widget.maxTextLength,
+                  textAlignVertical: TextAlignVertical.center,
+                  obscureText: false,
+                  autofocus: widget.autofocus,
+                  focusNode: widget.focusNode,
+                  controller: widget.controller,
+                  inputFormatters: inputRegExp != null
+                      ? [FilteringTextInputFormatter.allow(inputRegExp)]
+                      : null,
+                  keyboardType:
+                      _valueTypeToKeyboardType[widget.model.valueType],
+                  onChanged: (value) {
+                    _onValueChanged?.call(ValueModel.str(value));
+                  },
+                  decoration: _inputFieldDecoration(
+                    context,
+                    labelText: _labelText,
+                    hintText: _hint,
+                    hintColor: widget.hintColor,
+                    labelColor: widget.labelColor,
+                    floatingLabelBehavior: widget.floatingLabelBehavior,
+                    contentPadding: const EdgeInsets.only(
+                      top: 5,
+                      bottom: 12,
+                    ),
+                  ).copyWith(
+                    suffixText: widget.textLengthCounterVisible
+                        ? '${widget.controller.text.length}/${widget.maxTextLength}'
+                        : null,
+                  ),
+                  style: _inputFieldTextStyle(
+                    fontSize: widget.fontSize,
+                    foregroundColor: widget.foregroundColor,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
               ),
-              style: _inputFieldTextStyle(
-                fontSize: widget.fontSize,
-                foregroundColor: widget.foregroundColor,
-              ),
-              textAlign: TextAlign.start,
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -612,10 +596,8 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     this.conversionParams,
     this.controller,
     this.onValueChanged,
-    this.prefixWidgets = const [],
-    this.suffixWidgets = const [],
-    this.leftSpacing = true,
-    this.rightSpacing = true,
+    this.prefixIcons = const [],
+    this.suffixIcons = const [],
     this.labelText,
     required this.foregroundColor,
     required this.warningColor,
@@ -637,10 +619,8 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final List<ConvertouchInputBoxIcon> prefixWidgets;
-  final List<ConvertouchInputBoxIcon> suffixWidgets;
-  final bool leftSpacing;
-  final bool rightSpacing;
+  final List<InputBoxIconModel> prefixIcons;
+  final List<InputBoxIconModel> suffixIcons;
   final String? labelText;
   final Color foregroundColor;
   final Color warningColor;
@@ -832,12 +812,12 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                         widget.model.listType!.defaultIconUri != null &&
                             (selectedValue ?? hint) != _noValueHint;
 
-                    return _wrapWithIcons(
-                      prefixWidgets: [
-                        ...widget.prefixWidgets,
-                        ConvertouchInputBoxIcon.prefix(
+                    return InputBoxIconWrapper(
+                      dividerColor: widget.dividerColor,
+                      prefixIconsModels: [
+                        ...widget.prefixIcons,
+                        InputBoxIconModel.icon(
                           width: 50,
-                          dividerVisible: false,
                           visible: selectedValueIconVisible,
                           builder: () => ConvertouchSvgIcon(
                             uri: (selectedValue ?? hint).iconUri,
@@ -846,9 +826,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                           ),
                         ),
                       ],
-                      suffixWidgets: [
-                        ConvertouchInputBoxIcon.suffix(
-                          dividerVisible: false,
+                      suffixIconsModels: [
+                        InputBoxIconModel.icon(
                           builder: () => ValueListenableBuilder(
                             valueListenable: _dropdownIsOpenNotifier,
                             builder: (_, isOpen, child) {
@@ -860,7 +839,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                             },
                           ),
                         ),
-                        ...widget.suffixWidgets,
+                        ...widget.suffixIcons,
                       ],
                       child: DropdownButtonFormField2<ValueModel>(
                         items: items,
@@ -872,15 +851,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                           labelText: _labelText,
                           labelColor: widget.labelColor,
                           floatingLabelBehavior: widget.floatingLabelBehavior,
-                          contentPadding: EdgeInsets.only(
-                            left:
-                                !selectedValueIconVisible && widget.leftSpacing
-                                    ? 15
-                                    : 0,
-                            right:
-                                !selectedValueIconVisible && widget.rightSpacing
-                                    ? 15
-                                    : 0,
+                          contentPadding: const EdgeInsets.only(
                             top: 5,
                             bottom: 8,
                           ),
@@ -999,11 +970,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                       textBox: widget.dropdownColors.searchBox,
                                     ),
                                     dialogColors: widget.dialogColors,
-                                    leftSpacing: false,
-                                    rightSpacing: false,
-                                    prefixWidgets: [
-                                      ConvertouchInputBoxIcon.suffix(
-                                        dividerVisible: false,
+                                    prefixIcons: [
+                                      InputBoxIconModel.icon(
                                         builder: () => Icon(
                                           Icons.search,
                                           color: widget.foregroundColor,
@@ -1412,7 +1380,6 @@ TextStyle _inputFieldTextStyle({
     fontWeight: fontWeight,
     fontFamily: quicksandFontFamily,
     overflow: TextOverflow.fade,
-    height: 1,
     foreground: Paint()..color = foregroundColor,
     letterSpacing: 0,
   );
@@ -1482,20 +1449,4 @@ void Function(ValueModel?)? _wrapWithValidationReset({
 
     return func?.call(value);
   };
-}
-
-Widget _wrapWithIcons({
-  List<Widget> prefixWidgets = const [],
-  List<Widget> suffixWidgets = const [],
-  required Widget child,
-}) {
-  return IntrinsicHeight(
-    child: Row(
-      children: [
-        ...prefixWidgets,
-        Expanded(child: child),
-        ...suffixWidgets,
-      ],
-    ),
-  );
 }

@@ -74,11 +74,9 @@ class ConvertouchSearchBar extends StatelessWidget {
             theme: appState.theme,
             fontSize: 17,
             borderWidth: 0,
-            leftSpacing: false,
-            rightSpacing: false,
-            prefixWidgets: [
-              ConvertouchInputBoxIcon.prefix(
-                dividerVisible: false,
+            prefixIcons: [
+              InputBoxIconModel.icon(
+                width: 30,
                 builder: () => Icon(
                   Icons.search,
                   color:
@@ -86,10 +84,9 @@ class ConvertouchSearchBar extends StatelessWidget {
                 ),
               ),
             ],
-            suffixWidgets: [
-              ConvertouchInputBoxIcon.suffix(
+            suffixIcons: [
+              InputBoxIconModel.iconWithDivider(
                 height: 40,
-                dividerColor: searchBarColorScheme.inputBox.divider.regular,
                 onTap: () {
                   settingsController.changeSetting(
                     context,
@@ -98,16 +95,13 @@ class ConvertouchSearchBar extends StatelessWidget {
                     fromPage: pageName,
                   );
                 },
-                builder: () => Padding(
-                  padding: const EdgeInsets.only(right: 2),
-                  child:
-                      ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                    Icon(
-                      _itemViewModeIconMap[pageViewMode.next],
-                      key: ValueKey(pageViewMode),
-                      color: searchBarColorScheme
-                          .viewModeButton.foreground.regular,
-                    ),
+                builder: () =>
+                    ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                  Icon(
+                    _itemViewModeIconMap[pageViewMode.next],
+                    key: ValueKey(pageViewMode),
+                    color:
+                        searchBarColorScheme.viewModeButton.foreground.regular,
                   ),
                 ),
               ),

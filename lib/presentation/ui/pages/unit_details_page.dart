@@ -239,11 +239,9 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
               defaultValue: ValueModel.one,
             ),
             readonly: !pageState.details.conversionRule.configEditable,
-            suffixWidgets: [
-              ConvertouchInputBoxIcon.suffix(
+            suffixIcons: [
+              InputBoxIconModel.icon(
                 width: _unitButtonWidth,
-                dividerColor:
-                    appColors[theme].conversionItem.inputBox.divider.regular,
                 visible: pageState.details.resultUnit.exists,
                 builder: () => Text(
                   pageState.details.resultUnit.code,
@@ -275,11 +273,9 @@ class ConvertouchUnitDetailsPage extends StatelessWidget {
             ),
             readonly: !pageState.details.conversionRule.configEditable,
             tooltipDirection: TooltipDirection.up,
-            suffixWidgets: [
-              ConvertouchInputBoxIcon.suffix(
+            suffixIcons: [
+              InputBoxIconModel.icon(
                 width: _unitButtonWidth,
-                dividerColor:
-                    appColors[theme].conversionItem.inputBox.divider.regular,
                 visible: pageState.details.conversionRule.argUnit.exists,
                 onTap: () {
                   FocusScope.of(context).unfocus();

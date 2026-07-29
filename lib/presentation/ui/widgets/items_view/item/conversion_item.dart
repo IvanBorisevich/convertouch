@@ -21,8 +21,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final List<ConvertouchInputBoxIcon> prefixWidgets;
-  final List<ConvertouchInputBoxIcon> suffixWidgets;
+  final List<InputBoxIconModel> prefixIcons;
+  final List<InputBoxIconModel> suffixIcons;
   final ConversionItemColorScheme colors;
   final WidgetColorScheme dialogColors;
   final ConvertouchUITheme theme;
@@ -34,8 +34,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.tooltipDirection = TooltipDirection.down,
     this.readonly = false,
     this.onValueChanged,
-    this.prefixWidgets = const [],
-    this.suffixWidgets = const [],
+    this.prefixIcons = const [],
+    this.suffixIcons = const [],
     required this.colors,
     required this.dialogColors,
     required this.theme,
@@ -60,8 +60,8 @@ class ConvertouchConversionItem<M extends ItemValueModel>
       floatingLabelBehavior: FloatingLabelBehavior.always,
       tooltipDirection: tooltipDirection,
       onValueChanged: onValueChanged,
-      prefixWidgets: prefixWidgets,
-      suffixWidgets: suffixWidgets,
+      prefixIcons: prefixIcons,
+      suffixIcons: suffixIcons,
     );
   }
 }

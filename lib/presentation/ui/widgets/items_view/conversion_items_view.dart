@@ -80,19 +80,14 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                 readonly: !unitValue.unit.invertible,
                 tooltipDirection:
                     isLast ? TooltipDirection.up : TooltipDirection.down,
-                prefixWidgets: [
-                  ConvertouchInputBoxIcon.prefix(
-                    dividerColor: appColors[theme]
-                        .conversionItem
-                        .inputBox
-                        .divider
-                        .regular,
+                prefixIcons: [
+                  InputBoxIconModel.iconWithDivider(
+                    width: 30,
                     builder: () => ReorderableDragStartListener(
                       index: index,
                       child: Container(
                         width: _dragHandlerWidth,
                         color: Colors.transparent,
-                        padding: const EdgeInsets.only(left: 3),
                         alignment: Alignment.center,
                         child: unitValue.unit.id == srcUnitId
                             ? Text(
@@ -119,14 +114,9 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                     ),
                   ),
                 ],
-                suffixWidgets: [
-                  ConvertouchInputBoxIcon.suffix(
+                suffixIcons: [
+                  InputBoxIconModel.iconWithDivider(
                     width: _unitButtonWidth,
-                    dividerColor: appColors[theme]
-                        .conversionItem
-                        .inputBox
-                        .divider
-                        .regular,
                     visible: unitValue.unitItem != null &&
                         unitValue.unitItem!.exists,
                     onTap: () {
@@ -147,24 +137,23 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                         );
                       }
                     },
-                    builder: () => Text(
-                      unitValue.unitItem!.code,
-                      style: TextStyle(
-                        color:
-                            appColors[theme].conversionItem.unitButton.regular,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                    builder: () => Center(
+                      child: Text(
+                        unitValue.unitItem!.code,
+                        style: TextStyle(
+                          color: appColors[theme]
+                              .conversionItem
+                              .unitButton
+                              .regular,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
                       ),
-                      maxLines: 1,
                     ),
                   ),
-                  ConvertouchInputBoxIcon.suffix(
+                  InputBoxIconModel.iconWithDivider(
                     width: _removalButtonWidth,
-                    dividerColor: appColors[theme]
-                        .conversionItem
-                        .inputBox
-                        .divider
-                        .regular,
                     visible: removable,
                     onTap: () {
                       FocusScope.of(context).unfocus();
