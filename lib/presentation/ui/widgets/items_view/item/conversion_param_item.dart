@@ -14,7 +14,6 @@ import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_i
 import 'package:flutter/material.dart';
 
 const double _calculationSuffixIconWidth = 40;
-const double _unitButtonWidth = 76;
 
 class ConversionParamItem extends StatelessWidget {
   final ConversionParamValueModel paramValue;
@@ -51,6 +50,12 @@ class ConversionParamItem extends StatelessWidget {
           colors: colors,
           dialogColors: dialogColors,
           theme: theme,
+          onUnitItemTap: () {
+            unitsController.showUnitsForChangeInParam(
+              context,
+              paramValue: paramValue,
+            );
+          },
           onValueChanged: (value, {listValues}) {
             conversionController.editConversionParamValue(
               context,
@@ -78,7 +83,7 @@ class ConversionParamItem extends StatelessWidget {
             );
           },
           prefixIcons: [
-            InputBoxIconModel.icon(
+            InputBoxIconModel.iconWithDivider(
               width: _calculationSuffixIconWidth,
               visible:
                   calculationSwitchersVisible && paramValue.param.calculable,
@@ -94,30 +99,6 @@ class ConversionParamItem extends StatelessWidget {
                     ? Icons.calculate
                     : Icons.calculate_outlined,
                 color: colors.prefixWidget.regular,
-              ),
-            ),
-          ],
-          suffixIcons: [
-            InputBoxIconModel.iconWithDivider(
-              width: _unitButtonWidth,
-              visible:
-                  paramValue.unitItem != null && paramValue.unitItem!.exists,
-              onTap: () {
-                FocusScope.of(context).unfocus();
-
-                unitsController.showUnitsForChangeInParam(
-                  context,
-                  paramValue: paramValue,
-                );
-              },
-              builder: () => Text(
-                paramValue.unitItem!.code,
-                style: TextStyle(
-                  color: colors.unitButton.regular,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-                maxLines: 1,
               ),
             ),
           ],

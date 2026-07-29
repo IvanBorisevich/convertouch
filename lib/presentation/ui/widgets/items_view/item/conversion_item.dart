@@ -10,6 +10,9 @@ import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dar
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
+const double _unitButtonWidth = 76;
+const double _removalButtonWidth = 35;
+
 class ConvertouchConversionItem<M extends ItemValueModel>
     extends StatelessWidget {
   final M model;
@@ -17,10 +20,13 @@ class ConvertouchConversionItem<M extends ItemValueModel>
   final ConversionParamSetValueModel? conversionParams;
   final TooltipDirection tooltipDirection;
   final bool readonly;
+  final bool removable;
   final void Function(
     ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
+  final void Function()? onUnitItemTap;
+  final void Function()? onItemRemoved;
   final List<InputBoxIconModel> prefixIcons;
   final List<InputBoxIconModel> suffixIcons;
   final ConversionItemColorScheme colors;
@@ -33,7 +39,10 @@ class ConvertouchConversionItem<M extends ItemValueModel>
     this.conversionParams,
     this.tooltipDirection = TooltipDirection.down,
     this.readonly = false,
+    this.removable = false,
     this.onValueChanged,
+    this.onUnitItemTap,
+    this.onItemRemoved,
     this.prefixIcons = const [],
     this.suffixIcons = const [],
     required this.colors,
@@ -61,7 +70,41 @@ class ConvertouchConversionItem<M extends ItemValueModel>
       tooltipDirection: tooltipDirection,
       onValueChanged: onValueChanged,
       prefixIcons: prefixIcons,
-      suffixIcons: suffixIcons,
+      suffixIcons: [
+        ...suffixIcons,
+        InputBoxIconModel.iconWithDivider(
+          width: _unitButtonWidth,
+          visible: model.unitItem != null && model.unitItem!.exists,
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            onUnitItemTap?.call();
+          },
+          builder: () => Center(
+            child: Text(
+              model.unitItem!.code,
+              style: TextStyle(
+                color: colors.unitButton.regular,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+            ),
+          ),
+        ),
+        InputBoxIconModel.iconWithDivider(
+          width: _removalButtonWidth,
+          visible: removable,
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            onItemRemoved?.call();
+          },
+          builder: () => Icon(
+            Icons.remove,
+            color: colors.removalIcon.regular,
+            size: 20,
+          ),
+        ),
+      ],
     );
   }
 }

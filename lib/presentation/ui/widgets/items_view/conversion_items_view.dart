@@ -14,8 +14,6 @@ import 'package:super_tooltip/super_tooltip.dart';
 const double _spacing = 10;
 const double _bottomSpacing = 85;
 const double _dragHandlerWidth = 35;
-const double _removalButtonWidth = 35;
-const double _unitButtonWidth = 76;
 
 class ConvertouchConversionItemsView extends StatelessWidget {
   final UnitTapAction unitTapAction;
@@ -78,6 +76,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                 conversionGroupName: unitGroup.name,
                 conversionParams: params,
                 readonly: !unitValue.unit.invertible,
+                removable: removable,
                 tooltipDirection:
                     isLast ? TooltipDirection.up : TooltipDirection.down,
                 prefixIcons: [
@@ -114,69 +113,34 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                     ),
                   ),
                 ],
-                suffixIcons: [
-                  InputBoxIconModel.iconWithDivider(
-                    width: _unitButtonWidth,
-                    visible: unitValue.unitItem != null &&
-                        unitValue.unitItem!.exists,
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-
-                      if (unitTapAction == UnitTapAction.selectReplacingUnit) {
-                        unitsController.showUnitsForChangeInConversionItem(
-                          context,
-                          currentUnitId: unitValue.unit.id,
-                          unitGroupId: unitGroup.id,
-                          convertedUnitValues: unitValues,
-                        );
-                      } else if (unitTapAction == UnitTapAction.showUnitInfo) {
-                        unitDetailsController.showUnitDetails(
-                          context,
-                          unit: unitValue.unit,
-                          unitGroup: unitGroup,
-                        );
-                      }
-                    },
-                    builder: () => Center(
-                      child: Text(
-                        unitValue.unitItem!.code,
-                        style: TextStyle(
-                          color: appColors[theme]
-                              .conversionItem
-                              .unitButton
-                              .regular,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                  InputBoxIconModel.iconWithDivider(
-                    width: _removalButtonWidth,
-                    visible: removable,
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-
-                      conversionController.removeConversionItem(
-                        context,
-                        unitId: unitValue.unit.id,
-                      );
-                    },
-                    builder: () => Icon(
-                      Icons.remove,
-                      color:
-                          appColors[theme].conversionItem.removalIcon.regular,
-                      size: 20,
-                    ),
-                  ),
-                ],
                 onValueChanged: (value, {listValues}) {
                   conversionController.editConversionUnitValue(
                     context,
                     unitId: unitValue.unit.id,
                     newValue: value,
                     listValues: listValues,
+                  );
+                },
+                onUnitItemTap: () {
+                  if (unitTapAction == UnitTapAction.selectReplacingUnit) {
+                    unitsController.showUnitsForChangeInConversionItem(
+                      context,
+                      currentUnitId: unitValue.unit.id,
+                      unitGroupId: unitGroup.id,
+                      convertedUnitValues: unitValues,
+                    );
+                  } else if (unitTapAction == UnitTapAction.showUnitInfo) {
+                    unitDetailsController.showUnitDetails(
+                      context,
+                      unit: unitValue.unit,
+                      unitGroup: unitGroup,
+                    );
+                  }
+                },
+                onItemRemoved: () {
+                  conversionController.removeConversionItem(
+                    context,
+                    unitId: unitValue.unit.id,
                   );
                 },
                 colors: appColors[theme].conversionItem,
