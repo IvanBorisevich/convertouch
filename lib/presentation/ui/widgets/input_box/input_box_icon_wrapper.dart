@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 
-const debugMode = false;
+const _debugMode = false;
 const double _dividerWidth = 2;
-const double _innermostDividerSpacing = 10;
+const double _innermostSpacing = 7;
 const double _defaultIconSpacing = 5;
 const double _defaultOutermostSpacingWithoutIcons = 12;
 const double _defaultOutermostSpacingWithIcons = 7;
@@ -124,7 +124,7 @@ double _getIconsTotalWidth(
       iconType == IconType.prefix ? visibleIcons.last : visibleIcons.first;
 
   if (innermostIcon.hasDivider) {
-    result += _innermostDividerSpacing;
+    result += _innermostSpacing;
   }
 
   return result;
@@ -170,7 +170,7 @@ class _InputBoxIcon extends StatelessWidget {
           height: model.height ?? double.infinity,
           alignment: Alignment.center,
           decoration: const BoxDecoration(
-            color: debugMode ? Colors.green : Colors.transparent,
+            color: _debugMode ? Colors.green : Colors.transparent,
             borderRadius: BorderRadius.all(
               Radius.circular(defaultBorderRadius),
             ),
@@ -196,18 +196,25 @@ class _InputBoxIcon extends StatelessWidget {
         children: [
           Container(
             width: isOutermost ? outermostSpacing : spacing,
-            color: debugMode ? Colors.blue : Colors.transparent,
+            color: _debugMode ? Colors.deepPurpleAccent : Colors.transparent,
           ),
           icon,
-          Container(
-            width: spacing,
-            color: debugMode ? Colors.blue : Colors.transparent,
-          ),
+          model.hasDivider
+              ? Container(
+                  width: spacing,
+                  color: _debugMode ? Colors.blue : Colors.transparent,
+                )
+              : (isInnermost
+                  ? Container(
+                      width: _innermostSpacing,
+                      color: _debugMode ? Colors.orange : Colors.transparent,
+                    )
+                  : const SizedBox.shrink()),
           model.hasDivider ? _divider() : const SizedBox.shrink(),
           model.hasDivider && isInnermost
               ? Container(
-                  width: _innermostDividerSpacing,
-                  color: debugMode ? Colors.orange : Colors.transparent,
+                  width: _innermostSpacing,
+                  color: _debugMode ? Colors.orange : Colors.transparent,
                 )
               : const SizedBox.shrink(),
         ],
@@ -218,19 +225,26 @@ class _InputBoxIcon extends StatelessWidget {
       children: [
         model.hasDivider && isInnermost
             ? Container(
-                width: _innermostDividerSpacing,
-                color: debugMode ? Colors.orange : Colors.transparent,
+                width: _innermostSpacing,
+                color: _debugMode ? Colors.orange : Colors.transparent,
               )
             : const SizedBox.shrink(),
         model.hasDivider ? _divider() : const SizedBox.shrink(),
-        Container(
-          width: spacing,
-          color: debugMode ? Colors.blue : Colors.transparent,
-        ),
+        model.hasDivider
+            ? Container(
+                width: spacing,
+                color: _debugMode ? Colors.blue : Colors.transparent,
+              )
+            : (isInnermost
+                ? Container(
+                    width: _innermostSpacing,
+                    color: _debugMode ? Colors.orange : Colors.transparent,
+                  )
+                : const SizedBox.shrink()),
         icon,
         Container(
           width: isOutermost ? outermostSpacing : spacing,
-          color: debugMode ? Colors.blue : Colors.transparent,
+          color: _debugMode ? Colors.deepPurpleAccent : Colors.transparent,
         ),
       ],
     );
