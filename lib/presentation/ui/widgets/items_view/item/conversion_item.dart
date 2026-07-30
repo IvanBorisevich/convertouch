@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 const double _unitButtonWidth = 76;
-const double _removalButtonWidth = 35;
+const double _removalButtonWidth = 25;
 
 class ConvertouchConversionItem<M extends ItemValueModel>
     extends StatelessWidget {
@@ -67,6 +67,9 @@ class ConvertouchConversionItem<M extends ItemValueModel>
         NumInRangeValidator(model.min, model.max),
       ],
       floatingLabelBehavior: FloatingLabelBehavior.always,
+      iconsSpacing: 5,
+      innermostSpacing: 10,
+      outermostSpacingWithIcons: 7,
       tooltipDirection: tooltipDirection,
       onValueChanged: onValueChanged,
       prefixIcons: prefixIcons,
