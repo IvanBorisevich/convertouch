@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 
-const _debugMode = false;
+const _debugMode = true;
 const double _dividerWidth = 2;
-const double _innermostSpacing = 7;
+const double _innermostSpacing = 10;
 const double _defaultIconSpacing = 5;
 const double _defaultOutermostSpacingWithoutIcons = 12;
 const double _defaultOutermostSpacingWithIcons = 7;
@@ -17,7 +17,8 @@ class InputBoxIconWrapper extends StatelessWidget {
   final double? outermostSpacingWithoutIcons;
   final double? outermostSpacingWithIcons;
   final Color dividerColor;
-  final Widget child;
+  final Widget? child;
+  final Widget Function(double leftPadding, double rightPadding)? childBuilder;
 
   const InputBoxIconWrapper({
     this.prefixIconsModels = const [],
@@ -26,9 +27,13 @@ class InputBoxIconWrapper extends StatelessWidget {
     this.outermostSpacingWithoutIcons,
     this.outermostSpacingWithIcons,
     this.dividerColor = Colors.transparent,
-    required this.child,
+    this.child,
+    this.childBuilder,
     super.key,
-  });
+  }) : assert(
+          (child != null) ^ (childBuilder != null),
+          "Either 'child' or 'childBuilder' must be provided",
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -62,40 +67,93 @@ class InputBoxIconWrapper extends StatelessWidget {
     bool visiblePrefixIconsExist = visiblePrefixIconsModels.isNotEmpty;
     bool visibleSuffixIconsExist = visibleSuffixIconsModels.isNotEmpty;
 
+    List<Widget> prefixIcons = visiblePrefixIconsExist
+        ? visiblePrefixIconsModels
+            .mapIndexed(
+              (index, model) => _InputBoxIcon.prefix(
+                model: model,
+                spacing: resultIconSpacing,
+                outermostSpacing: resultOutermostSpacingWithIcons,
+                isInnermost: index == visiblePrefixIconsModels.length - 1,
+                isOutermost: index == 0,
+                dividerColor: dividerColor,
+              ),
+            )
+            .toList()
+        : [SizedBox(width: resultOutermostSpacingWithoutIcons)];
+
+    List<Widget> suffixIcons = visibleSuffixIconsExist
+        ? visibleSuffixIconsModels
+            .mapIndexed(
+              (index, model) => _InputBoxIcon.suffix(
+                model: model,
+                spacing: resultIconSpacing,
+                outermostSpacing: resultOutermostSpacingWithIcons,
+                isInnermost: index == 0,
+                isOutermost: index == visibleSuffixIconsModels.length - 1,
+                dividerColor: dividerColor,
+              ),
+            )
+            .toList()
+        : [SizedBox(width: resultOutermostSpacingWithoutIcons)];
+
     return IntrinsicHeight(
-      child: Row(
-        children: [
-          ...(visiblePrefixIconsExist
-              ? visiblePrefixIconsModels
-                  .mapIndexed(
-                    (index, model) => _InputBoxIcon.prefix(
-                      model: model,
-                      spacing: resultIconSpacing,
-                      outermostSpacing: resultOutermostSpacingWithIcons,
-                      isInnermost: index == visiblePrefixIconsModels.length - 1,
-                      isOutermost: index == 0,
-                      dividerColor: dividerColor,
-                    ),
-                  )
-                  .toList()
-              : [SizedBox(width: resultOutermostSpacingWithoutIcons)]),
-          Expanded(child: child),
-          ...(visibleSuffixIconsExist
-              ? visibleSuffixIconsModels
-                  .mapIndexed(
-                    (index, model) => _InputBoxIcon.suffix(
-                      model: model,
-                      spacing: resultIconSpacing,
-                      outermostSpacing: resultOutermostSpacingWithIcons,
-                      isInnermost: index == 0,
-                      isOutermost: index == visibleSuffixIconsModels.length - 1,
-                      dividerColor: dividerColor,
-                    ),
-                  )
-                  .toList()
-              : [SizedBox(width: resultOutermostSpacingWithoutIcons)]),
-        ],
-      ),
+      child: child != null
+          ? _buildViaRow(
+              prefixIcons: prefixIcons,
+              suffixIcons: suffixIcons,
+              child: child!,
+            )
+          : _buildViaStack(
+              prefixIcons: prefixIcons,
+              suffixIcons: suffixIcons,
+              prefixIconsTotalWidth: prefixIconsTotalWidth,
+              suffixIconsTotalWidth: suffixIconsTotalWidth,
+              childBuilder: childBuilder!,
+            ),
+    );
+  }
+
+  Widget _buildViaRow({
+    required List<Widget> prefixIcons,
+    required List<Widget> suffixIcons,
+    required Widget child,
+  }) {
+    return Row(
+      children: [
+        ...prefixIcons,
+        Expanded(child: child),
+        ...suffixIcons,
+      ],
+    );
+  }
+
+  Widget _buildViaStack({
+    required List<Widget> prefixIcons,
+    required List<Widget> suffixIcons,
+    required double prefixIconsTotalWidth,
+    required double suffixIconsTotalWidth,
+    required Widget Function(
+      double leftPadding,
+      double rightPadding,
+    ) childBuilder,
+  }) {
+    return Stack(
+      children: [
+        Row(
+          children: [
+            ...prefixIcons,
+            const Expanded(
+              child: SizedBox.expand(),
+            ),
+            ...suffixIcons,
+          ],
+        ),
+        childBuilder.call(
+          prefixIconsTotalWidth,
+          suffixIconsTotalWidth,
+        ),
+      ],
     );
   }
 }
@@ -111,23 +169,29 @@ double _getIconsTotalWidth(
     return outermostSpacingWithoutIcons;
   }
 
-  double result = outermostSpacingWithIcons +
-      visibleIcons
-          .map(
-            (iconModel) => iconModel.hasDivider
-                ? iconModel.width + _dividerWidth
-                : iconModel.width + iconSpacing,
-          )
-          .reduce((value, width) => value + width);
+  return outermostSpacingWithIcons +
+      visibleIcons.mapIndexed((index, iconModel) {
+        bool isOutermost = iconType == IconType.prefix && index == 0 ||
+            iconType == IconType.suffix && index == visibleIcons.length - 1;
+        bool isInnermost =
+            iconType == IconType.prefix && index == visibleIcons.length - 1 ||
+                iconType == IconType.suffix && index == 0;
 
-  InputBoxIconModel innermostIcon =
-      iconType == IconType.prefix ? visibleIcons.last : visibleIcons.first;
+        double outermostSpacing = isOutermost ? 0 : iconSpacing;
+        double iconWidth = iconModel.width;
+        double dividerSpacing = iconModel.hasDivider
+            ? iconSpacing
+            : (isInnermost ? _innermostSpacing : 0);
+        double dividerWidth = iconModel.hasDivider ? _dividerWidth : 0;
+        double innermostSpacing =
+            iconModel.hasDivider && isInnermost ? _innermostSpacing : 0;
 
-  if (innermostIcon.hasDivider) {
-    result += _innermostSpacing;
-  }
-
-  return result;
+        return outermostSpacing +
+            iconWidth +
+            dividerSpacing +
+            dividerWidth +
+            innermostSpacing;
+      }).reduce((value, width) => value + width);
 }
 
 class _InputBoxIcon extends StatelessWidget {

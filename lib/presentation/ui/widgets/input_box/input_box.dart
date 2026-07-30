@@ -872,7 +872,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                             ),
                             ...widget.suffixIcons,
                           ],
-                          child: DropdownButtonFormField2<ValueModel>(
+                          childBuilder: (leftPadding, rightPadding) =>
+                              DropdownButtonFormField2<ValueModel>(
                             items: items,
                             valueListenable: _selectedMainValueNotifier,
                             openDropdownListenable: _openDropdownNotifier,
@@ -883,7 +884,9 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                               labelColor: widget.labelColor,
                               floatingLabelBehavior:
                                   widget.floatingLabelBehavior,
-                              contentPadding: const EdgeInsets.only(
+                              contentPadding: EdgeInsets.only(
+                                left: leftPadding,
+                                right: rightPadding,
                                 top: 5,
                                 bottom: 12,
                               ),
@@ -962,7 +965,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                               padding: EdgeInsets.zero,
                               openInterval:
                                   const Interval(0, 0.5, curve: Curves.ease),
-                              offset: const Offset(0, -7.5),
+                              offset: const Offset(0, -5.5),
                             ),
                             menuItemStyleData: MenuItemStyleData(
                               padding: EdgeInsets.zero,
