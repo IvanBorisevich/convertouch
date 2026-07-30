@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 const _debugMode = false;
 const double _dividerWidth = 2;
 const double _defaultInnermostSpacing = 7;
-const double _defaultIconSpacing = 7;
+const double _defaultInnermostSpacingWithoutDivider = 5;
+const double _defaultIconSpacing = 5;
 const double _defaultOutermostSpacingWithoutIcons = 12;
 const double _defaultOutermostSpacingWithIcons = 10;
 const double defaultBorderRadius = 15;
@@ -15,6 +16,7 @@ class InputBoxIconWrapper extends StatelessWidget {
   final List<InputBoxIconModel> suffixIconsModels;
   final double? iconSpacing;
   final double? innermostSpacing;
+  final double? innermostSpacingWithoutDivider;
   final double? outermostSpacingWithoutIcons;
   final double? outermostSpacingWithIcons;
   final Color dividerColor;
@@ -26,6 +28,7 @@ class InputBoxIconWrapper extends StatelessWidget {
     this.suffixIconsModels = const [],
     this.iconSpacing,
     this.innermostSpacing,
+    this.innermostSpacingWithoutDivider,
     this.outermostSpacingWithoutIcons,
     this.outermostSpacingWithIcons,
     this.dividerColor = Colors.transparent,
@@ -46,6 +49,9 @@ class InputBoxIconWrapper extends StatelessWidget {
         outermostSpacingWithIcons ?? _defaultOutermostSpacingWithIcons;
     double resultInnermostSpacing =
         innermostSpacing ?? _defaultInnermostSpacing;
+    double resultInnermostSpacingWithoutDivider =
+        innermostSpacingWithoutDivider ??
+            _defaultInnermostSpacingWithoutDivider;
 
     final visiblePrefixIconsModels =
         prefixIconsModels.where((iconModel) => iconModel.visible).toList();
@@ -57,6 +63,7 @@ class InputBoxIconWrapper extends StatelessWidget {
       iconType: IconType.prefix,
       iconSpacing: resultIconSpacing,
       innermostSpacing: resultInnermostSpacing,
+      innermostSpacingWithoutDivider: resultInnermostSpacingWithoutDivider,
       outermostSpacingWithoutIcons: resultOutermostSpacingWithoutIcons,
       outermostSpacingWithIcons: resultOutermostSpacingWithIcons,
     );
@@ -66,6 +73,7 @@ class InputBoxIconWrapper extends StatelessWidget {
       iconType: IconType.suffix,
       iconSpacing: resultIconSpacing,
       innermostSpacing: resultInnermostSpacing,
+      innermostSpacingWithoutDivider: resultInnermostSpacingWithoutDivider,
       outermostSpacingWithoutIcons: resultOutermostSpacingWithoutIcons,
       outermostSpacingWithIcons: resultOutermostSpacingWithIcons,
     );
@@ -80,6 +88,8 @@ class InputBoxIconWrapper extends StatelessWidget {
                 model: model,
                 spacing: resultIconSpacing,
                 innermostSpacing: resultInnermostSpacing,
+                innermostSpacingWithoutDivider:
+                    resultInnermostSpacingWithoutDivider,
                 outermostSpacing: resultOutermostSpacingWithIcons,
                 isInnermost: index == visiblePrefixIconsModels.length - 1,
                 isOutermost: index == 0,
@@ -96,6 +106,8 @@ class InputBoxIconWrapper extends StatelessWidget {
                 model: model,
                 spacing: resultIconSpacing,
                 innermostSpacing: resultInnermostSpacing,
+                innermostSpacingWithoutDivider:
+                    resultInnermostSpacingWithoutDivider,
                 outermostSpacing: resultOutermostSpacingWithIcons,
                 isInnermost: index == 0,
                 isOutermost: index == visibleSuffixIconsModels.length - 1,
@@ -171,6 +183,7 @@ double _getIconsTotalWidth(
   required IconType iconType,
   required double iconSpacing,
   required double innermostSpacing,
+  required double innermostSpacingWithoutDivider,
   required double outermostSpacingWithoutIcons,
   required double outermostSpacingWithIcons,
 }) {
@@ -188,16 +201,16 @@ double _getIconsTotalWidth(
 
         double outermostSpacing = isOutermost ? 0 : iconSpacing;
         double iconWidth = iconModel.width;
-        double dividerSpacing = iconModel.hasDivider
+        double iconSpacingWithDivider = iconModel.hasDivider
             ? iconSpacing
-            : (isInnermost ? innermostSpacing : 0);
+            : (isInnermost ? innermostSpacingWithoutDivider : 0);
         double dividerWidth = iconModel.hasDivider ? _dividerWidth : 0;
         double dividerInnermostSpacing =
             iconModel.hasDivider && isInnermost ? innermostSpacing : 0;
 
         return outermostSpacing +
             iconWidth +
-            dividerSpacing +
+            iconSpacingWithDivider +
             dividerWidth +
             dividerInnermostSpacing;
       }).reduce((value, width) => value + width);
@@ -208,6 +221,7 @@ class _InputBoxIcon extends StatelessWidget {
     required this.model,
     required this.spacing,
     required this.innermostSpacing,
+    required this.innermostSpacingWithoutDivider,
     required this.outermostSpacing,
     required this.isInnermost,
     required this.isOutermost,
@@ -218,6 +232,7 @@ class _InputBoxIcon extends StatelessWidget {
     required this.model,
     required this.spacing,
     required this.innermostSpacing,
+    required this.innermostSpacingWithoutDivider,
     required this.outermostSpacing,
     required this.isInnermost,
     required this.isOutermost,
@@ -228,6 +243,7 @@ class _InputBoxIcon extends StatelessWidget {
   final IconType iconType;
   final double spacing;
   final double innermostSpacing;
+  final double innermostSpacingWithoutDivider;
   final double outermostSpacing;
   final bool isInnermost;
   final bool isOutermost;
@@ -282,7 +298,7 @@ class _InputBoxIcon extends StatelessWidget {
                 )
               : (isInnermost
                   ? Container(
-                      width: innermostSpacing,
+                      width: innermostSpacingWithoutDivider,
                       color: _debugMode ? Colors.orange : Colors.transparent,
                     )
                   : const SizedBox.shrink()),
@@ -313,7 +329,7 @@ class _InputBoxIcon extends StatelessWidget {
               )
             : (isInnermost
                 ? Container(
-                    width: innermostSpacing,
+                    width: innermostSpacingWithoutDivider,
                     color: _debugMode ? Colors.orange : Colors.transparent,
                   )
                 : const SizedBox.shrink()),

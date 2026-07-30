@@ -87,7 +87,7 @@ class ConvertouchSearchBar extends StatelessWidget {
             ],
             suffixIcons: [
               InputBoxIconModel.iconWithDivider(
-                width: 23,
+                width: 25,
                 height: 40,
                 onTap: () {
                   settingsController.changeSetting(

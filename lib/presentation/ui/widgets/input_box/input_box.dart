@@ -90,6 +90,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.suffixIcons = const [],
     this.iconsSpacing,
     this.innermostSpacing,
+    this.innermostSpacingWithoutDivider,
     this.outermostSpacingWithoutIcons,
     this.outermostSpacingWithIcons,
     this.fontSize = _defaultFontSize,
@@ -123,6 +124,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final List<InputBoxIconModel> suffixIcons;
   final double? iconsSpacing;
   final double? innermostSpacing;
+  final double? innermostSpacingWithoutDivider;
   final double? outermostSpacingWithoutIcons;
   final double? outermostSpacingWithIcons;
   final double fontSize;
@@ -280,6 +282,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         suffixIcons: widget.suffixIcons,
         iconsSpacing: widget.iconsSpacing,
         innermostSpacing: widget.innermostSpacing,
+        innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
         outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
         outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
         backgroundColor: _backgroundColor,
@@ -304,6 +307,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         suffixIcons: widget.suffixIcons,
         iconsSpacing: widget.iconsSpacing,
         innermostSpacing: widget.innermostSpacing,
+        innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
         outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
         outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
         foregroundColor: _foregroundColor,
@@ -341,6 +345,7 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     this.suffixIcons = const [],
     this.iconsSpacing,
     this.innermostSpacing,
+    this.innermostSpacingWithoutDivider,
     this.outermostSpacingWithoutIcons,
     this.outermostSpacingWithIcons,
     this.labelText,
@@ -374,6 +379,7 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final List<InputBoxIconModel> suffixIcons;
   final double? iconsSpacing;
   final double? innermostSpacing;
+  final double? innermostSpacingWithoutDivider;
   final double? outermostSpacingWithoutIcons;
   final double? outermostSpacingWithIcons;
   final String? labelText;
@@ -522,6 +528,7 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
         return InputBoxIconWrapper(
           iconSpacing: widget.iconsSpacing,
           innermostSpacing: widget.innermostSpacing,
+          innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
           outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
           outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
           dividerColor: widget.dividerColor,
@@ -629,6 +636,7 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     this.suffixIcons = const [],
     this.iconsSpacing,
     this.innermostSpacing,
+    this.innermostSpacingWithoutDivider,
     this.outermostSpacingWithoutIcons,
     this.outermostSpacingWithIcons,
     this.labelText,
@@ -656,6 +664,7 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
   final List<InputBoxIconModel> suffixIcons;
   final double? iconsSpacing;
   final double? innermostSpacing;
+  final double? innermostSpacingWithoutDivider;
   final double? outermostSpacingWithoutIcons;
   final double? outermostSpacingWithIcons;
   final String? labelText;
@@ -855,6 +864,8 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                         return InputBoxIconWrapper(
                           iconSpacing: widget.iconsSpacing,
                           innermostSpacing: widget.innermostSpacing,
+                          innermostSpacingWithoutDivider:
+                              widget.innermostSpacingWithoutDivider,
                           outermostSpacingWithoutIcons:
                               widget.outermostSpacingWithoutIcons,
                           outermostSpacingWithIcons:
@@ -863,7 +874,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                           prefixIconsModels: [
                             ...widget.prefixIcons,
                             InputBoxIconModel.icon(
-                              width: 30,
+                              width: 32,
                               visible: selectedValueIconVisible,
                               builder: () => ConvertouchSvgIcon(
                                 uri: (selectedValue ?? hint).iconUri,

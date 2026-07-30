@@ -81,7 +81,7 @@ class ConversionParamItem extends StatelessWidget {
             );
           },
           prefixIcons: [
-            InputBoxIconModel.iconWithDivider(
+            InputBoxIconModel.icon(
               width: 25,
               visible:
                   calculationSwitchersVisible && paramValue.param.calculable,
