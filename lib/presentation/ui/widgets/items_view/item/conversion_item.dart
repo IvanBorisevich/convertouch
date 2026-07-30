@@ -66,46 +66,48 @@ class ConvertouchConversionItem<M extends ItemValueModel>
         const NumSignsValidator(),
         NumInRangeValidator(model.min, model.max),
       ],
+      iconsModel: InputBoxIconsWrapperModel(
+        prefixIconsModels: prefixIcons,
+        suffixIconsModels: [
+          ...suffixIcons,
+          InputBoxIconModel.iconWithDivider(
+            width: _unitButtonWidth,
+            visible: model.unitItem != null && model.unitItem!.exists,
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              onUnitItemTap?.call();
+            },
+            builder: () => Text(
+              model.unitItem!.code,
+              style: TextStyle(
+                color: colors.unitButton.regular,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+            ),
+          ),
+          InputBoxIconModel.iconWithDivider(
+            width: _removalButtonWidth,
+            visible: removable,
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              onItemRemoved?.call();
+            },
+            builder: () => Icon(
+              Icons.remove,
+              color: colors.removalIcon.regular,
+              size: 20,
+            ),
+          ),
+        ],
+        iconSpacing: 5,
+        innermostSpacing: 10,
+        outermostSpacingWithIcons: 7,
+      ),
       floatingLabelBehavior: FloatingLabelBehavior.always,
-      iconsSpacing: 5,
-      innermostSpacing: 10,
-      outermostSpacingWithIcons: 7,
       tooltipDirection: tooltipDirection,
       onValueChanged: onValueChanged,
-      prefixIcons: prefixIcons,
-      suffixIcons: [
-        ...suffixIcons,
-        InputBoxIconModel.iconWithDivider(
-          width: _unitButtonWidth,
-          visible: model.unitItem != null && model.unitItem!.exists,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-            onUnitItemTap?.call();
-          },
-          builder: () => Text(
-            model.unitItem!.code,
-            style: TextStyle(
-              color: colors.unitButton.regular,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-            maxLines: 1,
-          ),
-        ),
-        InputBoxIconModel.iconWithDivider(
-          width: _removalButtonWidth,
-          visible: removable,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-            onItemRemoved?.call();
-          },
-          builder: () => Icon(
-            Icons.remove,
-            color: colors.removalIcon.regular,
-            size: 20,
-          ),
-        ),
-      ],
     );
   }
 }

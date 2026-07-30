@@ -4,33 +4,16 @@ import 'package:flutter/material.dart';
 
 const _debugMode = false;
 const double _dividerWidth = 2;
-const double _defaultInnermostSpacing = 7;
-const double _defaultInnermostSpacingWithoutDivider = 5;
-const double _defaultIconSpacing = 5;
-const double _defaultOutermostSpacingWithoutIcons = 12;
-const double _defaultOutermostSpacingWithIcons = 10;
 const double defaultBorderRadius = 15;
 
 class InputBoxIconWrapper extends StatelessWidget {
-  final List<InputBoxIconModel> prefixIconsModels;
-  final List<InputBoxIconModel> suffixIconsModels;
-  final double? iconSpacing;
-  final double? innermostSpacing;
-  final double? innermostSpacingWithoutDivider;
-  final double? outermostSpacingWithoutIcons;
-  final double? outermostSpacingWithIcons;
+  final InputBoxIconsWrapperModel model;
   final Color dividerColor;
   final Widget? child;
   final Widget Function(double leftPadding, double rightPadding)? childBuilder;
 
   const InputBoxIconWrapper({
-    this.prefixIconsModels = const [],
-    this.suffixIconsModels = const [],
-    this.iconSpacing,
-    this.innermostSpacing,
-    this.innermostSpacingWithoutDivider,
-    this.outermostSpacingWithoutIcons,
-    this.outermostSpacingWithIcons,
+    required this.model,
     this.dividerColor = Colors.transparent,
     this.child,
     this.childBuilder,
@@ -42,40 +25,23 @@ class InputBoxIconWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double resultIconSpacing = iconSpacing ?? _defaultIconSpacing;
-    double resultOutermostSpacingWithoutIcons =
-        outermostSpacingWithoutIcons ?? _defaultOutermostSpacingWithoutIcons;
-    double resultOutermostSpacingWithIcons =
-        outermostSpacingWithIcons ?? _defaultOutermostSpacingWithIcons;
-    double resultInnermostSpacing =
-        innermostSpacing ?? _defaultInnermostSpacing;
-    double resultInnermostSpacingWithoutDivider =
-        innermostSpacingWithoutDivider ??
-            _defaultInnermostSpacingWithoutDivider;
-
-    final visiblePrefixIconsModels =
-        prefixIconsModels.where((iconModel) => iconModel.visible).toList();
-    final visibleSuffixIconsModels =
-        suffixIconsModels.where((iconModel) => iconModel.visible).toList();
+    final visiblePrefixIconsModels = model.prefixIconsModels
+        .where((iconModel) => iconModel.visible)
+        .toList();
+    final visibleSuffixIconsModels = model.suffixIconsModels
+        .where((iconModel) => iconModel.visible)
+        .toList();
 
     double prefixIconsTotalWidth = _getIconsTotalWidth(
       visiblePrefixIconsModels,
       iconType: IconType.prefix,
-      iconSpacing: resultIconSpacing,
-      innermostSpacing: resultInnermostSpacing,
-      innermostSpacingWithoutDivider: resultInnermostSpacingWithoutDivider,
-      outermostSpacingWithoutIcons: resultOutermostSpacingWithoutIcons,
-      outermostSpacingWithIcons: resultOutermostSpacingWithIcons,
+      model: model,
     );
 
     double suffixIconsTotalWidth = _getIconsTotalWidth(
       visibleSuffixIconsModels,
       iconType: IconType.suffix,
-      iconSpacing: resultIconSpacing,
-      innermostSpacing: resultInnermostSpacing,
-      innermostSpacingWithoutDivider: resultInnermostSpacingWithoutDivider,
-      outermostSpacingWithoutIcons: resultOutermostSpacingWithoutIcons,
-      outermostSpacingWithIcons: resultOutermostSpacingWithIcons,
+      model: model,
     );
 
     bool visiblePrefixIconsExist = visiblePrefixIconsModels.isNotEmpty;
@@ -84,38 +50,38 @@ class InputBoxIconWrapper extends StatelessWidget {
     List<Widget> prefixIcons = visiblePrefixIconsExist
         ? visiblePrefixIconsModels
             .mapIndexed(
-              (index, model) => _InputBoxIcon.prefix(
-                model: model,
-                spacing: resultIconSpacing,
-                innermostSpacing: resultInnermostSpacing,
+              (index, iconModel) => _InputBoxIcon.prefix(
+                model: iconModel,
+                spacing: model.iconSpacing,
+                innermostSpacing: model.innermostSpacing,
                 innermostSpacingWithoutDivider:
-                    resultInnermostSpacingWithoutDivider,
-                outermostSpacing: resultOutermostSpacingWithIcons,
+                    model.innermostSpacingWithoutDivider,
+                outermostSpacing: model.outermostSpacingWithIcons,
                 isInnermost: index == visiblePrefixIconsModels.length - 1,
                 isOutermost: index == 0,
                 dividerColor: dividerColor,
               ),
             )
             .toList()
-        : [SizedBox(width: resultOutermostSpacingWithoutIcons)];
+        : [SizedBox(width: model.outermostSpacingWithoutIcons)];
 
     List<Widget> suffixIcons = visibleSuffixIconsExist
         ? visibleSuffixIconsModels
             .mapIndexed(
-              (index, model) => _InputBoxIcon.suffix(
-                model: model,
-                spacing: resultIconSpacing,
-                innermostSpacing: resultInnermostSpacing,
+              (index, iconModel) => _InputBoxIcon.suffix(
+                model: iconModel,
+                spacing: model.iconSpacing,
+                innermostSpacing: model.innermostSpacing,
                 innermostSpacingWithoutDivider:
-                    resultInnermostSpacingWithoutDivider,
-                outermostSpacing: resultOutermostSpacingWithIcons,
+                    model.innermostSpacingWithoutDivider,
+                outermostSpacing: model.outermostSpacingWithIcons,
                 isInnermost: index == 0,
                 isOutermost: index == visibleSuffixIconsModels.length - 1,
                 dividerColor: dividerColor,
               ),
             )
             .toList()
-        : [SizedBox(width: resultOutermostSpacingWithoutIcons)];
+        : [SizedBox(width: model.outermostSpacingWithoutIcons)];
 
     return IntrinsicHeight(
       child: child != null
@@ -181,17 +147,13 @@ class InputBoxIconWrapper extends StatelessWidget {
 double _getIconsTotalWidth(
   List<InputBoxIconModel> visibleIcons, {
   required IconType iconType,
-  required double iconSpacing,
-  required double innermostSpacing,
-  required double innermostSpacingWithoutDivider,
-  required double outermostSpacingWithoutIcons,
-  required double outermostSpacingWithIcons,
+  required InputBoxIconsWrapperModel model,
 }) {
   if (visibleIcons.isEmpty) {
-    return outermostSpacingWithoutIcons;
+    return model.outermostSpacingWithoutIcons;
   }
 
-  return outermostSpacingWithIcons +
+  return model.outermostSpacingWithIcons +
       visibleIcons.mapIndexed((index, iconModel) {
         bool isOutermost = iconType == IconType.prefix && index == 0 ||
             iconType == IconType.suffix && index == visibleIcons.length - 1;
@@ -199,14 +161,14 @@ double _getIconsTotalWidth(
             iconType == IconType.prefix && index == visibleIcons.length - 1 ||
                 iconType == IconType.suffix && index == 0;
 
-        double outermostSpacing = isOutermost ? 0 : iconSpacing;
+        double outermostSpacing = isOutermost ? 0 : model.iconSpacing;
         double iconWidth = iconModel.width;
         double iconSpacingWithDivider = iconModel.hasDivider
-            ? iconSpacing
-            : (isInnermost ? innermostSpacingWithoutDivider : 0);
+            ? model.iconSpacing
+            : (isInnermost ? model.innermostSpacingWithoutDivider : 0);
         double dividerWidth = iconModel.hasDivider ? _dividerWidth : 0;
         double dividerInnermostSpacing =
-            iconModel.hasDivider && isInnermost ? innermostSpacing : 0;
+            iconModel.hasDivider && isInnermost ? model.innermostSpacing : 0;
 
         return outermostSpacing +
             iconWidth +

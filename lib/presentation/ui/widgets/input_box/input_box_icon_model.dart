@@ -31,3 +31,48 @@ class InputBoxIconModel {
     this.onTap,
   }) : hasDivider = true;
 }
+
+class InputBoxIconsWrapperModel {
+  static const empty = InputBoxIconsWrapperModel();
+
+  final List<InputBoxIconModel> prefixIconsModels;
+  final List<InputBoxIconModel> suffixIconsModels;
+  final double iconSpacing;
+  final double innermostSpacing;
+  final double innermostSpacingWithoutDivider;
+  final double outermostSpacingWithoutIcons;
+  final double outermostSpacingWithIcons;
+
+  const InputBoxIconsWrapperModel({
+    this.prefixIconsModels = const [],
+    this.suffixIconsModels = const [],
+    this.iconSpacing = 5,
+    this.innermostSpacing = 7,
+    this.innermostSpacingWithoutDivider = 5,
+    this.outermostSpacingWithoutIcons = 12,
+    this.outermostSpacingWithIcons = 10,
+  });
+
+  InputBoxIconsWrapperModel copyWith({
+    List<InputBoxIconModel>? prefixIconsModels,
+    List<InputBoxIconModel>? suffixIconsModels,
+    double? iconSpacing,
+    double? innermostSpacing,
+    double? innermostSpacingWithoutDivider,
+    double? outermostSpacingWithoutIcons,
+    double? outermostSpacingWithIcons,
+  }) {
+    return InputBoxIconsWrapperModel(
+      prefixIconsModels: prefixIconsModels ?? this.prefixIconsModels,
+      suffixIconsModels: suffixIconsModels ?? this.suffixIconsModels,
+      iconSpacing: iconSpacing ?? this.iconSpacing,
+      innermostSpacing: innermostSpacing ?? this.innermostSpacing,
+      innermostSpacingWithoutDivider:
+          innermostSpacingWithoutDivider ?? this.innermostSpacingWithoutDivider,
+      outermostSpacingWithoutIcons:
+          outermostSpacingWithoutIcons ?? this.outermostSpacingWithoutIcons,
+      outermostSpacingWithIcons:
+          outermostSpacingWithIcons ?? this.outermostSpacingWithIcons,
+    );
+  }
+}

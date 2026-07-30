@@ -74,41 +74,43 @@ class ConvertouchSearchBar extends StatelessWidget {
             theme: appState.theme,
             fontSize: 17,
             borderWidth: 0,
-            prefixIcons: [
-              InputBoxIconModel.icon(
-                width: 25,
-                builder: () => Icon(
-                  Icons.search,
-                  color:
-                      searchBarColorScheme.inputBox.textBox.foreground.regular,
-                  size: 25,
-                ),
-              ),
-            ],
-            suffixIcons: [
-              InputBoxIconModel.iconWithDivider(
-                width: 25,
-                height: 40,
-                onTap: () {
-                  settingsController.changeSetting(
-                    context,
-                    key: viewModeSettingKey,
-                    newValue: pageViewMode.next.value,
-                    fromPage: pageName,
-                  );
-                },
-                builder: () =>
-                    ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
-                  Icon(
-                    _itemViewModeIconMap[pageViewMode.next],
-                    key: ValueKey(pageViewMode),
-                    color:
-                        searchBarColorScheme.viewModeButton.foreground.regular,
-                    size: 23,
+            iconsModel: InputBoxIconsWrapperModel(
+              prefixIconsModels: [
+                InputBoxIconModel.icon(
+                  width: 25,
+                  builder: () => Icon(
+                    Icons.search,
+                    color: searchBarColorScheme
+                        .inputBox.textBox.foreground.regular,
+                    size: 25,
                   ),
                 ),
-              ),
-            ],
+              ],
+              suffixIconsModels: [
+                InputBoxIconModel.iconWithDivider(
+                  width: 25,
+                  height: 40,
+                  onTap: () {
+                    settingsController.changeSetting(
+                      context,
+                      key: viewModeSettingKey,
+                      newValue: pageViewMode.next.value,
+                      fromPage: pageName,
+                    );
+                  },
+                  builder: () =>
+                      ConvertouchItemsViewModeButtonAnimation.wrapIntoAnimation(
+                    Icon(
+                      _itemViewModeIconMap[pageViewMode.next],
+                      key: ValueKey(pageViewMode),
+                      color: searchBarColorScheme
+                          .viewModeButton.foreground.regular,
+                      size: 23,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -86,13 +86,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     this.borderWidth = 1,
     required this.colors,
     required this.dialogColors,
-    this.prefixIcons = const [],
-    this.suffixIcons = const [],
-    this.iconsSpacing,
-    this.innermostSpacing,
-    this.innermostSpacingWithoutDivider,
-    this.outermostSpacingWithoutIcons,
-    this.outermostSpacingWithIcons,
+    this.iconsModel = InputBoxIconsWrapperModel.empty,
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
     this.labelText,
@@ -120,13 +114,7 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final double borderWidth;
   final InputBoxColorScheme colors;
   final WidgetColorScheme dialogColors;
-  final List<InputBoxIconModel> prefixIcons;
-  final List<InputBoxIconModel> suffixIcons;
-  final double? iconsSpacing;
-  final double? innermostSpacing;
-  final double? innermostSpacingWithoutDivider;
-  final double? outermostSpacingWithoutIcons;
-  final double? outermostSpacingWithIcons;
+  final InputBoxIconsWrapperModel iconsModel;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final String? labelText;
@@ -278,13 +266,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueChanged: widget.onValueChanged,
         onValueFocused: widget.onValueFocused,
         onValueUnfocused: widget.onValueUnfocused,
-        prefixIcons: widget.prefixIcons,
-        suffixIcons: widget.suffixIcons,
-        iconsSpacing: widget.iconsSpacing,
-        innermostSpacing: widget.innermostSpacing,
-        innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
-        outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
-        outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
+        iconsModel: widget.iconsModel,
         backgroundColor: _backgroundColor,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
@@ -303,13 +285,7 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         labelText: widget.labelText,
         controller: widget.controller,
         onValueChanged: widget.onValueChanged,
-        prefixIcons: widget.prefixIcons,
-        suffixIcons: widget.suffixIcons,
-        iconsSpacing: widget.iconsSpacing,
-        innermostSpacing: widget.innermostSpacing,
-        innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
-        outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
-        outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
+        iconsModel: widget.iconsModel,
         foregroundColor: _foregroundColor,
         warningColor: widget.colors.textBox.foreground.warning,
         hintColor: _hintColor,
@@ -341,13 +317,7 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.onValueFocused,
     this.onValueUnfocused,
-    this.prefixIcons = const [],
-    this.suffixIcons = const [],
-    this.iconsSpacing,
-    this.innermostSpacing,
-    this.innermostSpacingWithoutDivider,
-    this.outermostSpacingWithoutIcons,
-    this.outermostSpacingWithIcons,
+    this.iconsModel = InputBoxIconsWrapperModel.empty,
     this.labelText,
     this.readonly = false,
     required this.backgroundColor,
@@ -375,13 +345,7 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel?)? onValueChanged;
   final void Function(ValueModel?)? onValueFocused;
   final void Function(ValueModel?)? onValueUnfocused;
-  final List<InputBoxIconModel> prefixIcons;
-  final List<InputBoxIconModel> suffixIcons;
-  final double? iconsSpacing;
-  final double? innermostSpacing;
-  final double? innermostSpacingWithoutDivider;
-  final double? outermostSpacingWithoutIcons;
-  final double? outermostSpacingWithIcons;
+  final InputBoxIconsWrapperModel iconsModel;
   final String? labelText;
   final bool readonly;
   final Color backgroundColor;
@@ -526,40 +490,36 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
       valueListenable: _closeIconVisibilityNotifier,
       builder: (_, closeIconVisible, child) {
         return InputBoxIconWrapper(
-          iconSpacing: widget.iconsSpacing,
-          innermostSpacing: widget.innermostSpacing,
-          innermostSpacingWithoutDivider: widget.innermostSpacingWithoutDivider,
-          outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
-          outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
-          dividerColor: widget.dividerColor,
-          prefixIconsModels: widget.prefixIcons,
-          suffixIconsModels: [
-            InputBoxIconModel.icon(
-              width: 28,
-              visible: closeIconVisible,
-              onTap: () {
-                widget.controller.clear();
-                _wrapWithValidationReset(
-                  context: context,
-                  validationKey: widget.validationKey,
-                  func: _onValueChanged,
-                )?.call(null);
-              },
-              builder: () => Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: widget.foregroundColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.close_rounded,
-                  color: widget.backgroundColor,
-                  size: 12,
+          model: widget.iconsModel.copyWith(
+            suffixIconsModels: [
+              InputBoxIconModel.icon(
+                width: 28,
+                visible: closeIconVisible,
+                onTap: () {
+                  widget.controller.clear();
+                  _wrapWithValidationReset(
+                    context: context,
+                    validationKey: widget.validationKey,
+                    func: _onValueChanged,
+                  )?.call(null);
+                },
+                builder: () => Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: widget.foregroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.close_rounded,
+                    color: widget.backgroundColor,
+                    size: 12,
+                  ),
                 ),
               ),
-            ),
-            ...widget.suffixIcons,
-          ],
+              ...widget.iconsModel.suffixIconsModels,
+            ],
+          ),
+          dividerColor: widget.dividerColor,
           child: _validationWrapper(
             validationKey: widget.validationKey,
             focusNode: widget.focusNode,
@@ -632,13 +592,7 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     this.conversionParams,
     this.controller,
     this.onValueChanged,
-    this.prefixIcons = const [],
-    this.suffixIcons = const [],
-    this.iconsSpacing,
-    this.innermostSpacing,
-    this.innermostSpacingWithoutDivider,
-    this.outermostSpacingWithoutIcons,
-    this.outermostSpacingWithIcons,
+    this.iconsModel = InputBoxIconsWrapperModel.empty,
     this.labelText,
     required this.foregroundColor,
     required this.warningColor,
@@ -660,13 +614,7 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     ValueModel?, {
     ListValuesFetchResult? listValues,
   })? onValueChanged;
-  final List<InputBoxIconModel> prefixIcons;
-  final List<InputBoxIconModel> suffixIcons;
-  final double? iconsSpacing;
-  final double? innermostSpacing;
-  final double? innermostSpacingWithoutDivider;
-  final double? outermostSpacingWithoutIcons;
-  final double? outermostSpacingWithIcons;
+  final InputBoxIconsWrapperModel iconsModel;
   final String? labelText;
   final Color foregroundColor;
   final Color warningColor;
@@ -862,37 +810,31 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                       valueListenable: _dropdownIsOpenNotifier,
                       builder: (_, isDropdownOpen, child) {
                         return InputBoxIconWrapper(
-                          iconSpacing: widget.iconsSpacing,
-                          innermostSpacing: widget.innermostSpacing,
-                          innermostSpacingWithoutDivider:
-                              widget.innermostSpacingWithoutDivider,
-                          outermostSpacingWithoutIcons:
-                              widget.outermostSpacingWithoutIcons,
-                          outermostSpacingWithIcons:
-                              widget.outermostSpacingWithIcons,
-                          dividerColor: widget.dividerColor,
-                          prefixIconsModels: [
-                            ...widget.prefixIcons,
-                            InputBoxIconModel.icon(
-                              width: 32,
-                              visible: selectedValueIconVisible,
-                              builder: () => ConvertouchSvgIcon(
-                                uri: (selectedValue ?? hint).iconUri,
-                                defaultUri:
-                                    widget.model.listType!.defaultIconUri,
-                                defaultColor:
-                                    widget.dropdownColors.icon.regular,
+                          model: widget.iconsModel.copyWith(
+                            prefixIconsModels: [
+                              ...widget.iconsModel.prefixIconsModels,
+                              InputBoxIconModel.icon(
+                                width: 32,
+                                visible: selectedValueIconVisible,
+                                builder: () => ConvertouchSvgIcon(
+                                  uri: (selectedValue ?? hint).iconUri,
+                                  defaultUri:
+                                      widget.model.listType!.defaultIconUri,
+                                  defaultColor:
+                                      widget.dropdownColors.icon.regular,
+                                ),
                               ),
-                            ),
-                          ],
-                          suffixIconsModels: [
-                            _suffixRefreshIcon(
-                              context,
-                              listValuesFetchResult: listValuesFetchResult,
-                              isDropdownOpen: isDropdownOpen,
-                            ),
-                            ...widget.suffixIcons,
-                          ],
+                            ],
+                            suffixIconsModels: [
+                              _suffixRefreshIcon(
+                                context,
+                                listValuesFetchResult: listValuesFetchResult,
+                                isDropdownOpen: isDropdownOpen,
+                              ),
+                              ...widget.iconsModel.suffixIconsModels,
+                            ],
+                          ),
+                          dividerColor: widget.dividerColor,
                           childBuilder: (leftPadding, rightPadding) =>
                               DropdownButtonFormField2<ValueModel>(
                             items: items,
@@ -1030,16 +972,18 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                           textBox:
                                               widget.dropdownColors.searchBox,
                                         ),
-                                        dialogColors: widget.dialogColors,
-                                        prefixIcons: [
-                                          InputBoxIconModel.icon(
-                                            builder: () => Icon(
-                                              Icons.search,
-                                              color: widget.foregroundColor,
-                                              size: 20,
+                                        iconsModel: InputBoxIconsWrapperModel(
+                                          prefixIconsModels: [
+                                            InputBoxIconModel.icon(
+                                              builder: () => Icon(
+                                                Icons.search,
+                                                color: widget.foregroundColor,
+                                                size: 20,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
+                                        dialogColors: widget.dialogColors,
                                         controller: _dropdownSearchController,
                                         focusNode: _dropdownSearchFocusNode,
                                         fontSize: 15,

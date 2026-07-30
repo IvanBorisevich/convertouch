@@ -3,6 +3,7 @@ import 'package:convertouch/domain/model/item_value_model.dart';
 import 'package:convertouch/domain/model/value_model.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 
 class ConvertouchDetailsItem extends StatelessWidget {
@@ -57,7 +58,9 @@ class ConvertouchDetailsItem extends StatelessWidget {
             alt: savedValue,
           ),
         ),
-        outermostSpacingWithIcons: 10,
+        iconsModel: const InputBoxIconsWrapperModel(
+          outermostSpacingWithIcons: 10,
+        ),
         readonly: !editable,
         labelText: headerTitle,
         maxTextLength: editableValueMaxLength,
