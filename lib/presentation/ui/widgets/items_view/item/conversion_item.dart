@@ -6,7 +6,7 @@ import 'package:convertouch/domain/utils/input_validators/num_in_range_validator
 import 'package:convertouch/domain/utils/input_validators/num_signs_validator.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 

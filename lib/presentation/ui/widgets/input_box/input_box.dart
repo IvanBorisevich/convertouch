@@ -17,7 +17,7 @@ import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_wrapper.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/focus_node_mixin.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/mixin/text_controller_mixin.dart';

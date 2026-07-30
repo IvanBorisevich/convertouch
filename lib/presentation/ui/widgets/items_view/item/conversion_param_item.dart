@@ -9,7 +9,7 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/refreshing_job_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 

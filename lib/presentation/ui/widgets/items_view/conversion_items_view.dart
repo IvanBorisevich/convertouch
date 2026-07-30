@@ -5,7 +5,7 @@ import 'package:convertouch/presentation/controller/conversion_controller.dart';
 import 'package:convertouch/presentation/controller/unit_details_controller.dart';
 import 'package:convertouch/presentation/controller/units_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:convertouch/presentation/ui/widgets/no_items_info_label.dart';
 import 'package:flutter/material.dart';

@@ -8,7 +8,7 @@ import 'package:convertouch/presentation/ui/animation/items_view_mode_button_ani
 import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box.dart';
-import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dart';
+import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 
 const Map<ItemsViewMode, IconData> _itemViewModeIconMap = {
