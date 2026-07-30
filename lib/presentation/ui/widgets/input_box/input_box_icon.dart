@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-const double inputBoxIconDefaultWidth = 35;
-const double defaultBorderRadius = 15;
+const double _defaultIconWidth = 20;
 
 enum IconType {
   prefix,
@@ -17,7 +16,7 @@ class InputBoxIconModel {
   final void Function()? onTap;
 
   const InputBoxIconModel.icon({
-    this.width = inputBoxIconDefaultWidth,
+    this.width = _defaultIconWidth,
     this.height,
     required this.builder,
     this.visible = true,
@@ -25,7 +24,7 @@ class InputBoxIconModel {
   }) : hasDivider = false;
 
   const InputBoxIconModel.iconWithDivider({
-    this.width = inputBoxIconDefaultWidth,
+    this.width = _defaultIconWidth,
     this.height,
     required this.builder,
     this.visible = true,

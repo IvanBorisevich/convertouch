@@ -23,16 +23,16 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-        // throw ConvertouchException(
-        //   message: "Data fetching failed",
-        //   severity: ExceptionSeverity.warning,
-        // ),
+        throw ConvertouchException(
+          message: "Data fetching failed",
+          severity: ExceptionSeverity.warning,
+        ),
         // '[]'
-            '['
-                '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
-                '{"value":"Exchange-api.com"},'
-                '{"value":"test-rates.com"}'
-            ']',
+        //     '['
+        //         '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
+        //         '{"value":"Exchange-api.com"},'
+        //         '{"value":"test-rates.com"}'
+        //     ']',
       );
     }
 

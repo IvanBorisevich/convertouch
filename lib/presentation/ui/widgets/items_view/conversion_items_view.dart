@@ -81,7 +81,7 @@ class ConvertouchConversionItemsView extends StatelessWidget {
                     isLast ? TooltipDirection.up : TooltipDirection.down,
                 prefixIcons: [
                   InputBoxIconModel.iconWithDivider(
-                    width: 30,
+                    width: 25,
                     builder: () => ReorderableDragStartListener(
                       index: index,
                       child: Container(

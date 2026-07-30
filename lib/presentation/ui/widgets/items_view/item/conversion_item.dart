@@ -79,16 +79,14 @@ class ConvertouchConversionItem<M extends ItemValueModel>
             FocusScope.of(context).unfocus();
             onUnitItemTap?.call();
           },
-          builder: () => Center(
-            child: Text(
-              model.unitItem!.code,
-              style: TextStyle(
-                color: colors.unitButton.regular,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-              maxLines: 1,
+          builder: () => Text(
+            model.unitItem!.code,
+            style: TextStyle(
+              color: colors.unitButton.regular,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
             ),
+            maxLines: 1,
           ),
         ),
         InputBoxIconModel.iconWithDivider(

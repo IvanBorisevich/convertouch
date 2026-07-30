@@ -57,6 +57,7 @@ class ConvertouchDetailsItem extends StatelessWidget {
             alt: savedValue,
           ),
         ),
+        outermostSpacingWithIcons: 10,
         readonly: !editable,
         labelText: headerTitle,
         maxTextLength: editableValueMaxLength,

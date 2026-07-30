@@ -76,16 +76,18 @@ class ConvertouchSearchBar extends StatelessWidget {
             borderWidth: 0,
             prefixIcons: [
               InputBoxIconModel.icon(
-                width: 30,
+                width: 25,
                 builder: () => Icon(
                   Icons.search,
                   color:
                       searchBarColorScheme.inputBox.textBox.foreground.regular,
+                  size: 25,
                 ),
               ),
             ],
             suffixIcons: [
               InputBoxIconModel.iconWithDivider(
+                width: 23,
                 height: 40,
                 onTap: () {
                   settingsController.changeSetting(
@@ -102,6 +104,7 @@ class ConvertouchSearchBar extends StatelessWidget {
                     key: ValueKey(pageViewMode),
                     color:
                         searchBarColorScheme.viewModeButton.foreground.regular,
+                    size: 23,
                   ),
                 ),
               ),

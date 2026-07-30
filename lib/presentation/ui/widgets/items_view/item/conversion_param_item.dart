@@ -13,8 +13,6 @@ import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon.dar
 import 'package:convertouch/presentation/ui/widgets/items_view/item/conversion_item.dart';
 import 'package:flutter/material.dart';
 
-const double _calculationSuffixIconWidth = 40;
-
 class ConversionParamItem extends StatelessWidget {
   final ConversionParamValueModel paramValue;
   final String? conversionGroupName;
@@ -84,7 +82,7 @@ class ConversionParamItem extends StatelessWidget {
           },
           prefixIcons: [
             InputBoxIconModel.iconWithDivider(
-              width: _calculationSuffixIconWidth,
+              width: 25,
               visible:
                   calculationSwitchersVisible && paramValue.param.calculable,
               onTap: () {
@@ -99,6 +97,7 @@ class ConversionParamItem extends StatelessWidget {
                     ? Icons.calculate
                     : Icons.calculate_outlined,
                 color: colors.prefixWidget.regular,
+                size: 25,
               ),
             ),
           ],

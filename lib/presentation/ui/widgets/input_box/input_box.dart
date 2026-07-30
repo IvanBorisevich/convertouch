@@ -88,6 +88,9 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
     required this.dialogColors,
     this.prefixIcons = const [],
     this.suffixIcons = const [],
+    this.iconsSpacing,
+    this.outermostSpacingWithoutIcons,
+    this.outermostSpacingWithIcons,
     this.fontSize = _defaultFontSize,
     this.floatingLabelBehavior,
     this.labelText,
@@ -117,6 +120,9 @@ class ConvertouchInputBox<M extends ItemValueModel> extends StatefulWidget {
   final WidgetColorScheme dialogColors;
   final List<InputBoxIconModel> prefixIcons;
   final List<InputBoxIconModel> suffixIcons;
+  final double? iconsSpacing;
+  final double? outermostSpacingWithoutIcons;
+  final double? outermostSpacingWithIcons;
   final double fontSize;
   final FloatingLabelBehavior? floatingLabelBehavior;
   final String? labelText;
@@ -270,6 +276,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueUnfocused: widget.onValueUnfocused,
         prefixIcons: widget.prefixIcons,
         suffixIcons: widget.suffixIcons,
+        iconsSpacing: widget.iconsSpacing,
+        outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
+        outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
         backgroundColor: _backgroundColor,
         foregroundColor: _foregroundColor,
         hintColor: _hintColor,
@@ -290,6 +299,9 @@ class _ConvertouchInputBoxState<M extends ItemValueModel>
         onValueChanged: widget.onValueChanged,
         prefixIcons: widget.prefixIcons,
         suffixIcons: widget.suffixIcons,
+        iconsSpacing: widget.iconsSpacing,
+        outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
+        outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
         foregroundColor: _foregroundColor,
         warningColor: widget.colors.textBox.foreground.warning,
         hintColor: _hintColor,
@@ -323,6 +335,9 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueUnfocused,
     this.prefixIcons = const [],
     this.suffixIcons = const [],
+    this.iconsSpacing,
+    this.outermostSpacingWithoutIcons,
+    this.outermostSpacingWithIcons,
     this.labelText,
     this.readonly = false,
     required this.backgroundColor,
@@ -352,6 +367,9 @@ class _TextField<M extends ItemValueModel> extends StatefulWidget {
   final void Function(ValueModel?)? onValueUnfocused;
   final List<InputBoxIconModel> prefixIcons;
   final List<InputBoxIconModel> suffixIcons;
+  final double? iconsSpacing;
+  final double? outermostSpacingWithoutIcons;
+  final double? outermostSpacingWithIcons;
   final String? labelText;
   final bool readonly;
   final Color backgroundColor;
@@ -496,6 +514,9 @@ class _TextFieldState<M extends ItemValueModel> extends State<_TextField<M>>
       valueListenable: _closeIconVisibilityNotifier,
       builder: (_, closeIconVisible, child) {
         return InputBoxIconWrapper(
+          iconSpacing: widget.iconsSpacing,
+          outermostSpacingWithoutIcons: widget.outermostSpacingWithoutIcons,
+          outermostSpacingWithIcons: widget.outermostSpacingWithIcons,
           dividerColor: widget.dividerColor,
           prefixIconsModels: widget.prefixIcons,
           suffixIconsModels: [
@@ -599,6 +620,9 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
     this.onValueChanged,
     this.prefixIcons = const [],
     this.suffixIcons = const [],
+    this.iconsSpacing,
+    this.outermostSpacingWithoutIcons,
+    this.outermostSpacingWithIcons,
     this.labelText,
     required this.foregroundColor,
     required this.warningColor,
@@ -622,6 +646,9 @@ class _ListField<M extends ItemValueModel> extends StatefulWidget {
   })? onValueChanged;
   final List<InputBoxIconModel> prefixIcons;
   final List<InputBoxIconModel> suffixIcons;
+  final double? iconsSpacing;
+  final double? outermostSpacingWithoutIcons;
+  final double? outermostSpacingWithIcons;
   final String? labelText;
   final Color foregroundColor;
   final Color warningColor;
@@ -813,229 +840,242 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                         widget.model.listType!.defaultIconUri != null &&
                             (selectedValue ?? hint) != _noValueHint;
 
-                    return InputBoxIconWrapper(
-                      dividerColor: widget.dividerColor,
-                      prefixIconsModels: [
-                        ...widget.prefixIcons,
-                        InputBoxIconModel.icon(
-                          width: 50,
-                          visible: selectedValueIconVisible,
-                          builder: () => ConvertouchSvgIcon(
-                            uri: (selectedValue ?? hint).iconUri,
-                            defaultUri: widget.model.listType!.defaultIconUri,
-                            defaultColor: widget.dropdownColors.icon.regular,
-                          ),
-                        ),
-                      ],
-                      suffixIconsModels: [
-                        InputBoxIconModel.icon(
-                          builder: () => ValueListenableBuilder(
-                            valueListenable: _dropdownIsOpenNotifier,
-                            builder: (_, isOpen, child) {
-                              return _suffixRefreshIcon(
-                                context,
-                                listValuesFetchResult: listValuesFetchResult,
-                                isDropdownOpen: isOpen,
-                              );
-                            },
-                          ),
-                        ),
-                        ...widget.suffixIcons,
-                      ],
-                      child: DropdownButtonFormField2<ValueModel>(
-                        items: items,
-                        valueListenable: _selectedMainValueNotifier,
-                        openDropdownListenable: _openDropdownNotifier,
-                        isExpanded: true,
-                        decoration: _inputFieldDecoration(
-                          context,
-                          labelText: _labelText,
-                          labelColor: widget.labelColor,
-                          floatingLabelBehavior: widget.floatingLabelBehavior,
-                          contentPadding: const EdgeInsets.only(
-                            top: 5,
-                            bottom: 8,
-                          ),
-                        ),
-                        style: _inputFieldTextStyle(
-                          fontSize: widget.fontSize,
-                          foregroundColor: widget.foregroundColor,
-                        ),
-                        onChanged: (selectedValue) {
-                          if (selectedValue != null &&
-                              selectedValue !=
-                                  _selectedMainValueNotifier.value) {
-                            log("Change selected list value to: $selectedValue");
+                    return ValueListenableBuilder(
+                      valueListenable: _dropdownIsOpenNotifier,
+                      builder: (_, isDropdownOpen, child) {
+                        return InputBoxIconWrapper(
+                          iconSpacing: widget.iconsSpacing,
+                          outermostSpacingWithoutIcons:
+                              widget.outermostSpacingWithoutIcons,
+                          outermostSpacingWithIcons:
+                              widget.outermostSpacingWithIcons,
+                          dividerColor: widget.dividerColor,
+                          prefixIconsModels: [
+                            ...widget.prefixIcons,
+                            InputBoxIconModel.icon(
+                              width: 30,
+                              visible: selectedValueIconVisible,
+                              builder: () => ConvertouchSvgIcon(
+                                uri: (selectedValue ?? hint).iconUri,
+                                defaultUri:
+                                    widget.model.listType!.defaultIconUri,
+                                defaultColor:
+                                    widget.dropdownColors.icon.regular,
+                              ),
+                            ),
+                          ],
+                          suffixIconsModels: [
+                            _suffixRefreshIcon(
+                              context,
+                              listValuesFetchResult: listValuesFetchResult,
+                              isDropdownOpen: isDropdownOpen,
+                            ),
+                            ...widget.suffixIcons,
+                          ],
+                          child: DropdownButtonFormField2<ValueModel>(
+                            items: items,
+                            valueListenable: _selectedMainValueNotifier,
+                            openDropdownListenable: _openDropdownNotifier,
+                            isExpanded: true,
+                            decoration: _inputFieldDecoration(
+                              context,
+                              labelText: _labelText,
+                              labelColor: widget.labelColor,
+                              floatingLabelBehavior:
+                                  widget.floatingLabelBehavior,
+                              contentPadding: const EdgeInsets.only(
+                                top: 5,
+                                bottom: 12,
+                              ),
+                            ),
+                            style: _inputFieldTextStyle(
+                              fontSize: widget.fontSize,
+                              foregroundColor: widget.foregroundColor,
+                            ),
+                            onChanged: (selectedValue) {
+                              if (selectedValue != null &&
+                                  selectedValue !=
+                                      _selectedMainValueNotifier.value) {
+                                log("Change selected list value to: $selectedValue");
 
-                            _selectedMainValueNotifier.value = selectedValue;
-                            widget.onValueChanged?.call(selectedValue);
-                          }
-                        },
-                        hint: Text(
-                          hint.itemName,
-                          style: _inputFieldTextStyle(
-                            fontSize: widget.fontSize,
-                            foregroundColor: hint != _noValueHint
-                                ? widget.foregroundColor
-                                : widget.hintColor,
-                          ),
-                        ),
-                        /*
+                                _selectedMainValueNotifier.value =
+                                    selectedValue;
+                                widget.onValueChanged?.call(selectedValue);
+                              }
+                            },
+                            hint: Text(
+                              hint.itemName,
+                              style: _inputFieldTextStyle(
+                                fontSize: widget.fontSize,
+                                foregroundColor: hint != _noValueHint
+                                    ? widget.foregroundColor
+                                    : widget.hintColor,
+                              ),
+                            ),
+                            /*
                          WA to align paddings between
                         DropdownButtonFormField2, its label over the border
                         and DropdownMenuItem
                       */
-                        selectedItemBuilder: (context) {
-                          return (listValuesFetchResult?.items ?? []).map(
-                            (value) {
-                              final resultValue = selectedValue ?? _noValueHint;
+                            selectedItemBuilder: (context) {
+                              return (listValuesFetchResult?.items ?? []).map(
+                                (value) {
+                                  final resultValue =
+                                      selectedValue ?? _noValueHint;
 
-                              return Text(
-                                resultValue.itemName,
-                                style: _inputFieldTextStyle(
-                                  fontSize: widget.fontSize,
-                                  foregroundColor: resultValue != _noValueHint
-                                      ? widget.foregroundColor
-                                      : widget.hintColor,
-                                ),
-                              );
-                            },
-                          ).toList();
-                        },
-                        iconStyleData: const IconStyleData(
-                          icon: SizedBox.shrink(),
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: WidgetStateProperty.all(4),
-                            thumbColor: WidgetStateProperty.all(
-                              widget.dropdownColors.foreground.regular,
-                            ),
-                            trackColor:
-                                WidgetStateProperty.all(Colors.transparent),
-                            trackBorderColor:
-                                WidgetStateProperty.all(Colors.transparent),
-                            trackVisibility: WidgetStateProperty.all(true),
-                            radius: const Radius.circular(10),
-                          ),
-                          maxHeight: 250,
-                          elevation: 0,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(17)),
-                            color: widget.dropdownColors.background.regular,
-                          ),
-                          padding: EdgeInsets.zero,
-                          openInterval:
-                              const Interval(0, 0.5, curve: Curves.ease),
-                          offset: const Offset(0, -7.5),
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: EdgeInsets.zero,
-                          selectedMenuItemBuilder: (_, child) {
-                            return Container(
-                              color: widget.dropdownColors.selectedItem
-                                  .background.regular,
-                              child: Row(
-                                children: [
-                                  Expanded(child: child),
-                                  Icon(
-                                    Icons.check_circle_rounded,
-                                    size: 20,
-                                    color: widget
-                                        .dropdownColors.foreground.regular,
-                                  ),
-                                  const SizedBox(width: 12),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        buttonStyleData: const FormFieldButtonStyleData(
-                          padding: EdgeInsets.zero,
-                        ),
-                        dropdownSearchData: _dropdownSearchController != null &&
-                                _dropdownSearchFocusNode != null
-                            ? DropdownSearchData(
-                                searchController: _dropdownSearchController,
-                                searchBarWidgetHeight: 80,
-                                searchBarWidget: Container(
-                                  padding: const EdgeInsets.all(7),
-                                  child: ConvertouchInputBox(
-                                    model: const ItemValueModel(
-                                      defaultValue: ValueModel.rawStr(
-                                        _defaultSearchHint,
-                                      ),
+                                  return Text(
+                                    resultValue.itemName,
+                                    style: _inputFieldTextStyle(
+                                      fontSize: widget.fontSize,
+                                      foregroundColor:
+                                          resultValue != _noValueHint
+                                              ? widget.foregroundColor
+                                              : widget.hintColor,
                                     ),
-                                    colors: InputBoxColorScheme(
-                                      textBox: widget.dropdownColors.searchBox,
-                                    ),
-                                    dialogColors: widget.dialogColors,
-                                    prefixIcons: [
-                                      InputBoxIconModel.icon(
-                                        builder: () => Icon(
-                                          Icons.search,
-                                          color: widget.foregroundColor,
-                                          size: 20,
-                                        ),
-                                      ),
-                                    ],
-                                    controller: _dropdownSearchController,
-                                    focusNode: _dropdownSearchFocusNode,
-                                    fontSize: 15,
-                                    theme: widget.theme,
-                                  ),
-                                ),
-                                searchMatchFn: (item, searchValue) {
-                                  return listValuesFuncSets[
-                                              widget.model.listType]
-                                          ?.searchStringPredicate(
-                                              searchValue, item.value) ??
-                                      false;
+                                  );
                                 },
-                                noResultsWidget: _noResultsWidget(),
-                              )
-                            : null,
-                        onMenuStateChange: (isOpen) {
-                          if (!mounted) {
-                            return;
-                          }
-
-                          if (_isDropdownStateChangedProgrammatically) {
-                            if (isOpen) {
-                              _isDropdownStateChangedProgrammatically = false;
-                            }
-
-                            return;
-                          }
-
-                          if (isOpen) {
-                            if (_fetchNewListValues(listValuesFetchResult)) {
-                              log("Fetch new list values, "
-                                  "list type = ${widget.model.listType}");
-
-                              _fetchListValues(
-                                context,
-                                fetchParams: ListValuesFetchParams(
-                                  itemId: widget.model.id,
-                                  listType: widget.model.listType!,
-                                  conversionGroupName:
-                                      widget.conversionGroupName,
-                                  conversionParams: widget.conversionParams,
-                                  leaveUnknownSelectedValue:
-                                      widget.model.listType!.fetchedViaApi,
+                              ).toList();
+                            },
+                            iconStyleData: const IconStyleData(
+                              icon: SizedBox.shrink(),
+                            ),
+                            dropdownStyleData: DropdownStyleData(
+                              scrollbarTheme: ScrollbarThemeData(
+                                thickness: WidgetStateProperty.all(4),
+                                thumbColor: WidgetStateProperty.all(
+                                  widget.dropdownColors.foreground.regular,
                                 ),
-                                selectedValue: selectedValue ??
-                                    (hint != _noValueHint ? hint : null),
-                              );
-                            }
-                          } else {
-                            _dropdownSearchController?.clear();
-                          }
+                                trackColor:
+                                    WidgetStateProperty.all(Colors.transparent),
+                                trackBorderColor:
+                                    WidgetStateProperty.all(Colors.transparent),
+                                trackVisibility: WidgetStateProperty.all(true),
+                                radius: const Radius.circular(10),
+                              ),
+                              maxHeight: 250,
+                              elevation: 0,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(17)),
+                                color: widget.dropdownColors.background.regular,
+                              ),
+                              padding: EdgeInsets.zero,
+                              openInterval:
+                                  const Interval(0, 0.5, curve: Curves.ease),
+                              offset: const Offset(0, -7.5),
+                            ),
+                            menuItemStyleData: MenuItemStyleData(
+                              padding: EdgeInsets.zero,
+                              selectedMenuItemBuilder: (_, child) {
+                                return Container(
+                                  color: widget.dropdownColors.selectedItem
+                                      .background.regular,
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: child),
+                                      Icon(
+                                        Icons.check_circle_rounded,
+                                        size: 20,
+                                        color: widget
+                                            .dropdownColors.foreground.regular,
+                                      ),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            buttonStyleData: const FormFieldButtonStyleData(
+                              padding: EdgeInsets.zero,
+                            ),
+                            dropdownSearchData: _dropdownSearchController !=
+                                        null &&
+                                    _dropdownSearchFocusNode != null
+                                ? DropdownSearchData(
+                                    searchController: _dropdownSearchController,
+                                    searchBarWidgetHeight: 80,
+                                    searchBarWidget: Container(
+                                      padding: const EdgeInsets.all(7),
+                                      child: ConvertouchInputBox(
+                                        model: const ItemValueModel(
+                                          defaultValue: ValueModel.rawStr(
+                                            _defaultSearchHint,
+                                          ),
+                                        ),
+                                        colors: InputBoxColorScheme(
+                                          textBox:
+                                              widget.dropdownColors.searchBox,
+                                        ),
+                                        dialogColors: widget.dialogColors,
+                                        prefixIcons: [
+                                          InputBoxIconModel.icon(
+                                            builder: () => Icon(
+                                              Icons.search,
+                                              color: widget.foregroundColor,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ],
+                                        controller: _dropdownSearchController,
+                                        focusNode: _dropdownSearchFocusNode,
+                                        fontSize: 15,
+                                        theme: widget.theme,
+                                      ),
+                                    ),
+                                    searchMatchFn: (item, searchValue) {
+                                      return listValuesFuncSets[
+                                                  widget.model.listType]
+                                              ?.searchStringPredicate(
+                                                  searchValue, item.value) ??
+                                          false;
+                                    },
+                                    noResultsWidget: _noResultsWidget(),
+                                  )
+                                : null,
+                            onMenuStateChange: (isOpen) {
+                              if (!mounted) {
+                                return;
+                              }
 
-                          _dropdownIsOpenNotifier.value = isOpen;
-                        },
-                      ),
+                              if (_isDropdownStateChangedProgrammatically) {
+                                if (isOpen) {
+                                  _isDropdownStateChangedProgrammatically =
+                                      false;
+                                }
+
+                                return;
+                              }
+
+                              if (isOpen) {
+                                if (_fetchNewListValues(
+                                    listValuesFetchResult)) {
+                                  log("Fetch new list values, "
+                                      "list type = ${widget.model.listType}");
+
+                                  _fetchListValues(
+                                    context,
+                                    fetchParams: ListValuesFetchParams(
+                                      itemId: widget.model.id,
+                                      listType: widget.model.listType!,
+                                      conversionGroupName:
+                                          widget.conversionGroupName,
+                                      conversionParams: widget.conversionParams,
+                                      leaveUnknownSelectedValue:
+                                          widget.model.listType!.fetchedViaApi,
+                                    ),
+                                    selectedValue: selectedValue ??
+                                        (hint != _noValueHint ? hint : null),
+                                  );
+                                }
+                              } else {
+                                _dropdownSearchController?.clear();
+                              }
+
+                              _dropdownIsOpenNotifier.value = isOpen;
+                            },
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -1065,7 +1105,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     }
   }
 
-  Widget _suffixRefreshIcon(
+  InputBoxIconModel _suffixRefreshIcon(
     BuildContext context, {
     ListValuesFetchResult? listValuesFetchResult,
     bool isDropdownOpen = false,
@@ -1075,18 +1115,40 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     }
 
     if (listValuesFetchResult.isFailed) {
-      return _refreshFailureItem(
-        context,
-        listValuesFetchResult: listValuesFetchResult,
-        child: _refreshFailureIcon(),
+      return InputBoxIconModel.icon(
+        width: 30,
+        builder: () => _refreshFailureItem(
+          context,
+          listValuesFetchResult: listValuesFetchResult,
+          child: _refreshFailureIcon(
+            padding: const EdgeInsets.only(right: 10),
+          ),
+        ),
       );
     }
 
     if (listValuesFetchResult.isLoading) {
-      return _refreshInProgressIcon();
+      return InputBoxIconModel.icon(
+        width: 30,
+        builder: () => _refreshInProgressIcon(
+          size: 20,
+          padding: const EdgeInsets.only(right: 10),
+        ),
+      );
     }
 
     return _defaultSuffixIcon();
+  }
+
+  InputBoxIconModel _defaultSuffixIcon() {
+    return InputBoxIconModel.icon(
+      width: 28,
+      builder: () => Icon(
+        Icons.expand_more_rounded,
+        color: widget.foregroundColor,
+        size: 23,
+      ),
+    );
   }
 
   List<DropdownItem<ValueModel>>? _buildDropdownItems(
@@ -1257,40 +1319,42 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     );
   }
 
-  Widget _defaultSuffixIcon() {
-    return Icon(
-      Icons.expand_more_rounded,
-      color: widget.foregroundColor,
-    );
-  }
-
   Widget _refreshFailureIcon({
     double size = _refreshButtonWidth,
+    EdgeInsets padding = EdgeInsets.zero,
   }) {
-    return Container(
-      height: double.infinity,
-      color: Colors.transparent,
-      child: Icon(
-        Icons.sync_problem_rounded,
-        color: widget.warningColor,
-        size: size,
+    return Padding(
+      padding: padding,
+      child: Container(
+        width: size,
+        height: size,
+        color: Colors.transparent,
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.sync_problem_rounded,
+          color: widget.warningColor,
+          size: size,
+        ),
       ),
     );
   }
 
   Widget _refreshInProgressIcon({
     double size = _refreshButtonWidth,
+    EdgeInsets padding = const EdgeInsets.all(2),
   }) {
-    return Container(
-      width: size,
-      height: size,
-      color: Colors.transparent,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(2),
-      child: CircularProgressIndicator(
-        strokeCap: StrokeCap.round,
-        strokeWidth: 2,
-        color: widget.foregroundColor,
+    return Padding(
+      padding: padding,
+      child: Container(
+        width: size,
+        height: size,
+        color: Colors.transparent,
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(
+          strokeCap: StrokeCap.round,
+          strokeWidth: 2,
+          color: widget.foregroundColor,
+        ),
       ),
     );
   }
