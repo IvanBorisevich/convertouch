@@ -20,12 +20,13 @@ import 'package:timeago/timeago.dart' as timeago;
 
 const double _paramItemHeight = 75;
 const double _minBodyHeight = 150;
-const double _maxBodyHeight = 255;
+const double _maxBodyHeight = 270;
 const double _tabPanelHeight = 50;
 const double _tabHeight = 35;
 const double _tabRadius = 15;
 const double _footerHeight = 28;
 const double _paramsSpacing = 10;
+const double _paramsTopSpacing = 7;
 const double _jobInfoBoxHeight = 40;
 
 class ConversionParamsView extends StatelessWidget {
@@ -198,7 +199,7 @@ class ConversionParamsView extends StatelessWidget {
       showBackIcon: false,
       showNextIcon: false,
       tabAlignment: TabAlignment.center,
-      padding: const EdgeInsets.only(top: _paramsSpacing),
+      padding: const EdgeInsets.only(top: _paramsTopSpacing),
       indicator: const UnderlineTabIndicator(
         borderSide: BorderSide.none,
       ),
@@ -374,7 +375,7 @@ class ConversionParamsView extends StatelessWidget {
           );
         },
         padding: const EdgeInsets.only(
-          top: _paramsSpacing,
+          top: _paramsTopSpacing,
           left: _paramsSpacing,
           right: _paramsSpacing,
         ),
