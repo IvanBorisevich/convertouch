@@ -1053,7 +1053,10 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                                   searchValue, item.value) ??
                                           false;
                                     },
-                                    noResultsWidget: _noResultsWidget(),
+                                    noResultsWidget: Padding(
+                                      padding: const EdgeInsets.only(bottom: 7),
+                                      child: _noResultsWidget(),
+                                    ),
                                   )
                                 : null,
                             onMenuStateChange: (isOpen) {
