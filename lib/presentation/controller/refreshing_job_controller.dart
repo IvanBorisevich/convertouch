@@ -22,12 +22,33 @@ class RefreshingJobController {
     }
   }
 
+  void createRefreshingJob(
+    BuildContext context, {
+    required String unitGroupName,
+    required String? paramSetName,
+    required JobExecutionMode jobExecutionMode,
+  }) {
+    if (paramSetName == null) {
+      return;
+    }
+
+    BlocProvider.of<RefreshingJobsBloc>(context).add(
+      CreateRefreshingJob(
+        unitGroupName: unitGroupName,
+        paramSetName: paramSetName,
+        jobExecutionMode: jobExecutionMode,
+        onError: (error) {
+          navigationController.showException(context, exception: error);
+        },
+      ),
+    );
+  }
+
   void startRefreshingJob(
     BuildContext context, {
     required String unitGroupName,
     required ConversionParamSetValueModel? params,
     required UnitModel? srcUnit,
-    required JobExecutionMode jobExecutionMode,
   }) {
     if (params == null) {
       return;
@@ -38,7 +59,6 @@ class RefreshingJobController {
         unitGroupName: unitGroupName,
         params: params,
         srcUnitOfRefreshingValue: srcUnit,
-        jobExecutionMode: jobExecutionMode,
         onError: (error) {
           navigationController.showException(context, exception: error);
         },

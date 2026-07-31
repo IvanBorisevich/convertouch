@@ -36,11 +36,11 @@ class RefreshingJobsBloc
     required this.fetchDynamicValueUseCase,
   }) : super(const RefreshingJobsFetched(jobs: {})) {
     on<FetchRefreshingJobs>(_onJobsFetch);
-    on<ChangeJobInfo>(_onChangeJobInfo);
-    on<StartRefreshingJob>(
-      _onStartRefreshingJob,
+    on<CreateRefreshingJob>(
+      _onCreateRefreshingJob,
       transformer: restartable(),
     );
+    on<StartRefreshingJob>(_onStartRefreshingJob);
     on<StopRefreshingJob>(_onStopRefreshingJob);
   }
 
@@ -51,20 +51,8 @@ class RefreshingJobsBloc
     emit(state);
   }
 
-  _onChangeJobInfo(
-    ChangeJobInfo event,
-    Emitter<RefreshingJobsState> emit,
-  ) async {
-    await _patchJobsMapAndEmit(
-      unitGroupName: event.unitGroupName,
-      paramSetName: event.paramSetName,
-      jobPatch: event.jobPatch,
-      emit: emit,
-    );
-  }
-
-  _onStartRefreshingJob(
-    StartRefreshingJob event,
+  _onCreateRefreshingJob(
+    CreateRefreshingJob event,
     Emitter<RefreshingJobsState> emit,
   ) async {
     var activeJobs = ObjectUtils.copyMap(state.jobs);
@@ -72,12 +60,11 @@ class RefreshingJobsBloc
     JobModel? existingJob = findJob(
       activeJobs,
       unitGroupName: event.unitGroupName,
-      paramSetName: event.params.paramSet.name,
+      paramSetName: event.paramSetName,
     );
 
     if (existingJob != null &&
-        existingJob.progressController != null &&
-        !existingJob.progressController!.isClosed) {
+        existingJob.status == JobStatus.running) {
       if (event.jobExecutionMode ==
           JobExecutionMode.continueAlreadyRunningJobIfAny) {
         event.onError?.call(
@@ -92,7 +79,7 @@ class RefreshingJobsBloc
         await cancelJobOperation(
           _jobOperations,
           unitGroupName: event.unitGroupName,
-          paramSetName: event.params.paramSet.name,
+          paramSetName: event.paramSetName,
         );
 
         final result = await stopJobUseCase.execute(
@@ -107,6 +94,37 @@ class RefreshingJobsBloc
           event.onError?.call(result.left);
         }
       }
+    }
+
+    final jobStreamController = StreamController<JobResultModel>.broadcast();
+
+    JobModel job = JobModel(
+      executionMode: event.jobExecutionMode,
+      progressController: jobStreamController,
+    );
+
+    await _patchJobsMapAndEmit(
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.paramSetName,
+      jobPatch: job,
+      emit: emit,
+    );
+  }
+
+  _onStartRefreshingJob(
+    StartRefreshingJob event,
+    Emitter<RefreshingJobsState> emit,
+  ) async {
+    var activeJobs = ObjectUtils.copyMap(state.jobs);
+
+    JobModel? jobToStart = findJob(
+      activeJobs,
+      unitGroupName: event.unitGroupName,
+      paramSetName: event.params.paramSet.name,
+    );
+
+    if (jobToStart == null || jobToStart.status != JobStatus.created) {
+      return;
     }
 
     DynamicDataType? dynamicDataType = dynamicDataGroups[event.unitGroupName];
@@ -136,24 +154,11 @@ class RefreshingJobsBloc
       return;
     }
 
-    final jobStreamController = StreamController<JobResultModel>.broadcast();
-
-    JobModel job = JobModel(
-      params: inputDynamicDataFetchModel,
-      executionMode: event.jobExecutionMode,
-      progressController: jobStreamController,
-    );
-
-    await _patchJobsMapAndEmit(
-      unitGroupName: event.unitGroupName,
-      paramSetName: event.params.paramSet.name,
-      jobPatch: job,
-      emit: emit,
-    );
-
     final jobStartResult = await startJobUseCase.execute(
       InputJobStartModel(
-        job: job,
+        job: jobToStart.copyWith(
+          params: inputDynamicDataFetchModel,
+        ),
         onExecute: (jobParams) async {
           if (jobParams == null) {
             return null;
@@ -183,7 +188,16 @@ class RefreshingJobsBloc
         _jobOperations,
         unitGroupName: event.unitGroupName,
         paramSetName: event.params.paramSet.name,
-        jobOperation: jobStartResult.right,
+        jobOperation: jobStartResult.right.jobOperation,
+      );
+
+      log("[_onStartRefreshingJob] startedJob: ${jobStartResult.right.job}");
+
+      await _patchJobsMapAndEmit(
+        unitGroupName: event.unitGroupName,
+        paramSetName: event.params.paramSet.name,
+        jobPatch: jobStartResult.right.job,
+        emit: emit,
       );
     }
   }
@@ -218,6 +232,8 @@ class RefreshingJobsBloc
       ),
     );
 
+    log("[_onStopRefreshingJob] stoppedJob: ${stoppedJobResult.right}");
+
     if (stoppedJobResult.isLeft) {
       event.onError?.call(stoppedJobResult.left);
     } else {
@@ -238,12 +254,17 @@ class RefreshingJobsBloc
     required JobModel jobPatch,
     required Emitter<RefreshingJobsState> emit,
   }) async {
+    log("[_patchJobsMapAndEmit] before patch: ${state.jobs}");
+
     var patchedJobsMap = patchJobsMap(
       state.jobs,
       unitGroupName: unitGroupName,
       paramSetName: paramSetName,
       jobPatch: jobPatch,
     );
+
+    log("[_patchJobsMapAndEmit] after patch: $patchedJobsMap");
+
 
     emit(
       state.copyWith(jobs: patchedJobsMap),

@@ -14,6 +14,7 @@ class ConvertouchProgressButton extends StatelessWidget {
   final bool determinate;
   final bool visible;
   final void Function()? onProgressIndicatorClick;
+  final void Function()? onFetchJobReady;
   final void Function(JobResultModel)? onFetchSuccess;
   final void Function(ConvertouchException info)? onFetchError;
   final EdgeInsets? margin;
@@ -27,6 +28,7 @@ class ConvertouchProgressButton extends StatelessWidget {
     this.determinate = false,
     this.visible = true,
     this.onProgressIndicatorClick,
+    this.onFetchJobReady,
     this.onFetchSuccess,
     this.onFetchError,
     this.margin,
@@ -37,7 +39,8 @@ class ConvertouchProgressButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("refresh button progressStream: $progressStream");
+    log("Refresh button progress stream: $progressStream "
+        "(${progressStream?.hashCode})");
 
     return Visibility(
       visible: visible,
@@ -51,10 +54,15 @@ class ConvertouchProgressButton extends StatelessWidget {
             : StreamBuilder<JobResultModel>(
                 stream: progressStream,
                 builder: (context, snapshot) {
-                  log("Connection: ${snapshot.connectionState}, "
+                  log("[Progress stream (${progressStream?.hashCode})] "
+                      "Connection: ${snapshot.connectionState}, "
                       "data: ${snapshot.data?.progressPercent}");
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.data == null) {
+                      onFetchJobReady?.call();
+                    }
+
                     return GestureDetector(
                       onTap: onProgressIndicatorClick,
                       child: determinate
@@ -96,7 +104,8 @@ class ConvertouchProgressButton extends StatelessWidget {
                             ),
                     );
                   } else if (snapshot.hasError) {
-                    log("Error received: ${snapshot.error}");
+                    log("[Progress stream (${progressStream?.hashCode})] "
+                        "Error received: ${snapshot.error}");
                     onFetchError?.call(
                       snapshot.error is ConvertouchException
                           ? snapshot.error as ConvertouchException
@@ -109,10 +118,12 @@ class ConvertouchProgressButton extends StatelessWidget {
                     return initialButtonWidget;
                   } else {
                     if (snapshot.data!.finished) {
-                      log("Data receiving finished successfully");
+                      log("[Progress stream (${progressStream?.hashCode})] "
+                          "Data receiving finished successfully");
                       onFetchSuccess?.call(snapshot.data!);
                     } else if (snapshot.data!.failed) {
-                      log("Data receiving failed");
+                      log("[Progress stream (${progressStream?.hashCode})] "
+                          "Data receiving failed");
                       onFetchError?.call(snapshot.data!.notification!);
                     }
 

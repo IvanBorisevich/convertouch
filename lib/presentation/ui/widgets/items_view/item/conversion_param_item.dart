@@ -62,11 +62,10 @@ class ConversionParamItem extends StatelessWidget {
               listValues: listValues,
               ifParamSetFilled: (conversion) {
                 if (appState.refreshOnParamsChange) {
-                  refreshingJobController.startRefreshingJob(
+                  refreshingJobController.createRefreshingJob(
                     context,
                     unitGroupName: conversion.unitGroup.name,
-                    params: conversion.params?.active,
-                    srcUnit: conversion.srcUnitValue?.unit,
+                    paramSetName: conversion.params?.active?.paramSet.name,
                     jobExecutionMode: JobExecutionMode.startNewJob,
                   );
                 }

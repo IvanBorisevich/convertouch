@@ -37,44 +37,40 @@ class FetchRefreshingJobs extends RefreshingJobsEvent {
   }
 }
 
-class ChangeJobInfo extends SingleJobEvent {
-  final JobModel jobPatch;
-  final bool forceReplaceWithNulls;
+class CreateRefreshingJob extends SingleJobEvent {
+  final JobExecutionMode jobExecutionMode;
 
-  const ChangeJobInfo({
-    required this.jobPatch,
-    this.forceReplaceWithNulls = false,
+  const CreateRefreshingJob({
     required super.unitGroupName,
     required super.paramSetName,
+    this.jobExecutionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
+    super.onError,
   });
 
   @override
   List<Object?> get props => [
-        jobPatch,
-        forceReplaceWithNulls,
         super.props,
+        jobExecutionMode,
       ];
 
   @override
   String toString() {
-    return 'ChangeJobInfo{'
-        'jobPatch: $jobPatch, '
+    return 'CreateRefreshingJob{'
         'unitGroupName: $unitGroupName, '
-        'paramSetName: $paramSetName}';
+        'paramSetName: $paramSetName, '
+        'jobExecutionMode: $jobExecutionMode}';
   }
 }
 
 class StartRefreshingJob extends RefreshingJobsEvent {
   final String unitGroupName;
   final ConversionParamSetValueModel params;
-  final JobExecutionMode jobExecutionMode;
   final UnitModel? srcUnitOfRefreshingValue;
 
   const StartRefreshingJob({
     required this.unitGroupName,
     required this.params,
     this.srcUnitOfRefreshingValue,
-    this.jobExecutionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
     super.onError,
   });
 
@@ -82,7 +78,6 @@ class StartRefreshingJob extends RefreshingJobsEvent {
   List<Object?> get props => [
         unitGroupName,
         params,
-        jobExecutionMode,
         srcUnitOfRefreshingValue,
       ];
 
@@ -91,7 +86,6 @@ class StartRefreshingJob extends RefreshingJobsEvent {
     return 'StartRefreshingJob{'
         'unitGroupName: $unitGroupName, '
         'params: $params, '
-        'jobExecutionMode: $jobExecutionMode, '
         'srcUnitOfRefreshingValue: $srcUnitOfRefreshingValue}';
   }
 }

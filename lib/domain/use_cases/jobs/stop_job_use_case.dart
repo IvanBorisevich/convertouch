@@ -12,15 +12,18 @@ class StopJobUseCase<R> extends UseCase<InputJobStopModel, JobModel> {
   Future<Either<ConvertouchException, JobModel>> execute(
     InputJobStopModel input,
   ) async {
+    if (input.job.status != JobStatus.running) {
+      return Right(input.job);
+    }
+
     try {
       await input.job.progressController?.close();
 
       JobModel stoppedJob = input.job.copyWith(
         progressController: const Patchable(null, patchNull: true),
-        completedAt: Patchable(
-          input.stopOnError || input.forceStop ? null : DateTime.now(),
-          patchNull: false,
-        ),
+        completedAt:
+            input.stopOnError || input.forceStop ? null : DateTime.now(),
+        status: JobStatus.finalized,
       );
 
       return Right(stoppedJob);

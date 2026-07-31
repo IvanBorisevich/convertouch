@@ -8,6 +8,13 @@ import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_dynamic_data_fetch_model.dart';
 import 'package:convertouch/domain/utils/object_utils.dart';
 
+enum JobStatus {
+  created,
+  running,
+  finalized,
+  ;
+}
+
 enum JobExecutionMode {
   continueAlreadyRunningJobIfAny,
   startNewJob,
@@ -27,6 +34,7 @@ class JobModel extends IdNameItemModel {
   final Cron cron;
   final DateTime? completedAt;
   final StreamController<JobResultModel>? progressController;
+  final JobStatus status;
   final JobExecutionMode executionMode;
 
   const JobModel({
@@ -34,6 +42,7 @@ class JobModel extends IdNameItemModel {
     this.cron = Cron.never,
     this.completedAt,
     this.progressController,
+    this.status = JobStatus.created,
     this.executionMode = JobExecutionMode.continueAlreadyRunningJobIfAny,
   }) : super(
           name: "",
@@ -42,15 +51,18 @@ class JobModel extends IdNameItemModel {
         );
 
   JobModel copyWith({
-    Patchable<DateTime>? completedAt,
-    Patchable<Cron>? cron,
+    InputDynamicDataFetchModel? params,
+    JobStatus? status,
+    DateTime? completedAt,
+    Cron? cron,
     Patchable<StreamController<JobResultModel>>? progressController,
   }) {
     return JobModel(
       executionMode: executionMode,
-      params: params,
-      completedAt: ObjectUtils.patch(this.completedAt, completedAt),
-      cron: ObjectUtils.patch(this.cron, cron)!,
+      params: params ?? this.params,
+      completedAt: completedAt ?? this.completedAt,
+      cron: cron ?? this.cron,
+      status: status ?? this.status,
       progressController:
           ObjectUtils.patch(this.progressController, progressController),
     );
@@ -63,6 +75,7 @@ class JobModel extends IdNameItemModel {
         completedAt,
         progressController.hashCode,
         itemType,
+        status,
         executionMode,
       ];
 
@@ -104,6 +117,7 @@ class JobModel extends IdNameItemModel {
         'completedAt: $completedAt, '
         'progressController: $progressController '
         '(${progressController?.hashCode}), '
+        'status: $status, '
         'executionMode: $executionMode}';
   }
 }

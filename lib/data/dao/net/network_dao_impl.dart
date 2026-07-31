@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
@@ -23,16 +25,16 @@ class NetworkDaoImpl extends NetworkDao {
       return await Future.delayed(
         const Duration(seconds: 5),
         () =>
-        throw ConvertouchException(
-          message: "Data fetching failed",
-          severity: ExceptionSeverity.warning,
-        ),
+        // throw ConvertouchException(
+        //   message: "Data fetching failed",
+        //   severity: ExceptionSeverity.warning,
+        // ),
         // '[]'
-        //     '['
-        //         '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
-        //         '{"value":"Exchange-api.com"},'
-        //         '{"value":"test-rates.com"}'
-        //     ']',
+            '['
+                '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
+                '{"value":"Exchange-api.com"},'
+                '{"value":"test-rates.com"}'
+            ']',
       );
     }
     //
@@ -47,6 +49,8 @@ class NetworkDaoImpl extends NetworkDao {
     //     '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75, "BTN": 0.3}',
     //   );
     // }
+
+    log("Checking connection");
 
     await _checkConnection();
 
@@ -74,6 +78,8 @@ class NetworkDaoImpl extends NetworkDao {
 
   Future<void> _checkConnection() async {
     bool isConnected = await networkHelper.isConnected();
+
+    log("is connected: $isConnected");
 
     if (!isConnected) {
       throw ConvertouchException(

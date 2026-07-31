@@ -4,21 +4,26 @@ import 'dart:developer';
 import 'package:async/async.dart';
 import 'package:convertouch/domain/model/dynamic_data_model.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
+import 'package:convertouch/domain/model/job_model.dart';
 import 'package:convertouch/domain/model/job_result_model.dart';
 import 'package:convertouch/domain/model/use_case_model/input/input_job_start_model.dart';
+import 'package:convertouch/domain/model/use_case_model/output/output_job_start_model.dart';
 import 'package:convertouch/domain/use_cases/use_case.dart';
 import 'package:either_dart/either.dart';
 
-class StartJobUseCase
-    extends UseCase<InputJobStartModel, CancelableOperation<void>?> {
+class StartJobUseCase extends UseCase<InputJobStartModel, OutputJobStartModel> {
   const StartJobUseCase();
 
   @override
-  Future<Either<ConvertouchException, CancelableOperation<void>?>> execute(
+  Future<Either<ConvertouchException, OutputJobStartModel>> execute(
     InputJobStartModel input,
   ) async {
     if (input.job.progressController == null) {
-      return const Right(null);
+      return Right(
+        OutputJobStartModel(
+          job: input.job,
+        ),
+      );
     }
 
     try {
@@ -30,7 +35,14 @@ class StartJobUseCase
         },
       );
 
-      return Right(jobOperation);
+      return Right(
+        OutputJobStartModel(
+          job: input.job.copyWith(
+            status: JobStatus.running,
+          ),
+          jobOperation: jobOperation,
+        ),
+      );
     } catch (e, stackTrace) {
       log("Error when starting the job: $e, $stackTrace");
 

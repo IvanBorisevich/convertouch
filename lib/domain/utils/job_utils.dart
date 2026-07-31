@@ -26,8 +26,10 @@ JobsMap patchJobsMap(
   resultMap.update(
     _jobKey(unitGroupName, paramSetName),
     (job) => job.copyWith(
-      completedAt: Patchable(jobPatch.completedAt),
-      cron: Patchable(jobPatch.cron),
+      params: jobPatch.params,
+      status: jobPatch.status,
+      completedAt: jobPatch.completedAt,
+      cron: jobPatch.cron,
       progressController: Patchable(
         jobPatch.progressController,
         patchNull: true,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:convertouch/domain/constants/settings.dart';
 import 'package:convertouch/domain/model/exception_model.dart';
 import 'package:convertouch/domain/model/job_model.dart';
@@ -59,16 +61,27 @@ class ConvertouchRefreshFloatingButton extends StatelessWidget {
                 disabled: disabled,
                 colorScheme: refreshButtonColor,
                 onClick: () {
-                  refreshingJobController.startRefreshingJob(
+                  refreshingJobController.createRefreshingJob(
                     context,
                     unitGroupName: unitGroupName,
-                    params: params,
-                    srcUnit: srcUnit,
+                    paramSetName: params?.paramSet.name,
                     jobExecutionMode:
                         JobExecutionMode.continueAlreadyRunningJobIfAny,
                   );
                 },
               ),
+              onFetchJobReady: () {
+                log("The job of the group '$unitGroupName' "
+                    "and param set '${params?.paramSet.name}' "
+                    "is ready to start");
+
+                refreshingJobController.startRefreshingJob(
+                  context,
+                  unitGroupName: unitGroupName,
+                  params: params,
+                  srcUnit: srcUnit,
+                );
+              },
               onFetchSuccess: (jobResult) {
                 if (jobResult.data != null) {
                   conversionController.updateWithDynamicData(
