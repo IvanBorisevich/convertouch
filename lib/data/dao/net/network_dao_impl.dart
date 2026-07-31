@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:convertouch/data/const/constants.dart';
 import 'package:convertouch/data/dao/net/network_helper/network_helper.dart';
 import 'package:convertouch/data/dao/network_dao.dart';
 import 'package:convertouch/domain/constants/constants.dart';
@@ -21,22 +20,22 @@ class NetworkDaoImpl extends NetworkDao {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
-    if (urlPath == exchangeRateSourcesPath) {
-      return await Future.delayed(
-        const Duration(seconds: 5),
-        () =>
-        // throw ConvertouchException(
-        //   message: "Data fetching failed",
-        //   severity: ExceptionSeverity.warning,
-        // ),
-        // '[]'
-            '['
-                '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
-                '{"value":"Exchange-api.com"},'
-                '{"value":"test-rates.com"}'
-            ']',
-      );
-    }
+    // if (urlPath == exchangeRateSourcesPath) {
+    //   return await Future.delayed(
+    //     const Duration(seconds: 5),
+    //     () =>
+    //     // throw ConvertouchException(
+    //     //   message: "Data fetching failed",
+    //     //   severity: ExceptionSeverity.warning,
+    //     // ),
+    //     // '[]'
+    //         '['
+    //             '{"value":"British Central Bank", "iconUri": "https://www.svgrepo.com/show/513266/bank.svg"},'
+    //             '{"value":"Exchange-api.com"},'
+    //             '{"value":"test-rates.com"}'
+    //         ']',
+    //   );
+    // }
     //
     // if (urlPath == exchangeRatePath) {
     //   return await Future.delayed(
@@ -49,8 +48,6 @@ class NetworkDaoImpl extends NetworkDao {
     //     '{"EUR": 1.2, "AUD": 0.7, "CAD": 0.75, "BTN": 0.3}',
     //   );
     // }
-
-    log("Checking connection");
 
     await _checkConnection();
 
@@ -79,7 +76,7 @@ class NetworkDaoImpl extends NetworkDao {
   Future<void> _checkConnection() async {
     bool isConnected = await networkHelper.isConnected();
 
-    log("is connected: $isConnected");
+    log("Is connection OK: $isConnected");
 
     if (!isConnected) {
       throw ConvertouchException(
