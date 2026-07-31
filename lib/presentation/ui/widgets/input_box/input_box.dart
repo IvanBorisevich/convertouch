@@ -1223,9 +1223,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                     value.itemName,
                     style: _inputFieldTextStyle(
                       fontSize: _defaultDropdownItemFontSize,
-                      foregroundColor: value != _noValueHint
-                          ? widget.foregroundColor
-                          : widget.hintColor,
+                      foregroundColor: widget.dropdownColors.foreground.regular,
                     ),
                   ),
                 ),
@@ -1418,7 +1416,7 @@ TextStyle _inputFieldTextStyle({
     fontWeight: fontWeight,
     fontFamily: quicksandFontFamily,
     overflow: TextOverflow.fade,
-    foreground: Paint()..color = foregroundColor,
+    color: foregroundColor,
     letterSpacing: 0,
   );
 }

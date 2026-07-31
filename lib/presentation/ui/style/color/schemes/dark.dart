@@ -40,7 +40,7 @@ const _notification = NotificationColorScheme(
 );
 
 const _dropdown = DropdownColorScheme(
-  background: MultiColor.only(Color(0xFF3F4857)),
+  background: MultiColor.only(Color(0xFF3A4D60)),
   foreground: MultiColor(
     regular: Color(0xFFBFD3E3),
     warning: _warningForeground,
@@ -48,7 +48,7 @@ const _dropdown = DropdownColorScheme(
   icon: MultiColor.only(Color(0xFF5596D8)),
   searchBox: _dropdownSearchBox,
   selectedItem: WidgetColorScheme(
-    background: MultiColor.only(Color(0xFF475163)),
+    background: MultiColor.only(Color(0xFF43596E)),
     foreground: MultiColor.only(Color(0xFFBFD3E3)),
   ),
 );
@@ -392,7 +392,7 @@ const _paramItemTextBox = TextBoxColorScheme(
     focused: Color(0xFF547CAC),
   ),
   foreground: MultiColor(
-    regular: Color(0xFF71A8EA),
+    regular: Color(0xFF92BBED),
     disabled: Color(0xFF7191B8),
     warning: Color(0xFFF18461),
   ),
