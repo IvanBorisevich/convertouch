@@ -78,7 +78,7 @@ class ConvertouchProgressButton extends StatelessWidget {
                           : Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(15),
                               decoration: BoxDecoration(
                                 color: colors.background.selected,
                                 borderRadius:
@@ -87,23 +87,11 @@ class ConvertouchProgressButton extends StatelessWidget {
                                   color: colors.border.selected,
                                 ),
                               ),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.stop_rounded,
-                                      size: 25,
-                                      color: colors.foreground.selected,
-                                    ),
-                                  ),
-                                  CircularProgressIndicator(
-                                    value: null,
-                                    strokeWidth: 3.0,
-                                    strokeCap: StrokeCap.round,
-                                    color: colors.foreground.selected,
-                                  ),
-                                ],
+                              child: CircularProgressIndicator(
+                                value: null,
+                                strokeWidth: 3.0,
+                                strokeCap: StrokeCap.round,
+                                color: colors.foreground.selected,
                               ),
                             ),
                     );
