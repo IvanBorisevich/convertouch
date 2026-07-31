@@ -244,9 +244,9 @@ enum ConvertouchListType {
     fetchedViaApi: true,
     defaultIconUri: IconKeys.dataSource,
   ),
-  clothesHeightRange(24),
-  ringDiameterRange(25),
-  ringCircumferenceRange(26),
+  clothesHeightRange(24, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringDiameterRange(25, listValuesType: ConvertouchValueType.decimalNonNegative),
+  ringCircumferenceRange(26, listValuesType: ConvertouchValueType.decimalNonNegative),
   ;
 
   /// The id of the list type used for storing in db

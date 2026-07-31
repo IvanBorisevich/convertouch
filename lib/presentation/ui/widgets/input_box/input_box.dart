@@ -963,10 +963,12 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                     searchBarWidget: Container(
                                       padding: const EdgeInsets.all(7),
                                       child: ConvertouchInputBox(
-                                        model: const ItemValueModel(
-                                          defaultValue: ValueModel.rawStr(
+                                        model: ItemValueModel(
+                                          defaultValue: const ValueModel.rawStr(
                                             _defaultSearchHint,
                                           ),
+                                          valueType: widget
+                                              .model.listType!.listValuesType,
                                         ),
                                         colors: InputBoxColorScheme(
                                           textBox:

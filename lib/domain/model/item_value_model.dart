@@ -48,11 +48,13 @@ class ItemValueModel extends ItemModel {
   final ValueModel? value;
   final ValueModel? defaultValue;
   final ListValuesFetchResult? listValuesFetchResult;
+  final ConvertouchValueType valueType;
 
   const ItemValueModel({
     this.value,
     this.defaultValue,
     this.listValuesFetchResult,
+    this.valueType = ConvertouchValueType.text,
   }) : super(
           itemType: ItemType.itemValue,
         );
@@ -80,8 +82,6 @@ class ItemValueModel extends ItemModel {
   double? get min => unitItem?.minValue?.numVal ?? valueType.min;
 
   double? get max => unitItem?.maxValue?.numVal;
-
-  ConvertouchValueType get valueType => ConvertouchValueType.text;
 
   ConvertouchListType? get listType => null;
 
