@@ -688,7 +688,9 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     bool showUnknownSelectedValue = currentSelectedValue != null &&
         (listValuesFetchResult == null ||
             listValuesFetchResult.isEmpty ||
-            listValuesFetchResult.selectedItem == null);
+            listValuesFetchResult.selectedItem == null ||
+            listValuesFetchResult.fetchParams != null &&
+                listValuesFetchResult.fetchParams!.leaveUnknownSelectedValue);
 
     ValueModel? mainValue =
         showUnknownSelectedValue ? null : currentSelectedValue;
@@ -762,9 +764,9 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             log("ListValuesBloc listener, "
                 "list values fetched: $listFetchResult");
 
-            if (listFetchResult.isLoading) {
-              return;
-            }
+            // if (listFetchResult.isLoading) {
+            //   return;
+            // }
 
             if (listFetchResult.isSuccess) {
               widget.onValueChanged?.call(
@@ -1190,7 +1192,31 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
         DropdownItem(
           height: _defaultListItemHeight,
           enabled: false,
-          child: _noResultsWidget(),
+          child: GestureDetector(
+            onTap: () {
+              _fetchListValues(
+                context,
+                fetchParams: listValuesFetchResult.fetchParams,
+                selectedValue: listValuesFetchResult.selectedItem,
+              );
+            },
+            child: Container(
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              child: Row(
+                children: [
+                  _noResultsWidget(),
+                  const SizedBox(width: 10),
+                  Icon(
+                    Icons.refresh_rounded,
+                    color: widget.foregroundColor,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ];
     }

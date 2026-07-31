@@ -635,5 +635,46 @@ void main() {
         ),
       );
     });
+
+    test("Should leave unknown selected value: 'Test Bank' -> 'Test Bank'",
+        () async {
+      final currentParamValue = ConversionParamValueModel.tuple(
+        exchangeRateSourceBankParam,
+        'Test Bank',
+        null,
+      );
+
+      when(
+        mockitoNetworkRepository.fetchListValues(
+          listType: ConvertouchListType.exchangeRateSource,
+          conversionGroupName: GroupNames.currency,
+          params: anyNamed('params'),
+          pageSize: listValuesPageSize,
+          pageNum: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Right([
+          ValueModel.rawStr('FloatRates', iconUri: IconKeys.dataSource),
+        ]),
+      );
+
+      await testCase(
+        leaveUnknownSelectedValue: true,
+        itemValue: currentParamValue,
+        conversionGroupName: GroupNames.currency,
+        expectedListFetchResult: exchangeRateSources.copyWith(
+          selectedItem: const Patchable(
+            ValueModel.rawStr('Test Bank'),
+          ),
+        ),
+        expectedSelectedValue: const ValueModel.rawStr('Test Bank'),
+        paramSetValue: ConversionParamSetValueModel(
+          paramSet: exchangeRateParamSet,
+          paramValues: [
+            currentParamValue,
+          ],
+        ),
+      );
+    });
   });
 }
