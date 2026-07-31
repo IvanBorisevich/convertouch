@@ -77,6 +77,8 @@ abstract class IconKeys {
   static const defaultGroup = "default_group";
   static const diameter = "diameter";
   static const exchangeRateParams = "exchange_rate_params";
+  static const home = "home";
+  static const homeFilled = "home_filled";
   static const length = "length";
   static const mass = "mass";
   static const parameters = "parameters";
@@ -101,6 +103,8 @@ const Map<String, String> idToIconName = {
   IconKeys.defaultGroup: "default-group.svg",
   IconKeys.diameter: "diameter.svg",
   IconKeys.exchangeRateParams: "chart.svg",
+  IconKeys.home: "home.svg",
+  IconKeys.homeFilled: "home-filled.svg",
   IconKeys.length: "length-group.svg",
   IconKeys.mass: "mass.svg",
   IconKeys.parameters: "parameters.svg",

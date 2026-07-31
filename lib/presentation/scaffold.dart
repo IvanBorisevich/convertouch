@@ -42,6 +42,7 @@ import 'package:convertouch/presentation/ui/style/color/colors_factory.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/root_screen.dart';
+import 'package:convertouch/presentation/ui/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,14 +60,21 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
-  static final _navBarIcons = {
-    BottomNavbarItem.home: const Icon(Icons.home_outlined),
-    BottomNavbarItem.settings: const Icon(Icons.settings_outlined),
+  static final Map<BottomNavbarItem, Widget Function(Color)> _navBarIcons = {
+    BottomNavbarItem.home: (color) => ConvertouchSvgIcon(
+          uri: IconKeys.home,
+          color: color,
+        ),
+    BottomNavbarItem.settings: (color) => const Icon(Icons.settings_outlined),
   };
 
-  static final _navBarIconsSelected = {
-    BottomNavbarItem.home: const Icon(Icons.home_rounded),
-    BottomNavbarItem.settings: const Icon(Icons.settings_rounded),
+  static final Map<BottomNavbarItem, Widget Function(Color)>
+      _navBarIconsSelected = {
+    BottomNavbarItem.home: (color) => ConvertouchSvgIcon(
+          uri: IconKeys.homeFilled,
+          color: color,
+        ),
+    BottomNavbarItem.settings: (color) => const Icon(Icons.settings_rounded),
   };
 
   static const _navBarLabels = {
@@ -296,10 +304,18 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
                           _buildNavbarItem(
                             bottomNavbarItem: BottomNavbarItem.home,
                             selectedItem: selectedItem,
+                            unselectedItemColor:
+                                pageColorScheme.bottomBar.foreground.regular,
+                            selectedItemColor:
+                                pageColorScheme.bottomBar.foreground.selected,
                           ),
                           _buildNavbarItem(
                             bottomNavbarItem: BottomNavbarItem.settings,
                             selectedItem: selectedItem,
+                            unselectedItemColor:
+                                pageColorScheme.bottomBar.foreground.regular,
+                            selectedItemColor:
+                                pageColorScheme.bottomBar.foreground.selected,
                           ),
                         ],
                         onTap: (index) {
@@ -332,11 +348,13 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
   BottomNavigationBarItem _buildNavbarItem({
     required BottomNavbarItem bottomNavbarItem,
     required BottomNavbarItem selectedItem,
+    required Color unselectedItemColor,
+    required Color selectedItemColor,
   }) {
     return BottomNavigationBarItem(
       icon: bottomNavbarItem == selectedItem
-          ? _navBarIconsSelected[bottomNavbarItem]!
-          : _navBarIcons[bottomNavbarItem]!,
+          ? _navBarIconsSelected[bottomNavbarItem]!.call(selectedItemColor)
+          : _navBarIcons[bottomNavbarItem]!.call(unselectedItemColor),
       label: _navBarLabels[bottomNavbarItem],
     );
   }
