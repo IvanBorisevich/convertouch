@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:convertouch/presentation/ui/utils/widget_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:flutter/material.dart';
 
@@ -217,7 +218,8 @@ class _InputBoxIcon extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return _wrapInGestureDetector(
+    return wrapInGestureDetector(
+      onTap: model.onTap,
       child: _wrapInDivider(
         icon: Container(
           width: model.width,
@@ -233,15 +235,6 @@ class _InputBoxIcon extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _wrapInGestureDetector({required Widget child}) {
-    return model.onTap != null
-        ? GestureDetector(
-            onTap: model.onTap,
-            child: child,
-          )
-        : child;
   }
 
   Widget _wrapInDivider({required Widget icon}) {

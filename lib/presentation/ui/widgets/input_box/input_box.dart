@@ -16,6 +16,7 @@ import 'package:convertouch/presentation/bloc/common/root_screen/root_screen_sta
 import 'package:convertouch/presentation/controller/validation_controller.dart';
 import 'package:convertouch/presentation/ui/style/color/model/widget_color_scheme.dart';
 import 'package:convertouch/presentation/ui/utils/common_utils.dart';
+import 'package:convertouch/presentation/ui/utils/widget_utils.dart';
 import 'package:convertouch/presentation/ui/widgets/dialog/failure_dialog.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_model.dart';
 import 'package:convertouch/presentation/ui/widgets/input_box/input_box_icon_wrapper.dart';
@@ -62,7 +63,6 @@ final Map<ConvertouchValueType, RegExp> _valueTypeToRegExp = {
 
 const double _defaultFontSize = 18;
 const double _defaultDropdownItemFontSize = 17;
-const double _refreshButtonWidth = 25;
 
 const String _defaultSearchHint = "Search...";
 const ValueModel _noValueHint = ValueModel.rawStr('-');
@@ -764,10 +764,6 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
             log("ListValuesBloc listener, "
                 "list values fetched: $listFetchResult");
 
-            // if (listFetchResult.isLoading) {
-            //   return;
-            // }
-
             if (listFetchResult.isSuccess) {
               widget.onValueChanged?.call(
                 validatedSelectedValue,
@@ -986,6 +982,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                               ),
                                             ),
                                           ],
+                                          outermostSpacingWithIcons: 7,
                                         ),
                                         dialogColors: widget.dialogColors,
                                         controller: _dropdownSearchController,
@@ -1003,7 +1000,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
                                     },
                                     noResultsWidget: Padding(
                                       padding: const EdgeInsets.only(bottom: 7),
-                                      child: _noResultsWidget(),
+                                      child: _noResultListItemText(),
                                     ),
                                   )
                                 : null,
@@ -1091,12 +1088,13 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
 
     if (listValuesFetchResult.isFailed) {
       return InputBoxIconModel.icon(
-        width: 30,
-        builder: () => _refreshFailureItem(
-          context,
-          listValuesFetchResult: listValuesFetchResult,
-          child: _refreshFailureIcon(
-            padding: const EdgeInsets.only(right: 10),
+        width: 35,
+        builder: () => _suffixIconWrapper(
+          size: 25,
+          icon: Icon(
+            Icons.sync_problem_rounded,
+            color: widget.warningColor,
+            size: 25,
           ),
         ),
       );
@@ -1105,9 +1103,13 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     if (listValuesFetchResult.isLoading) {
       return InputBoxIconModel.icon(
         width: 30,
-        builder: () => _refreshInProgressIcon(
+        builder: () => _suffixIconWrapper(
           size: 20,
-          padding: const EdgeInsets.only(right: 10),
+          icon: CircularProgressIndicator(
+            strokeCap: StrokeCap.round,
+            strokeWidth: 2,
+            color: widget.foregroundColor,
+          ),
         ),
       );
     }
@@ -1117,11 +1119,30 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
 
   InputBoxIconModel _defaultSuffixIcon() {
     return InputBoxIconModel.icon(
-      width: 28,
-      builder: () => Icon(
-        Icons.expand_more_rounded,
-        color: widget.foregroundColor,
-        size: 23,
+      width: 30,
+      builder: () => _suffixIconWrapper(
+        size: 20,
+        icon: Icon(
+          Icons.expand_more_rounded,
+          color: widget.foregroundColor,
+          size: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget _suffixIconWrapper({
+    required double size,
+    required Widget icon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Container(
+        width: size,
+        height: size,
+        color: Colors.transparent,
+        alignment: Alignment.center,
+        child: icon,
       ),
     );
   }
@@ -1134,12 +1155,18 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       log("Show dropdown item 'refresh in progress'");
 
       return [
-        DropdownItem<ValueModel>(
-          enabled: false,
-          alignment: Alignment.center,
-          height: 40,
-          child: _refreshInProgressIcon(
-            size: 20,
+        _listItem(
+          child: Center(
+            child: Container(
+              width: 20,
+              height: 20,
+              color: Colors.transparent,
+              child: CircularProgressIndicator(
+                strokeCap: StrokeCap.round,
+                strokeWidth: 2,
+                color: widget.foregroundColor,
+              ),
+            ),
           ),
         ),
       ];
@@ -1149,38 +1176,22 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       log("Show dropdown item 'refresh failure'");
 
       return [
-        DropdownItem(
-          height: _defaultListItemHeight,
-          enabled: false,
-          child: _refreshFailureItem(
-            context,
-            listValuesFetchResult: listValuesFetchResult,
-            onHandle: () {
-              Navigator.of(context).pop();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              color: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 17),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "Refresh failed",
-                        style: _inputFieldTextStyle(
-                          fontSize: _defaultDropdownItemFontSize,
-                          fontWeight: FontWeight.w600,
-                          foregroundColor: widget.warningColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  _refreshFailureIcon(size: 20),
-                ],
-              ),
-            ),
+        _listItem(
+          onTap: () {
+            _showFailureDialog(
+              context,
+              listValuesFetchResult: listValuesFetchResult,
+              onRetry: () {
+                Navigator.of(context).pop();
+              },
+            );
+          },
+          trailingIcon: Icon(
+            Icons.sync_problem_rounded,
+            color: widget.warningColor,
+            size: 20,
           ),
+          child: _refreshFailureListItemText(),
         ),
       ];
     }
@@ -1189,34 +1200,20 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
       log("Show dropdown item 'no result'");
 
       return [
-        DropdownItem(
-          height: _defaultListItemHeight,
-          enabled: false,
-          child: GestureDetector(
-            onTap: () {
-              _fetchListValues(
-                context,
-                fetchParams: listValuesFetchResult.fetchParams,
-                selectedValue: listValuesFetchResult.selectedItem,
-              );
-            },
-            child: Container(
-              alignment: Alignment.center,
-              color: Colors.transparent,
-              padding: const EdgeInsets.symmetric(horizontal: 17),
-              child: Row(
-                children: [
-                  _noResultsWidget(),
-                  const SizedBox(width: 10),
-                  Icon(
-                    Icons.refresh_rounded,
-                    color: widget.foregroundColor,
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
+        _listItem(
+          onTap: () {
+            _fetchListValues(
+              context,
+              fetchParams: listValuesFetchResult.fetchParams,
+              selectedValue: listValuesFetchResult.selectedItem,
+            );
+          },
+          trailingIcon: Icon(
+            Icons.refresh_rounded,
+            color: widget.foregroundColor,
+            size: 20,
           ),
+          child: _noResultListItemText(),
         ),
       ];
     }
@@ -1224,81 +1221,62 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     log("Show dropdown items, list type: ${widget.model.listType}");
 
     return listValuesFetchResult.items.map((value) {
-      return DropdownItem(
+      return _listItem(
         value: value,
-        height: _defaultListItemHeight,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 14),
-          child: Row(
-            children: [
-              widget.model.listType!.defaultIconUri != null &&
-                      value != _noValueHint
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: ConvertouchSvgIcon(
-                        uri: value.iconUri,
-                        defaultUri: widget.model.listType!.defaultIconUri,
-                        defaultColor: widget.dropdownColors.icon.regular,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Text(
-                    value.itemName,
-                    style: _inputFieldTextStyle(
-                      fontSize: _defaultDropdownItemFontSize,
-                      foregroundColor: widget.dropdownColors.foreground.regular,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        leadingIcon: widget.model.listType!.defaultIconUri != null &&
+                value != _noValueHint
+            ? ConvertouchSvgIcon(
+                uri: value.iconUri,
+                defaultUri: widget.model.listType!.defaultIconUri,
+                defaultColor: widget.dropdownColors.icon.regular,
+              )
+            : null,
+        child: _listItemText(
+          value.itemName,
+          color: widget.dropdownColors.foreground.regular,
         ),
       );
     }).toList();
   }
 
-  Widget _refreshFailureItem(
-    BuildContext context, {
-    required ListValuesFetchResult listValuesFetchResult,
+  DropdownItem<ValueModel> _listItem({
+    ValueModel? value,
+    void Function()? onTap,
     required Widget child,
-    void Function()? onHandle,
+    Widget? leadingIcon,
+    Widget? trailingIcon,
   }) {
-    return GestureDetector(
-      onTap: () {
-        showConvertouchDialog(
-          currentTheme: ConvertouchUITheme.dark,
-          context: context,
-          builder: (_, setStateDialog) {
-            return ConvertouchFailureDialog(
-              title: "Refresh failed",
-              handlerFunc: () {
-                _fetchListValues(
-                  context,
-                  fetchParams: listValuesFetchResult.fetchParams,
-                  selectedValue: listValuesFetchResult.selectedItem,
-                );
-
-                onHandle?.call();
-              },
-              handlerActionName: "Retry",
-              content: Text(
-                listValuesFetchResult.error?.message ?? _fetchErrorMsg,
-                style: _inputFieldTextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  foregroundColor: widget.dialogColors.foreground.regular,
-                ),
+    return DropdownItem(
+      value: value,
+      enabled: value != null,
+      height: _defaultListItemHeight,
+      child: wrapInGestureDetector(
+        onTap: onTap,
+        child: Container(
+          alignment: Alignment.center,
+          color: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 17),
+          child: Row(
+            children: [
+              leadingIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: leadingIcon,
+                    )
+                  : const SizedBox.shrink(),
+              Expanded(
+                child: child,
               ),
-              colors: widget.dialogColors,
-            );
-          },
-        ).then((returnedValue) {});
-      },
-      child: child,
+              trailingIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: trailingIcon,
+                    )
+                  : const SizedBox.shrink(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -1316,59 +1294,68 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
     );
   }
 
-  Widget _refreshFailureIcon({
-    double size = _refreshButtonWidth,
-    EdgeInsets padding = EdgeInsets.zero,
-  }) {
-    return Padding(
-      padding: padding,
-      child: Container(
-        width: size,
-        height: size,
-        color: Colors.transparent,
-        alignment: Alignment.center,
-        child: Icon(
-          Icons.sync_problem_rounded,
-          color: widget.warningColor,
-          size: size,
-        ),
-      ),
-    );
-  }
-
-  Widget _refreshInProgressIcon({
-    double size = _refreshButtonWidth,
-    EdgeInsets padding = const EdgeInsets.all(2),
-  }) {
-    return Padding(
-      padding: padding,
-      child: Container(
-        width: size,
-        height: size,
-        color: Colors.transparent,
-        alignment: Alignment.center,
-        child: CircularProgressIndicator(
-          strokeCap: StrokeCap.round,
-          strokeWidth: 2,
-          color: widget.foregroundColor,
-        ),
-      ),
-    );
-  }
-
-  Widget _noResultsWidget() {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: Text(
+  Widget _noResultListItemText() {
+    return Center(
+      child: _listItemText(
         'No Items',
-        style: _inputFieldTextStyle(
-          fontSize: _defaultDropdownItemFontSize,
-          fontWeight: FontWeight.w600,
-          foregroundColor: widget.dropdownColors.foreground.regular,
-        ),
+        color: widget.dropdownColors.foreground.regular,
       ),
     );
+  }
+
+  Widget _refreshFailureListItemText() {
+    return Center(
+      child: _listItemText(
+        "Refresh failed",
+        color: widget.warningColor,
+      ),
+    );
+  }
+
+  Widget _listItemText(String text, {required Color color}) {
+    return Text(
+      text,
+      style: _inputFieldTextStyle(
+        fontSize: _defaultDropdownItemFontSize,
+        fontWeight: FontWeight.w600,
+        foregroundColor: color,
+      ),
+    );
+  }
+
+  void _showFailureDialog(
+    BuildContext context, {
+    required ListValuesFetchResult listValuesFetchResult,
+    void Function()? onRetry,
+  }) {
+    showConvertouchDialog(
+      currentTheme: ConvertouchUITheme.dark,
+      context: context,
+      builder: (_, setStateDialog) {
+        return ConvertouchFailureDialog(
+          title: "Refresh failed",
+          handlerFunc: () {
+            _fetchListValues(
+              context,
+              fetchParams: listValuesFetchResult.fetchParams,
+              selectedValue: listValuesFetchResult.selectedItem,
+            );
+
+            onRetry?.call();
+          },
+          handlerActionName: "Retry",
+          content: Text(
+            listValuesFetchResult.error?.message ?? _fetchErrorMsg,
+            style: _inputFieldTextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              foregroundColor: widget.dialogColors.foreground.regular,
+            ),
+          ),
+          colors: widget.dialogColors,
+        );
+      },
+    ).then((returnedValue) {});
   }
 }
 
