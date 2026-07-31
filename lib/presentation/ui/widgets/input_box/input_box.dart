@@ -1060,7 +1060,7 @@ class _ListFieldState<M extends ItemValueModel> extends State<_ListField<M>>
   }
 
   void _refreshDropdown() {
-    /* WA to refresh dropdown list values instantly */
+    // TODO: remove it after the way of dropdown instant update has been found
     if (_dropdownIsOpenNotifier.value) {
       log("[${DateTime.now()}] Auto-closing the dropdown when list fetch finished");
 

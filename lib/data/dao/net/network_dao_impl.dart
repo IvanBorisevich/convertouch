@@ -20,6 +20,9 @@ class NetworkDaoImpl extends NetworkDao {
     Map<String, dynamic>? queryParams,
     Map<String, String>? headers,
   }) async {
+    // TODO: remove it after the way of dropdown instant update has been found
+    await Future.delayed(const Duration(milliseconds: 500), () {});
+
     // if (urlPath == exchangeRateSourcesPath) {
     //   return await Future.delayed(
     //     const Duration(seconds: 5),
