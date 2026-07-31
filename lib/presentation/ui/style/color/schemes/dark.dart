@@ -459,7 +459,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
       foreground: MultiColor.only(Color(0xFF77C1FD)),
     ),
     footer: WidgetColorScheme(
-      background: MultiColor.only(Color(0xFF4C5970)),
+      background: MultiColor.only(Color(0xFF475368)),
       foreground: MultiColor.only(Color(0xFF7083A3)),
     ),
   ),

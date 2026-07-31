@@ -40,7 +40,7 @@ const _notification = NotificationColorScheme(
 );
 
 const _dropdown = DropdownColorScheme(
-  background: MultiColor.only(Color(0xff92bdfd)),
+  background: MultiColor.only(Color(0xff88b7fd)),
   foreground: MultiColor(
     regular: Color(0xFF1D578C),
     warning: _warningForeground,
@@ -464,7 +464,7 @@ const _paramSetPanel = ParamSetPanelColorScheme(
       foreground: MultiColor.only(Color(0xFF395E80)),
     ),
     footer: WidgetColorScheme(
-      background: MultiColor.only(Color(0xffadc2f6)),
+      background: MultiColor.only(Color(0xffb6cafd)),
       foreground: MultiColor.only(Color(0xFF6C9CC9)),
     ),
   ),
