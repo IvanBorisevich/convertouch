@@ -60,21 +60,14 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     BottomNavbarItem.settings: GlobalKey<NavigatorState>(),
   };
 
-  static final Map<BottomNavbarItem, Widget Function(Color)> _navBarIcons = {
-    BottomNavbarItem.home: (color) => ConvertouchSvgIcon(
-          uri: IconKeys.home,
-          color: color,
-        ),
-    BottomNavbarItem.settings: (color) => const Icon(Icons.settings_outlined),
+  static const Map<BottomNavbarItem, String> _navBarIcons = {
+    BottomNavbarItem.home: IconKeys.home,
+    BottomNavbarItem.settings: IconKeys.settings,
   };
 
-  static final Map<BottomNavbarItem, Widget Function(Color)>
-      _navBarIconsSelected = {
-    BottomNavbarItem.home: (color) => ConvertouchSvgIcon(
-          uri: IconKeys.homeFilled,
-          color: color,
-        ),
-    BottomNavbarItem.settings: (color) => const Icon(Icons.settings_rounded),
+  static const Map<BottomNavbarItem, String> _navBarIconsSelected = {
+    BottomNavbarItem.home: IconKeys.homeFilled,
+    BottomNavbarItem.settings: IconKeys.settingsFilled,
   };
 
   static const _navBarLabels = {
@@ -352,9 +345,14 @@ class _ConvertouchScaffoldState extends State<ConvertouchScaffold> {
     required Color selectedItemColor,
   }) {
     return BottomNavigationBarItem(
-      icon: bottomNavbarItem == selectedItem
-          ? _navBarIconsSelected[bottomNavbarItem]!.call(selectedItemColor)
-          : _navBarIcons[bottomNavbarItem]!.call(unselectedItemColor),
+      icon: ConvertouchSvgIcon(
+        uri: bottomNavbarItem == selectedItem
+            ? _navBarIconsSelected[bottomNavbarItem]!
+            : _navBarIcons[bottomNavbarItem]!,
+        color: bottomNavbarItem == selectedItem
+            ? selectedItemColor
+            : unselectedItemColor,
+      ),
       label: _navBarLabels[bottomNavbarItem],
     );
   }

@@ -84,6 +84,8 @@ abstract class IconKeys {
   static const parameters = "parameters";
   static const pressure = "pressure";
   static const ringSize = "ring_size";
+  static const settings = "settings";
+  static const settingsFilled = "settings_filled";
   static const speed = "speed";
   static const temperature = "temperature";
   static const volume = "volume";
@@ -110,6 +112,8 @@ const Map<String, String> idToIconName = {
   IconKeys.parameters: "parameters.svg",
   IconKeys.pressure: "pressure-group.svg",
   IconKeys.ringSize: "ring-size-group.svg",
+  IconKeys.settings: "settings.svg",
+  IconKeys.settingsFilled: "settings-filled.svg",
   IconKeys.speed: "speed-group.svg",
   IconKeys.temperature: "temperature-group.svg",
   IconKeys.volume: "volume-group.svg",
